@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "de": "die Disziplin",
+        "uz": "intizom",
+        "pos": "noun",
+        "example_de": "Disziplin ist der Schlüssel zum Erfolg.",
+        "example_uz": "Intizom - muvaffaqiyat kaliti."
+    },
+    {
+        "id": 2,
+        "de": "die Freiheit",
+        "uz": "ozodlik",
+        "pos": "noun",
+        "example_de": "Die Gedanken sind frei.",
+        "example_uz": "Fikrlar ozoddir."
+    }
+]

@@ -1,0 +1,1114 @@
+{
+    "A1": [
+        {
+            "id": "ua1_1",
+            "title": "Unit 1: Personalpronomen",
+            "description": "Kishilik olmoshlari (Ich, du, er...)",
+            "content": "Kishilik olmoshlari gapda kim haqida gap ketayotganini bildiradi. Nemis tilida ular 3 ta shaxs (1, 2, 3) va 2 ta son (Birlik, Ko'plik) ga bo'linadi.\n\n### 👤 Kishilik olmoshlari jadvali\n| Shaxs | Birlik (Singular) | Ko'plik (Plural) |\n|---|---|---|\n| **1.** | `ich` (men) | `wir` (biz) |\n| **2.** | `du` (sen) | `ihr` (sizlar) |\n| **3.** | `er/sie/es` (u) | `sie/Sie` (ular/Siz) |\n\n> [!TIP]\n> **Sie** (hurmat shakli) har doim katta harf bilan yoziladi va fe'l ko'plikda keladi.",
+            "example": "1. Ich bin Anna. (Men Annaman.)\n2. Wir lernen Deutsch. (Biz nemis tilini o'rganyapmiz.)\n3. Wo wohnen Sie? (Siz qayerda yashaysiz?)"
+        },
+        {
+            "id": "ua1_2",
+            "title": "Unit 2: Konjugation Präsens",
+            "description": "Fe'llarning hozirgi zamonda tuslanishi",
+            "content": "Nemis tilida fe'llar o'zagi va qo'shimchadan iborat. Hozirgi zamonda (`Präsens`) fe'l o'zagiga shaxs-son qo'shimchalari qo'shiladi.\n\n### ⚙️ Tuslanish qoidasi\nMasalan: **lernen** (o'rganmoq)\n\n| Shaxs | Qo'shimcha | Misol |\n|---|---|---|\n| `ich` | **-e** | ich lern**e** |\n| `du` | **-st** | du lern**st** |\n| `er/sie/es` | **-t** | er lern**t** |\n| `wir` | **-en** | wir lern**en** |\n| `ihr` | **-t** | ihr lern**t** |\n| `sie/Sie` | **-en** | sie lern**en** |\n\n> [!IMPORTANT]\n> Agar fe'l o'zagi **-d, -t** bilan tugasa (masalan: *arbeiten*), `du`, `er` va `ihr` shaxslarida talaffuz oson bo'lishi uchun **-e-** harfi qo'shiladi: *du arbeit**est***.",
+            "example": "1. Ich komme aus Spanien. (Men Ispaniyadanman.)\n2. Er spielt Fußball. (U futbol o'ynaydi.)\n3. Wir arbeiten viel. (Biz ko'p ishlaymiz.)"
+        },
+        {
+            "id": "ua1_3",
+            "title": "Unit 3: Sein, haben und besondere Verben",
+            "description": "Eng muhim yordamchi fe'llar",
+            "content": "**sein** (bo'lmoq) va **haben** (bor bo'lmoq) fe'llari noto'g'ri fe'llar bo'lib, ularni yodlab olish shart. Ular nafaqat mustaqil fe'l, balki yordamchi fe'l sifatida ham ishlatiladi.\n\n### 💎 sein vs haben\n| Shaxs | **sein** | **haben** |\n|---|---|---|\n| `ich` | bin | habe |\n| `du` | bist | hast |\n| `er/sie/es` | ist | hat |\n| `wir` | sind | haben |\n| `ihr` | seid | habt |\n| `sie/Sie` | sind | haben |\n\n### ⭐ möchten (xohlamoq)\nBu fe'l irodani bildiradi: `ich möchte`, `du möchtest`, `er möchte`...",
+            "example": "1. Ich bin müde. (Men charchaganman.)\n2. Hast du ein Handy? (Sening telefoning bormi?)\n3. Er ist Lehrer. (U o'qituvchi.)"
+        },
+        {
+            "id": "ua1_4",
+            "title": "Unit 4: Verben mit Vokalwechsel",
+            "description": "O'zak unlisi o'zgaradigan fe'llar",
+            "content": "Ba'zi kuchli fe'llar `du` va `er/sie/es` (2- va 3-shaxs birlik) shakllarida o'zak unlisini o'zgartiradi. Qolgan shaxslarda qoida bo'yicha tuslanadi.\n\n### 🔄 O'zgarish turlari:\n1. **e → i/ie**: *helfen* (hilfst, hilft), *lesen* (liest, liest).\n2. **a → ä**: *fahren* (fährst, fährt), *schlafen* (schläfst, schläft).\n3. **au → äu**: *laufen* (läufst, läuft).\n\n> [!WARNING]\n> Bu o'zgarish faqat birlikning 2- va 3-shaxsiga tegishli! `wir`, `ihr` va `sie` shaxslarida o'zgarish bo'lmaydi.",
+            "example": "1. Er liest ein spannendes Buch. (U qiziqarli kitob o'qiyapti.)\n2. Fährst du nach Berlin? (Siz Berlinga ketyapsizmi?)\n3. Das Kind schläft schon. (Bola allaqachon uxlab yotibdi.)"
+        },
+        {
+            "id": "ua1_5",
+            "title": "Unit 5: Modalverben: Konjugation und Position",
+            "description": "Modal fe'llar va ularning tartibi",
+            "content": "Modal fe'llar (können, müssen, wollen...) istak yoki majburiyatni bildiradi. Ular ikkita asosiy xususiyatga ega:\n\n1. **Tuslanish**: `ich` va `er/sie/es` shaxslari qo'shimcha olmaydi va ular bir xil: `ich kann`, `er kann`.\n2. **So'z tartibi**: Modal fe'l har doim 2-o'rinda, ikkinchi asosiy fe'l esa gapning eng oxirida o'zgarmas (Infinitiv) holda keladi.\n\n### ⚙️ GAP TUZILISHI:\n`Ega` + `Modal fe'l` + `...` + `Asosiy Fe'l (oxirida)`",
+            "example": "1. Ich **muss** heute viel **arbeiten**. (Men bugun ko'p ishlashim kerak.)\n2. **Kannst** du gut **schwimmen**? (Yaxshi suza olasizmi?)\n3. Wir **wollen** Pizza **essen**. (Biz pizza yeyishni xohlaymiz.)"
+        },
+        {
+            "id": "ua1_6",
+            "title": "Unit 6: Modalverben: Gebrauch",
+            "description": "Modal fe'llarning ma'nolari va qo'llanilishi",
+            "content": "Har bir modal fe'l o'ziga xos ma'noga ega. Ularni to'g'ri tanlash gapning mazmunini butunlay o'zgartiradi.\n\n### 📖 Modal fe'llar lug'ati:\n- `dürfen` - ruxsat (masalan: ruxsat berilgan ishlar).\n- `sollen` - maslahat/vazifa (birovning topshirig'i).\n- `mögen` - yoqtirish (narsalarni yoki odamlarni).\n- `möchten` - xohish (muloyim shakl).\n\n> [!TIP]\n> Inkor shaklida `nicht dürfen` - **taqiqlash** ma'nosini beradi (mumkin emas).",
+            "example": "1. Hier **darf** man nicht **rauchen**. (Bu yerda chekish mumkin emas/taqiqlangan.)\n2. **Soll** ich das Fenster **zumachen**? (Derazani yopaymi? - maslahat/so'rov)\n3. Ich **mag** deutsche Filme. (Menga nemis filmlari yoqadi.)"
+        },
+        {
+            "id": "ua1_7",
+            "title": "Unit 7: Trennbare Verben",
+            "description": "Ayriladigan old qo'shimchali fe'llar",
+            "content": "Ba'zi nemis fe'llari prefiks (old qo'shimcha) bilan keladi. Darak gapda bu prefiks fe'ldan ajralib, gapning **eng oxiriga** boradi.\n\n### 🧩 Umumiy ayriladigan prefikslar:\n`auf-, an-, ab-, mit-, ein-, aus-, vor-, fern-, zu-`.\n\n**Misol:** `einkaufen` (bozorlik qilmoq)\n> *Ich **kaufe** heute im Supermarkt **ein**.*",
+            "example": "1. Wann **stehst** du morgens **auf**? (Ertalab soat nechada uyg'onasan?)\n2. Er **ruft** mich abends **an**. (U kechqurun menga qo'ng'iroq qiladi.)\n3. Wir **sehen** heute abend **fern**. (Biz bugun kechqurun televizor ko'ramiz.)"
+        },
+        {
+            "id": "ua1_8",
+            "title": "Unit 8: Imperativ",
+            "description": "Buyruq va iltimos shakli",
+            "content": "Buyruq shakli gapda harakatni bajarishni buyurish yoki iltimos qilish uchun ishlatiladi. U 3 ta asosiy shaklga ega:\n\n### 📢 Buyruq shakllari:\n- **du** (sen): Fe'l o'zagi olinadi. (*Komm! Hör!*)\n- **ihr** (Sizlar): Fe'l o'zagi + `-t`. (*Kommt! Hört!*)\n- **Sie** (Siz - hurmat): Fe'l + `Sie`. (*Kommen Sie! Hören Sie!*)\n\n> [!IMPORTANT]\n> `du` shaxsidagi buyruqda **-st** qo'shimchasi va **du** olmoshi tushib qoladi.",
+            "example": "1. **Komm** bitte mal her! (Iltimos, bu yerga kel - sen.)\n2. **Esst** jetzt euer Obst! (Mevangizni yenglar - sizlar.)\n3. **Gehen Sie** bitte nach Hause. (Iltimos, uyga boring - Siz.)"
+        },
+        {
+            "id": "ua1_9",
+            "title": "Unit 9: Fragen mit Fragewort",
+            "description": "W-Fragen (Maxsus so'roq gaplar)",
+            "content": "So'roq so'z bilan boshlanadigan gaplarda fe'l har doim **2-o'rinda** keladi. So'roq so'zlarning aksariyati **W** harfi bilan boshlanadi.\n\n### 🔍 Eng muhim so'roq so'zlar:\n- `Wer?` (Kim?) | `Was?` (Nima?)\n- `Wo?` (Qayerda?) | `Wohin?` (Qayerga?)\n- `Wie?` (Qanday?) | `Wann?` (Qachon?)\n- `Warum?` (Nega?) | `Woher?` (Qayerdan?)",
+            "example": "1. **Wo** wohnst du? (Qayerda yashaysiz?)\n2. **Wer** ist der Mann dort? (U yerdagi odam kim?)\n3. **Wie** geht es Ihnen? (Ahvollaringiz qanday?)"
+        },
+        {
+            "id": "ua1_10",
+            "title": "Unit 10: Ja/Nein-Fragen",
+            "description": "Umumiy so'roq gaplar",
+            "content": "Agar gapda so'roq so'z (W-Wort) bo'lmasa, **fe'l 1-o'ringa** chiqadi. Bunday gaplarga `Ja` (Ha) yoki `Nein` (Yo'q) deb javob beriladi.\n\n### 🔁 Gap tuzilishi:\n`Fe'l` + `Ega` + `...` + `?`",
+            "example": "1. **Kommst** du aus Italien? (Siz Italiyadanmisiz?)\n2. **Haben** Sie heute Zeit? (Bugun vaqtingiz bormi?)\n3. **Lernst** du Deutsch? (Sen nemis tilini o'rganyapsanmi?)"
+        },
+        {
+            "id": "ua1_11",
+            "title": "Unit 11: Wörter im Satz 1",
+            "description": "Gapda so'z tartibi (Darak gap)",
+            "content": "Darak gapda fe'l har doim **2-o'rinda** turadi (bu oltin qoida). Ega esa 1-o'rinda yoki fe'ldan keyin 3-o'rinda kelishi mumkin.\n\n### 🔄 Inversiya (Teskari tartib):\nAgar gap vaqt yoki joy bilan boshlansa, ega 3-o'ringa o'tadi:\n`Bugun` + `o'qiyman` + `men` + `kitob`.",
+            "example": "1. **Ich** komme heute. (Men bugun kelaman.)\n2. **Heute** komme ich. (Bugun men kelaman.)\n3. **Am Sonntag** gehen wir ins Kino. (Yakshanba kuni biz kinoga boramiz.)"
+        },
+        {
+            "id": "ua1_12",
+            "title": "Unit 12: Wörter im Satz 2",
+            "description": "Fe'l ramkasi (Satzklammer)",
+            "content": "Nemis tilining o'ziga xos xususiyati - fe'l ramkasi. Agar gapda ikkita fe'l bo'lsa (modal fe'lli gaplar yoki ayriladigan fe'llar), ikkinchi qism gapning **eng oxiriga** boradi.\n\n### 📦 Ramka tuzilishi:\n`Fe'l 1` ... `Fe'l 2/Prefiks`",
+            "example": "1. Ich **muss** heute viel **lernen**. (Bugun ko'p o'qishim kerak.)\n2. Er **ruft** dich morgen **an**. (U ertaga senga qo'ng'iroq qiladi.)\n3. Du **kannst** hier **rauchen**. (Bu yerda chekishing mumkin.)"
+        },
+        {
+            "id": "ua1_13",
+            "title": "Unit 13: Nomen: Plural",
+            "description": "Otlar: Ko'plik shakllari",
+            "content": "Nemis tilida otlarning ko'pligi turli qo'shimchalar bilan yasaladi. Eng muhimi: ko'plikda barcha otlar uchun artikl **die** bo'ladi.\n\n### 👥 Ko'plik qo'shimchalari:\n1. **-e** : `der Tisch -> die Tische`\n2. **-(e)n** : `die Frau -> die Frauen`\n3. **-er** (+ Umlaut) : `das Kind -> die Kinder`\n4. **-s** : `das Auto -> die Autos`\n5. **-** (o'zgarmas): `der Lehrer -> die Lehrer`",
+            "example": "1. Das sind meine **Bücher**. (Bular mening kitoblarim.)\n2. Wo sind die **Kinder**? (Bolalar qayerda?)\n3. Die **Häuser** sind alt. (Uylar eski.)"
+        },
+        {
+            "id": "ua1_14",
+            "title": "Unit 14: Artikel: definit, indefinit, kein Artikel",
+            "description": "Artikllar: Aniq, Noaniq va Artiklsiz holat",
+            "content": "Nemis tilida har bir ot artiklga ega (der, die, das).\n\n### 📚 Turlari:\n1. **Definit** (Aniq): Siz ma'lum bir narsa haqida gapiryapsiz.\n2. **Indefinit** (Noaniq): Narsa haqida birinchi marta gapiryapsiz.\n3. **Nullartikel**: Kasblar, millatlar va ko'plikdagi noaniq narsalar uchun artikl ishlatilmaydi.",
+            "example": "1. Das ist **ein** Auto. **Das** Auto ist rot. (Bu mashina. Mashina qizil.)\n2. Ich bin **Student**. (Men talabaman.)\n3. Ich esse **Äpfel**. (Men olmalar yeyapman.)"
+        },
+        {
+            "id": "ua1_15",
+            "title": "Unit 15: Negation",
+            "description": "Inkor: kein, nicht, nie",
+            "content": "Nemis tilida inkor qilishning uch xil usuli bor:\n\n### ❌ Farqlari:\n- **kein**: Artiklli otlarni inkor qiladi. (*Das ist kein Auto.*)\n- **nicht**: F'ellar, sifatlar va butun gapni inkor qiladi. (*Ich lerne nicht.*)\n- **nie**: 'Hech qachon' ma'nosida.",
+            "example": "1. Das ist **kein** Wasser. (Bu suv emas.)\n2. Ich verstehe das **nicht**. (Buni tushunmayapman.)\n3. Er raucht **nie**. (U hech qachon chekmaydi.)"
+        },
+        {
+            "id": "ua1_16",
+            "title": "Unit 16: Akkusativ",
+            "description": "Tushunm kelishigi (Ob'ekt kelishigi)",
+            "content": "Akkusativ - nemis tilida eng ko'p ishlatiladigan kelishiklardan biri bo'lib, u gapdagi bevosita to'ldiruvchini (kimni? nimani?) bildiradi. \n\n### 🔄 Artikl o'zgarishi:\nAkkusativda faqat **der** (erkak jinsi) artikli o'zgaradi. Qolganlari o'zgarmas qoladi.\n\n| Jins | Nominativ | Akkusativ |\n|---|---|---|\n| Erkak (maskulin) | **der** / ein | **den** / einen |\n| Ayol (feminin) | **die** / eine | **die** / eine |\n| O'rta (neutral) | **das** / ein | **das** / ein |\n| Ko'plik (plural) | **die** | **die** |\n\n> [!TIP]\n> Ko'p ishlatiladigan Akkusativ fe'llari: *haben, suchen, finden, essen, trinken, lesen, besuchen*.",
+            "example": "1. Ich habe **einen** Hund. (Mening itim bor.)\n2. Er sucht **den** Schlüssel. (U kalitni qidiryapti.)\n3. Wir essen **einen** Apfel. (Biz olma yeyapmiz.)"
+        },
+        {
+            "id": "ua1_17",
+            "title": "Unit 17: Dativ",
+            "description": "Jo'nalish kelishigi (Kimgadir?)",
+            "content": "Dativ kimga yoki nimaga savoliga javob beradi. Akkusativdan farqli o'laroq, bu yerda deyarli barcha artikllar o'zgaradi.\n\n### 🔄 Artikl o'zgarishi:\n| Jins | Nominativ | Dativ |\n|---|---|---|\n| Erkak | **der** | **dem** / einem |\n| Ayol | **die** | **der** / einer |\n| O'rta | **das** | **dem** / einem |\n| Ko'plik | **die** | **den ...n** (+n) |\n\n> [!CAUTION]\n> Ko'plikda nafaqat artikl *den* ga o'zgaradi, balki otning o'ziga ham **-n** qo'shimchasi qo'shiladi: *den Kinder**n***.",
+            "example": "1. Ich helfe **dem** Bruder. (Men akamga/ukamga yordam beraman.)\n2. Er schenkt **der** Frau Blumen. (U ayolga gullar sovg'a qilyapti.)\n3. Wir antworten **den** Lehrer**n**. (Biz o'qituvchilarga javob beramiz.)"
+        },
+        {
+            "id": "ua1_18",
+            "title": "Unit 18: Possessivartikel",
+            "description": "Egalik artikllari (Mening, sening...)",
+            "content": "Egalik artikllari narsaning kimga tegishli ekanligini ko'rsatadi. Ular ham artikl kabi gapdagi kelishiklarga (Nom, Akk, Dat) qarab turlanadi.\n\n### 👤 Egalik olmoshlari birlikda:\n- `ich` -> **mein** (mening)\n- `du` -> **dein** (sening)\n- `er/es` -> **sein** (uning - o'g'il boila/narsa)\n- `sie` -> **ihr** (uning - qiz bola)\n\n> [!IMPORTANT]\n> Agar ot ayol jinsida yoki ko'plikda bo'lsa, oxiriga **-e** qo'shiladi: *mein**e** Mutter*.",
+            "example": "1. Ist das **dein** Buch? (Bu sening kitobingmi?)\n2. Das ist **meine** Tasche. (Bu mening sumkam.)\n3. **Sein** Vater ist Arzt. (Uning dadasi shifokor.)"
+        },
+        {
+            "id": "ua1_19",
+            "title": "Unit 19: Artikel: interrogativ und demonstrativ",
+            "description": "So'roq va ko'rsatish artikllari",
+            "content": "Muayyan narsani tanlash yoki ko'rsatish uchun ishlatiladi.\n\n### 🔍 Turlari:\n- **Welcher?** (Qaysi biri?): Tanlash uchun.\n- **Dieser** (Bu / Mana bu): Aniq va yaqinroqdagi narsani ko'rsatish uchun.\n\nIkkalasi ham artikllar kabi turlanadi: `Welchen Saft möchtest du?` - `Diesen.`",
+            "example": "1. **Welches** Buch liest du? (Qaysi kitobni o'qiyapsan?)\n2. **Dieser** Tisch ist neu. (Bu stol yangi.)\n3. **Welchen** Kurs besuchst du? (Qaysi kursga qatnayapsiz?)"
+        },
+        {
+            "id": "ua1_20",
+            "title": "Unit 20: Personalpronomen: Akkusativ and Dativ",
+            "description": "Kishilik olmoshlarining kelishiklarda turlanishi",
+            "content": "Kishilik olmoshlari gapda kelishiklarga uchraydi. Bu jadvalni yodlab olish juda muhim.\n\n| Nom. | Akk. | Dat. |\n|---|---|---|\n| `ich` | mich | mir |\n| `du` | dich | dir |\n| `er` | ihn | ihm |\n| `sie` | sie | ihr |\n| `es` | es | ihm |\n| `wir` | uns | uns |\n| `ihr` | euch | euch |\n| `sie/Sie` | sie/Sie | ihnen/Ihnen |",
+            "example": "1. Hilfst du **mir**? (Menga yordam berasizmi? - Dativ)\n2. Ich liebe **dich**. (Seni sevaman. - Akkusativ)\n3. Das gehört **ihm**. (Bu unga tegishli. - Dativ)"
+        }
+    ],
+    "A2": [
+        {
+            "id": "ua2_21",
+            "title": "Unit 21: Verben mit Akkusativ und Dativ",
+            "description": "Ikkita to'ldiruvchi talab qiladigan fe'llar",
+            "content": "Ba'zi fe'llar (geben, schenken, zeigen...) gapda bir vaqtda ikkita to'ldiruvchini talab qiladi.\n\n### ⚖️ Oltin qoida:\nOdatda: **Odam -> Dativ**, **Narsa -> Akkusativ** bo'ladi.\n*Ich schenke **dir** (Dat) **ein Buch** (Akk).* \n\n> [!NOTE]\n> Agar ikkalasi ham olmosh bo'lsa, Akkusativ birinchi keladi: *Ich schenke **es** (Akk) **dir** (Dat).* ",
+            "example": "1. Er gibt **mir** den Stift. (U menga ruchkani beryapti.)\n2. Wir zeigen **euch** die Stadt. (Biz sizlarga shaharni ko'rsatamiz.)\n3. Schreibst du **ihr** eine Karte? (Unga otkritka yozasanmi?)"
+        },
+        {
+            "id": "ua2_22",
+            "title": "Unit 22: Verben mit Dativ",
+            "description": "Faqat Dativ talab qiladigan fe'llar",
+            "content": "Nemis tilida shunday fe'llar borki, ular gapda faqat Dativ kelishigini talab qiladi. Ularni ro'yxat bo'yicha yodlash kerak.\n\n### 📝 Dativ fe'llari:\n- **helfen** (yordam bermoq)\n- **danken** (rahmat aytmoq)\n- **gratulieren** (tabriklamoq)\n- **gehören** (tegishli bo'lmoq)\n- **glauben** (ishonmoq)\n- **passen** (mos kelmoq)",
+            "example": "1. Ich helfe **dir** gern. (Senga jon deb yordam beraman.)\n2. Wir gratulieren **ihm**. (Biz uni tabriklaymiz.)\n3. Das Kleid passt **mir** nicht. (Ko'ylak menga mos kelmayapti.)"
+        },
+        {
+            "id": "ua2_23",
+            "title": "Unit 23: Präteritum: sein und haben",
+            "description": "Sein va Haben ning o'tgan zamoni",
+            "content": "Hozirgi zamondagi `ist` va `hat` o'rniga o'tmishda (Präteritum) `war` va `hatte` ishlatiladi. Bu shakllar og'zaki nutqda ham juda faol qo'llaniladi.\n\n### 🕰️ Tuslanishi:\n| Shaxs | **war** (edi) | **hatte** (bor edi) |\n|---|---|---|\n| `ich` | war | hatte |\n| `du` | warst | hattest |\n| `er/sie/es` | war | hatte |\n| `wir` | waren | hatten |\n| `ihr` | wart | hattet |\n| `sie/Sie` | waren | hatten |",
+            "example": "1. Wo **warst** du yesterday? (Kecha qayerda eding?)\n2. Ich **hatte** keine Zeit. (Mening vaqtim yo'q edi.)\n3. Das Wetter **war** sehr schön. (Ob-havo juda yaxshi edi.)"
+        },
+        {
+            "id": "ua2_24",
+            "title": "Unit 24: Perfekt mit haben",
+            "description": "O'tgan tugallangan zamon (haben bilan)",
+            "content": "Perfekt - kundalik so'zlashuvda o'tgan zamonni bildirish uchun ishlatiladi.\n\n### ⚙️ Formula:\n`haben` (tuslangan) + `Partizip II` (eng oxirida)\n\nKo'pgina tranzitiv (harakat ob'ektga yo'nalgan) fe'llar `haben` bilan ishlatiladi.\n*Ich **habe** Pizza **gegessen**.*",
+            "example": "1. Was **hast** du gestern **gemacht**? (Kecha nima qilding?)\n2. Wir **haben** viel **gelernt**. (Biz ko'p o'qidik/o'rgandik.)\n3. Er **hat** einen Kaffee **getrunken**. (U kofe ichdi.)"
+        },
+        {
+            "id": "ua2_25",
+            "title": "Unit 25: Perfekt mit sein",
+            "description": "O'tgan tugallangan zamon (sein bilan)",
+            "content": "Agarda fe'l yo'nalish yoki holat o'zgarishini bildirsa, `sein` yordamchi fe'li ishlatiladi.\n\n### 🏃 Harakat turlari:\n1. **Yo'nalish**: *gehen, fahren, fliegen, kommen*.\n2. **Holat o'zgarishi**: *aufstehen, einschlafen, werden*.\n3. **Istisnolar**: *sein, bleiben, passieren*.",
+            "example": "1. Biz Berlinga **bordik**. -> Wir **sind** nach Berlin **gefahren**.\n2. U soat 7 da **uyg'ondi**. -> Er **ist** um 7 Uhr **aufgestanden**.\n3. Sen qayerga **ketding**? -> Wohin **bist** du **gegangen**?"
+        },
+        {
+            "id": "ua2_26",
+            "title": "Unit 26: Partizip Perfekt",
+            "description": "Partizip II yasalishi",
+            "content": "Partizip II - Perfekt zamonini yasash uchun fe'lning maxsus shakli.\n\n### ⚒️ Yasalish qoidalari:\n- **Oddiy fe'llar**: `ge-` + `o'zak` + `-t` (*gekauft*).\n- **Kuchli fe'llar**: `ge-` + `o'zak` + `-en` (*gesehen*).\n- **-ieren** bilan tugasa: `ge-` prefiksi qo'shilmaydi (*studiert, telefoniert*).\n- **Ayrilmas prefikslar**: `ge-` qo'shilmaydi (*besucht, bezahlt*).",
+            "example": "1. Ich habe heute **gearbeitet**. (Men bugun ishladim.)\n2. Hast du den Film **gesehen**? (Filmni ko'rdingmi?)\n3. Wir haben in Berlin **studiert**. (Biz Berlinda o'qiganmiz.)"
+        },
+        {
+            "id": "ua2_27",
+            "title": "Unit 27: Präteritum: Modalverben",
+            "description": "Modal fe'llarning o'tgan zamoni",
+            "content": "O'tgan zamonda (Präteritum) modal fe'llar `umlaut` (ä, ö, ü) harflarini yo'qotadi va barchasiga **-te** qo'shimchasi qo'shiladi.\n\n### 🔄 O'zgarish:\n- `können` -> **konnte**\n- `müssen` -> **musste**\n- `dürfen` -> **durfte**\n- `wollen` -> **wollte**\n- `sollen` -> **sollte**",
+            "example": "1. Als Kind **konnte** ich nicht schwimmen. (Bolaligimda suza olmasdim.)\n2. Ich **musste** gestern lange arbeiten. (Kecha uzoq ishlashim kerak edi.)\n3. **Wolltet** ihr uns besuchen? (Bizni yo'qlab kelmoqchi edinglarmi?)"
+        },
+        {
+            "id": "ua2_28",
+            "title": "Unit 28: Zeitengebrauch",
+            "description": "O'tgan zamonlarni Farqlash",
+            "content": "Nemis tilida o'tgan zamonning ikki turi bor: **Perfekt** va **Präteritum**. Ularni to'g'ri ishlatish muhim.\n\n### ⚖️ Qachon qaysi biri?\n- **Perfekt**: Og'zaki nutqda (do'stlar, oila b-n gaplashganda).\n- **Präteritum**: Yozma nutqda (kitoblar, gazetalar, rasmiy xatlar).\n\n> [!NOTE]\n> `sein`, `haben` va **modal fe'llar** hatto og'zaki nutqda ham ko'pincha Präteritumda ishlatiladi (*war, hatte, konnte*).",
+            "example": "1. Ich **bin** nach Hause **gegangen**. (So'zlashuvda)\n2. Er **ging** nach Hause. (Kitobiy variantda)\n3. Früher **war** alles besser. (Oldinroq hamma narsa yaxshi edi.)"
+        },
+        {
+            "id": "ua2_29",
+            "title": "Unit 29: Reflexive Verben",
+            "description": "O'zlik fe'llari (sich olmoshi bilan)",
+            "content": "O'zlik fe'llari harakatning bajaruvchiga qaytishini bildiradi (masalan: yuvinmoq, kiyinmoq). Ular bilan birga `sich` (o'zini) olmoshi ishlatiladi.\n\n### 👤 Reflexivpronomen (Akkusativda):\n- ich **mich** | wir **uns**\n- du **dich** | ihr **euch**\n- er/sie/es **sich** | sie/Sie **sich**\n\n> [!IMPORTANT]\n> Ba'zi fe'llar Dativda olmosh talab qiladi (agar gapda boshqa ob'ekt bo'lsa): *Ich wasche **mir** die Hände.*",
+            "example": "1. Ich **freue mich** auf den Urlaub. (Dam olishni jon deb kutaman.)\n2. Setz **dich** bitte! (Iltimos, o'tir!)\n3. Er **wäscht sich** jeden Morgen. (U har kuni ertalab yuvinadi.)"
+        },
+        {
+            "id": "ua2_30",
+            "title": "Unit 30: Temporale Präpositionen",
+            "description": "Vaqt predloglari (um, am, im...)",
+            "content": "Vaqtni aniq ko'rsatish uchun nemis tilida maxsus predloglar ishlatiladi.\n\n### ⏰ Vaqt ko'rsatkichlari:\n- **um** : Soatbay vaqt uchun (*um 8 Uhr*).\n- **am** : Kunlar va kun qismlari uchun (*am Montag, am Morgen*).\n- **im** : Oylar va fasllar uchun (*im Juli, im Sommer*).\n- **von ... bis** : Ma'lum bir vaqt oralig'i uchun.",
+            "example": "1. Der Unterricht beginnt **um** 9:00. (Dars soat 9 da boshlanadi.)\n2. Ich treffe mich **am** Samstag mit Freunden. (Shanba kuni do'stlarim bilan uchrashaman.)\n3. **Im** Winter ist es kalt. (Qishda sovuq bo'ladi.)"
+        },
+        {
+            "id": "ua2_31",
+            "title": "Unit 31: Präpositionen mit Dativ",
+            "description": "Faqat Dativ talab qiladigan predloglar",
+            "content": "Bu predloglardan keyin keladigan ot yoki olmosh har doim Dativ kelishigida bo'lishi shart.\n\n### 📝 Dativ predloglari:\n- **aus** (ichidan/dan): *aus dem Haus*\n- **bei** (yonida/da): *bei mir*\n- **mit** (bilan): *mit dem Bus*\n- **nach** (keyin/ga - shahar/davlat): *nach Berlin*\n- **seit** (dan beri): *seit bir Woche*\n- **von** (dan): *von der Schule*\n- **zu** (ga - odam/joy): *zum Arzt*",
+            "example": "1. Ich komme **aus der** Schule. (Men maktabdan kelyapman.)\n2. Er wohnt **bei seinen** Eltern. (U ota-onasi bilan yashaydi.)\n3. Fährst du **mit dem** Fahrrad? (Velosipedda borasanmi?)"
+        },
+        {
+            "id": "ua2_32",
+            "title": "Unit 32: Präpositionen mit Akkusativ",
+            "description": "Faqat Akkusativ talab qiladigan predloglar",
+            "content": "Ushbu predloglar har doim Akkusativ kelishigini boshqaradi.\n\n### 📝 Akkusativ predloglari:\n- **für** (uchun): *für dich*\n- **um** (atrofida/soat): *um den Tisch*\n- **durch** (orqali): *durch den Park*\n- **ohne** (siz/sizsiz): *ohne mich*\n- **gegen** (qarshi/taxminan): *gegen den Baum*",
+            "example": "1. Das Geschenk ist **für den** Vater. (Sovg'a dada uchun.)\n2. Wir gehen **durch den** Wald. (Biz o'rmon orqali ketyapmiz.)\n3. Ich trinke Kaffee **ohne** Zucker. (Men shakarsiz kofe ichaman.)"
+        },
+        {
+            "id": "ua2_33",
+            "title": "Unit 33: Wechselpräpositionen mit Dativ",
+            "description": "Holat ko'rsatuvchi predloglar (Wo?)",
+            "content": "Ikki tomonlama predloglar (in, an, auf, unter, über...) agarda holatni yoki tinchlikni bildirsa, Dativ kelishigida keladi.\n\n### 🔍 So'roq: **Wo?** (Qayerda?)\n\n- **in** (ichida): *im (in dem) Schrank*\n- **auf** (ustida - binoan/ochiq joy): *auf dem Tisch*\n- **an** (yonida/devorda): *an der Wand*",
+            "example": "1. Die Tasche liegt **auf dem** Stuhl. (Sumka stulning ustida yotipti.)\n2. Wir sind **im** Kino. (Biz kinodamiz.)\n3. Er sitzt **an dem** Tisch. (U stolning yonida o'tiribdi.)"
+        },
+        {
+            "id": "ua2_34",
+            "title": "Unit 34: Wechselpräpositionen mit Akkusativ",
+            "description": "Yo'nalish ko'rsatuvchi predloglar (Wohin?)",
+            "content": "Agarda harakat bir joydan ikkinchi joyga yo'nalgan bo'lsa, xuddi shu predloglar Akkusativ kelishigini talab qiladi.\n\n### 🔍 So'roq: **Wohin?** (Qayerga?)\n\n- **in** : *ins (in das) Kino*\n- **auf** : *auf den Balkon*\n- **an** : *ans (an das) Meer*",
+            "example": "1. Ich gehe **ins** Kino. (Men kinoga ketyapman.)\n2. Leg das Buch **auf den** Tisch! (Kitobni stol ustiga qo'y!)\n3. Wir fahren **an den** See. (Biz ko'lga boryapmiz.)"
+        },
+        {
+            "id": "ua2_35",
+            "title": "Unit 35: Lokale Präpositionen: Harakat turlari",
+            "description": "Nach, Zu, In farqlari",
+            "content": "Yo'nalishni bildirishda predlog tanlash muhim:\n\n### 🗺️ Qoidalar:\n- **nach** : Shaxar, davlat (artiklsiz) va *nach Hause*.\n- **in** : Artikli bor joylar (in die Schweiz, in den Park).\n- **zu** : Odamlarga yoki ma'lum bir binoga nisbatan (zum Arzt, zur Schule).\n- **an** : Suv bo'yiga (ans Meer, an den Strand).",
+            "example": "1. Ich fliege **nach** Taschkent. (Men Toshkentga uchaman.)\n2. Er geht **zum** Friseur. (U sartaroshga ketyapti.)\n3. Wir gehen **in den** Garten. (Biz bog'ga ketyapmiz.)"
+        },
+        {
+            "id": "ua2_36",
+            "title": "Unit 36: Adjektive 1: Nominativ und Akkusativ",
+            "description": "Noaniq artikldan keyin sifat turlanishi",
+            "content": "Agarda sifat noaniq artikl (`ein, eine`) dan keyin kelsa, u otning jinsini bildiruvchi qo'shimchani oladi.\n\n### ⚒️ Qo'shimchalar (Nominativ):\n- Erkak: ein **-er** (*ein nett**er** Mann*)\n- Ayol: eine **-e** (*eine nett**e** Frau*)\n- O'rta: ein **-es** (*ein nett**es** Kind*)",
+            "example": "1. Das ist **ein interesantes** Buch. (Bu qiziqarli kitob.)\n2. Er ist **ein guter** Freund. (U yaxshi do'st.)\n3. Sie ist **eine schöne** Frau. (U chiroyli ayol.)"
+        },
+        {
+            "id": "ua2_37",
+            "title": "Unit 37: Nominativ, Akkusativ und Dativ",
+            "description": "Aniq artikldan keyin sifat turlanishi",
+            "content": "Aniq artikldan (`der, die, das`) keyin sifatlar Nominativda faqat **-e** qo'shimchasini oladi. Dativda esa barchasi **-en** oladi.\n\n### ⚒️ Qo'shimchalar:\n- Nominativ: der/die/das **-e**\n- Dativ: dem/der/den **-en**\n- Akkusativ: den **-en** / die/das **-e**",
+            "example": "1. **Der neue** Lehrer ist nett. (Yangi o'qituvchi muloyim.)\n2. Ich spreche mit **dem neuen** Lehrer. (Men yangi o'qituvchi bilan gaplashyapman.)\n3. Er kauft **den blauen** Mantel. (U ko'k paltoni sotib olyapti.)"
+        },
+        {
+            "id": "ua2_38",
+            "title": "Unit 38: Komparativ und Vergleichssätze",
+            "description": "Sifatlarning qiyosiy darajasi",
+            "content": "Ikki narsani o'zaro solishtirish uchun ishlatiladi.\n\n### ⚖️ Formula:\nSifat + **-er** ... **als** (dan ko'ra)\n\n> [!NOTE]\n> Ba'zi sifatlar `umlaut` oladi: *alt -> **älter**, groß -> **größer**, jung -> **jünger***.",
+            "example": "1. Mein Auto ist **schneller als** dein Auto. (Mening mashinam senikidan tezroq.)\n2. Berlin ist **größer als** Hamburg. (Berlin Hamburgdan kattaroq.)\n3. Er ist **älter als** ich. (U mendan yoshroq.)"
+        },
+        {
+            "id": "ua2_39",
+            "title": "Unit 39: Superlativ",
+            "description": "Sifatlarning orttirma darajasi",
+            "content": "Eng yuqori darajani ko'rsatish uchun ishlatiladi.\n\n### 🏆 Turlari:\n1. Predikativ (gap oxirida): **am ...-sten** (*am schnellsten*)\n2. Atributiv (otdan oldin): **der/die/das ...-ste** (*der schnellste Mann*)\n\n**Istisnolar:** *gut -> am besten, viel -> am meisten, gern -> am liebsten*.",
+            "example": "1. Er läuft **am schnellsten**. (U eng tez yuguradi.)\n2. Das ist **das schönste** Haus. (Bu eng chiroyli uy.)\n3. Welches Buch ist **am besten**? (Qaysi kitob eng yaxshisi?)"
+        },
+        {
+            "id": "ua2_40",
+            "title": "Unit 40: Und, aber, oder, denn",
+            "description": "Hauptsätze verbinden (Position 0)",
+            "content": "Bog'lovchilar gaplarni bog'laydi va so'z tartibiga ta'sir qilmaydi (Position 0).",
+            "example": "Ich lerne Deutsch, denn ich möchte in Berlin leben.\nEr kommt, aber er hat keine Zeit."
+        },
+        {
+            "id": "ua2_41",
+            "title": "Unit 41: Deshalb, sonst, dann, danach",
+            "description": "Adverbial bog'lovchilar (Position 1)",
+            "content": "Bu bog'lovchilar gapda ravish vazifasini bajaradi va 1-o'rinda keladi. Fe'l esa darhol ulardan keyin (2-o'rinda) keladi.\n\n### 🔗 Bog'lovchilar ma'nosi:\n- **deshalb** : Shuning uchun (sabab).\n- **sonst** : Aks holda.\n- **dann / danach** : Keyin / so'ngra (ketma-ketlik).\n\n> [!IMPORTANT]\n> So'z tartibi: `Bog'lovchi` + `Fe'l` + `Ega` ...",
+            "example": "1. Ich bin krank, **deshalb bleibe** ich zu Hause. (Men kasalman, shuning uchun uyda qolaman.)\n2. Beeil dich, **sonst kommen** wir zu spät. (Shoshil, aks holda kech qolamiz.)\n3. Erst frühstücken wir, **dann gehen** wir spazieren. (Oldin nonushta qilamiz, keyin sayrga chiqamiz.)"
+        },
+        {
+            "id": "ua2_42",
+            "title": "Unit 42: Weil, dass und wenn",
+            "description": "Ergash gaplar (Nebensätze)",
+            "content": "Ergash gaplarda f'el har doim gapning **eng oxiriga** o'tadi. Bog'lovchi esa gapni boshlaydi.\n\n### 🧩 Bog'lovchilar:\n- **weil** : Chunki (sabab).\n- **dass** : -ki / ekanligini (xabar).\n- **wenn** : Agar / qachonki (shart/vaqt).\n\n> [!NOTE]\n> Bosh gap va ergash gap har doim vergul bilan ajratiladi.",
+            "example": "1. Ich lerne, **weil** ich eine Prüfung **habe**. (Chunki imtihonim bor.)\n2. Er sagt, **dass** er morgen **kommt**. (U ertaga kelishini aytyapti.)\n3. **Wenn** es regnet, **bleibe** ich zu Hause. (Agar yomg'ir yog'sa, uyda qolaman.)"
+        },
+        {
+            "id": "ua2_43",
+            "title": "Unit 43: Positionsadverbien und Direktionaladverbien",
+            "description": "Holat va yo'nalish ravishlari",
+            "content": "Qayerda ekanligini (tinchlik) yoki qayerga ketayotganini (harakat) bildiruvchi ravishlar.\n\n### 🧭 Ravishlar:\n- **da / dort** : u yerda.\n- **dahin / dorthin** : u yerga.\n- **rauf / runter** : tepaga / pastga.\n- **rein / raus** : ichkariga / tashqariga.",
+            "example": "1. Ich bin schon **da**. (Men allaqachon shu yerdaman.)\n2. Gehen wir **dahin**? (U yerga boramizmi?)\n3. Komm mal **rauf**! (Tepaga chiq-chi!)"
+        },
+        {
+            "id": "ua2_44",
+            "title": "Unit 44: Partikeln",
+            "description": "Ma'no kuchaytiruvchi yuklamalar",
+            "content": "Nemis tilida gapning hissiy rangini o'zgartiruvchi kichik so'zlar bor. Ularni tarjima qilish qiyin, lekin ular nutqni 'jonli' qiladi.\n\n### ✨ Partikullar:\n- **mal** : iltimosni muloyim qiladi (*Komm mal!*).\n- **doch** : qarshi fikrni bildiradi yoki ta'kidlaydi (*Komm doch!*).\n- **ja** : hayratni yoki aniq narsani bildiradi (*Das ist ja toll!*).\n- **denn** : so'roq gapda qiziqishni oshiradi (*Wie alt bist du denn?*).",
+            "example": "1. Kannst du **mal** helfen? (Yordam bera olmaysizmi?)\n2. Das ist **ja** fantastisch! (Bu haqiqatdan ham ajoyib!)\n3. Iss **doch** etwas! (Biror narsa yesang-chi!)"
+        },
+        {
+            "id": "ua2_45",
+            "title": "Unit 45: Komposita",
+            "description": "Qo'shma so'zlar yasalishi",
+            "content": "Nemis tili uzun qo'shma so'zlari bilan mashhur. Ikki yoki undan ortiq so'z birlashib yangi ma'no beradi.\n\n### 📏 Qoidalar:\n1. Oxirgi so'z asosiy so'z hisoblanadi.\n2. Butun so'zning **artikli** oxirgi so'zga qarab belgilanadi.\n\n*das Haus + die Tür = die Haustür* (Uy eshigi)",
+            "example": "1. Der **Apfelkuchen** schmeckt gut. (Apfel + Kuchen)\n2. Wo ist moy **Hausschlüssel**? (Haus + Schlüssel)\n3. Er ist **Kinderarzt**. (Kinder + Arzt)"
+        },
+        {
+            "id": "ua2_46",
+            "title": "Unit 46: -chen, -lein, -er, -in, -ung",
+            "description": "So'z yasovchi qo'shimchalar",
+            "content": "Qo'shimchalar orqali so'zning jinsi va ma'nosini aniqlash mumkin.\n\n### 🛠️ Qo'shimchalar:\n- **-chen / -lein** : Kichraytirma (har doim **das**). *das Brötchen*.\n- **-in** : Ayol jinsi kasblari (har doim **die**). *die Lehrerin*.\n- **-ung** : Fe'ldan ot yasash (har doim **die**). *die Wohnung*.\n- **-er** : Shaxs yoki asbob. *der Fahrer, der Toaster*.",
+            "example": "1. Das **Kätzchen** ist süß. (Mushukcha juda shirin.)\n2. Meine **Wohnung** ist groß. (Mening kvartiram katta.)\n3. Sie ist **Ärztin**. (U shifokor ayol.)"
+        },
+        {
+            "id": "ua2_47",
+            "title": "Unit 47: Zusammengesetzte Verben",
+            "description": "Murakkab fe'llar",
+            "content": "F'elning boshqa so'z turkumlari (ot, sifat, ravish) bilan birikishi.\n\n✅ `spazierengehen`, `radfahren`, `kennenlernen`.\n\nOdatda ular ajraladi: *Ich **lerne** dich **kennen**.*",
+            "example": "1. Wir **gehen** heute **spazieren**. (Biz bugun sayrga chiqamiz.)\n2. Er **fährt** gern **Rad**. (U velosiped haydashni yaxshi ko'radi.)\n3. Ich möchte dich **kennenlernen**. (Siz bilan tanishmoqchiman.)"
+        },
+        {
+            "id": "ua2_48",
+            "title": "Unit 48: Genusregeln",
+            "description": "Artiklarni aniqlash qoidalari",
+            "content": "Artiklarni yodlash qiyin bo'lsa, so'zning oxiriga qarab taxmin qilish mumkin.\n\n### 💎 Tipik artikllar:\n- **der** : -ismus, -or, -er, -ent. (Erkak jinsi)\n- **die** : -ung, -heit, -keit, -schaft, -tion, -tät. (Ayol jinsi)\n- **das** : -um, -ment, -ma, -chen. (O'rta jins)",
+            "example": "1. Die **Freiheit** ist wichtig. (-heit -> die)\n2. Das **Zentrum** ist weit weg. (-um -> das)\n3. Der **Optimismus** hilft. (-ismus -> der)"
+        }
+    ],
+    "B1": [
+        {
+            "id": "ub1_49",
+            "title": "Unit 49: Präteritum: regelmäßige und unregelmäßige Verben",
+            "description": "O'tgan zamonning yozma shakli",
+            "content": "Präteritum - asosan hikoya va matnlarda ishlatiladigan o'tgan zamon. \n\n### ⚒️ Yasalishi:\n- **Muntazam fe'llar**: `o'zak` + `-te` (*lernte, arbeitete*).\n- **Nomuntazam fe'llar**: O'zak unlisi o'zgaradi va maxsus shakl oladi (*ging, sah, kam*).\n\n> [!NOTE]\n> `ich` va `er/sie/es` shaxslarida qo'shimcha bir xil bo'ladi (ich ging, er ging).",
+            "example": "1. Es **war** einmal ein König. (Bir bor ekan, bir yo'q ekan, bir podshoh bo'lgan ekan.)\n2. Wir **besuchten** gestern das Museum. (Biz kecha muzeyga bordik.)\n3. Er **schrieb** einen langen Brief. (U uzun xat yozdi.)"
+        },
+        {
+            "id": "ub1_50",
+            "title": "Unit 50: Perfekt oder Präteritum?",
+            "description": "Zamonlarni to'g'ri tanlash",
+            "content": "Nemis tilida o'tgan zamonni tanlash kontekstga bog'liq.\n\n### ⚖️ Farqlar:\n1. **Perfekt**: Jonli muloqot, do'stlar bilan suhbat. *Ich habe gegessen.*\n2. **Präteritum**: Gazeta, kitob, yangiliklar. *Er ging nach Hause.*\n\n> [!TIP]\n> Kundalik hayotda `war` (sein) va `hatte` (haben) har doim Präteritumda ishlatilishi tavsiya etiladi.",
+            "example": "1. **Gestern war** ich im Kino. (Kecha kinoda edim.)\n2. Er **hat** mir alles **erzählt**. (U menga hamma narsani aytib berdi.)\n3. Wo **warst** du? (Qayerda eding?)"
+        },
+        {
+            "id": "ub1_51",
+            "title": "Unit 51: Plusquamperfekt",
+            "description": "O'tgan zamondan oldingi zamon",
+            "content": "Bu zamon o'tmishdagi ikki harakatdan qaysi biri birinchisidir sodir bo'lganini bildirish uchun ishlatiladi.\n\n### ⚙️ Formula:\n`war / hatte` + `Partizip II` \n\n*Hamma kelishidan oldin, men ovqatni **yeb bo'lgan edim**.*",
+            "example": "1. Nachdem er **gegessen hatte**, ging er spazieren. (U ovqatlanib bo'lgach, sayrga chiqdi.)\n2. Ich **hatte** das schon **vergessen**. (Men buni allaqachon unutib bo'lgan edim.)\n3. Sie **war** bereits **gegangen**. (U allaqachon ketib bo'lgan edi.)"
+        },
+        {
+            "id": "ub1_52",
+            "title": "Unit 52: Futur 1",
+            "description": "Kelasi zamon",
+            "content": "Kelajakdagi rejalar yoki taxminlarni bildirish uchun ishlatiladi.\n\n### ⚙️ Formula:\n`werden` (tuslangan) + `Infinitiv` (gap oxirida) \n\n*Men ertaga Berlinga **boraman**.*",
+            "example": "1. Ich **werde** morgen **anrufen**. (Men ertaga qo'ng'iroq qilaman.)\n2. Das Wetter **wird** morgen schön **sein**. (Ertaga ob-havo yaxshi bo'ladi.)\n3. Was **wirst** du im Sommer **machen**? (Yozda nima qilasan?)"
+        },
+        {
+            "id": "ub1_53",
+            "title": "Unit 53: Passiv: Präsens und Präteritum",
+            "description": "Majhul nisbat (Präsens/Präteritum)",
+            "content": "Passivda diqqat markazida harakat bajaruvchisi emas, balki harakatning o'zi turadi.\n\n### ⚙️ Formula:\n- **Präsens**: `werden` + `Partizip II`\n- **Präteritum**: `wurden` + `Partizip II` \n\n*Mashina **ta'mirlanyapti**.*",
+            "example": "1. Das Auto **wird repariert**. (Mashina ta'mirlanyapti.)\n2. Das Haus **wurde** 1990 **gebaut**. (Uy 1990-yilda qurilgan.)\n3. Hier **wird** nicht **geraucht**. (Bu yerda chekilmaydi.)"
+        },
+        {
+            "id": "ub1_54",
+            "title": "Unit 54: Passiv: Perfekt und Plusquamperfekt",
+            "description": "Majhul nisbatning tugallangan shakli",
+            "content": "O'tgan zamonda passivni yasash uchun `worden` so'zi ishlatiladi.\n\n### ⚙️ Formula:\n`ist` + `Partizip II` + `worden` \n\n*Xat **yozib bo'lindi**.*",
+            "example": "1. Der Brief **ist geschrieben worden**. (Xat yozib bo'lindi.)\n2. Die Pizza **ist gegessen worden**. (Pizza yeb bo'lindi.)\n3. Das Problem **ist gelöst worden**. (Muammo hal qilindi.)"
+        },
+        {
+            "id": "ub1_55",
+            "title": "Unit 55: Passiv mit Modalverben",
+            "description": "Modal fe'lli majhul nisbat",
+            "content": "Modal fe'llar bilan passiv yasashda modal fe'l 2-o'rinda, qolgan qism gap oxirida keladi.\n\n### ⚙️ Formula:\n`Modal fe'l` + `Partizip II` + `werden` \n\n*Bu ish bugun **bajarilishi kerak**.*",
+            "example": "1. Die Hausaufgabe **muss gemacht werden**. (Uyga vazifa qilinishi kerak.)\n2. Hier **darf** nicht **geparkt werden**. (Bu yerda mashina qo'yish mumkin emas.)\n3. Das **sollte** bald **erledigt werden**. (Buni tezda hal qilish kerak edi.)"
+        },
+        {
+            "id": "ub1_56",
+            "title": "Unit 56: Konjunktiv 2: Formen",
+            "description": "Noreal orzular uchun yasalish shakllari",
+            "content": "Konjunktiv 2 - bu noreal orzular, muloyim iltimoslar yoki maslahatlar uchun ishlatiladigan fe'l shakli.\n\n### ⚙️ Yasalishi:\n- **`sein`**: `wäre`\n- **`haben`**: `hätte`\n- **Boshqa fe'llar**: `würde` + `Infinitiv` (ko'pincha) yoki Präteritum o'zagiga `Umlaut` va `-e` qo'shish (*ginge, käme*).\n\n> [!NOTE]\n> Modal fe'llar ham Konjunktiv 2 shakliga ega: *könnte, müsste, dürfte, sollte, wollte*.",
+            "example": "1. Ich **wäre** jetzt gern im Urlaub. (Men hozir ta'tilda bo'lishni xohlardim.)\n2. Wenn ich Geld **hätte**, **würde** ich ein Auto **kaufen**. (Agar pulim bo'lganda, mashina sotib olardim.)\n3. **Könntest** du mir helfen? (Menga yordam bera olarmiding?)"
+        },
+        {
+            "id": "ub1_57",
+            "title": "Unit 57: Konjunktiv 2: Gebrauch",
+            "description": "Konjunktiv 2 ning ishlatilishi",
+            "content": "Konjunktiv 2 asosan quyidagi holatlarda ishlatiladi:\n\n1. **Noreal orzular/shartlar**: *Wenn ich reich wäre, würde ich reisen.*\n2. **Muloyim iltimoslar**: *Könnten Sie mir helfen?*\n3. **Maslahatlar**: *Du solltest mehr lernen.*\n4. **Taqqoslashlar**: *Er tut so, als ob er alles wüsste.*",
+            "example": "1. Ich **würde** gern nach Japan **fliegen**. (Men Yaponiyaga uchishni xohlardim.)\n2. Es **wäre** schön, wenn du **käme**. (Agar kelsang, yaxshi bo'lardi.)\n3. **Hättest** du einen Moment Zeit für mich? (Mening uchun bir oz vaqting bormidi?)"
+        },
+        {
+            "id": "ub1_58",
+            "title": "Unit 58: Verben mit Präpositionalobjekt",
+            "description": "Predlogli fe'llar",
+            "content": "Ba'zi fe'llar har doim ma'lum bir predlog va kelishikni talab qiladi. Bu predloglar fe'lning ma'nosini o'zgartirishi mumkin.\n\n### 📝 Ba'zi misollar:\n- **warten auf** (+ Akk): kutmoq.\n- **denken an** (+ Akk): o'ylamoq.\n- **träumen von** (+ Dat): tush ko'rmoq/orzu qilmoq.\n- **sich freuen auf** (+ Akk): kelajakdagi narsadan xursand bo'lmoq.\n- **sich interessieren für** (+ Akk): qiziqmoq.",
+            "example": "1. Ich **warte auf** den Bus. (Men avtobusni kutyapman.)\n2. Er **denkt an** seine Familie. (U oilasi haqida o'ylayapti.)\n3. Wir **freuen uns auf** den Urlaub. (Biz ta'tilni intizorlik bilan kutamiz.)"
+        },
+        {
+            "id": "ub1_59",
+            "title": "Unit 59: Indirekte Fragen",
+            "description": "Bilvosita so'roq gaplar",
+            "content": "Muloyimlikni oshirish uchun savollarni bilvosita berish usuli. Ergash gaplarda fe'l har doim oxirida keladi.\n\n### 🧩 Bog'lovchilar:\n- **ob**: Ha/yo'q savollari uchun.\n- **W-so'zlar**: Kim, nima, qayerda, qachon kabi so'roq so'zlar.\n\n*Siz bilmaysizmi, **poyezd qachon keladi**?*",
+            "example": "1. Können Sie mir sagen, **wo** der Bahnhof **ist**? (Vokzal qayerdaligini ayta olasizmi?)\n2. Wisst ihr, **ob** es heute regnet? (Bugun yomg'ir yog'ishini bilmaysizlarmi?)\n3. Ich frage mich, **warum** er nicht kommt. (Nega u kelmayapti ekan-a?)"
+        },
+        {
+            "id": "ub1_60",
+            "title": "Unit 60: Adjektive mit Präpositionen",
+            "description": "Predlogli sifatlar",
+            "content": "Xuddi fe'llar kabi, sifatlar ham ma'lum predloglarni talab qiladi. Bu birikmalar sifatning ma'nosini to'ldiradi.\n\n### 📝 Ba'zi misollar:\n- **stolz auf** (+ Akk): faxrlanmoq.\n- **zufrieden mit** (+ Dat): mamnun bo'lmoq.\n- **interessiert an** (+ Dat): qiziqmoq.\n- **wütend auf** (+ Akk): jahli chiqmoq.\n- **gut in** (+ Dat): biror narsada yaxshi bo'lmoq.",
+            "example": "1. Ich bin **stolz auf** dich. (Men sendan faxrlanaman.)\n2. Er ist **zufrieden mit** seinem Job. (U o'z ishidan mamnun.)\n3. Wir sind **interessiert an** diesem Projekt. (Biz bu loyihaga qiziqamiz.)"
+        },
+        {
+            "id": "ub1_61",
+            "title": "Unit 61: Das Verb lassen",
+            "description": "Lassen fe'li va uning turlari",
+            "content": "`lassen` fe'li bir necha ma'nolarda ishlatiladi:\n\n1. **Qoldirmoq**: *Ich lasse mein Handy zu Hause.*\n2. **Buyurtma qilmoq**: *Ich lasse mein Auto reparieren.*\n3. **Ruxsat bermoq**: *Lass mich gehen!*\n4. **Taklif qilish** (Lass uns...): *Lass uns ins Kino gehen!*",
+            "example": "1. Ich **lasse** mir die Haare schneiden. (Men sochlarimni kestiryapman - buyurtma.)\n2. **Lass** das bitte! (Iltimos, buni qo'y/to'xtat!)\n3. **Lassen** wir uns überraschen. (Keling, hayron qolaylik.)"
+        },
+        {
+            "id": "ub1_62",
+            "title": "Unit 62: Positions- und Direktionsverben",
+            "description": "Holat va harakat fe'llari",
+            "content": "Nemis tilida holat (Dativ) va harakat (Akkusativ) fe'llari juftlik bo'lib keladi.\n\n- **liegen** (yotmoq - Dat) vs **legen** (qo'ymoq - Akk).\n- **stehen** (turmoq - Dat) vs **stellen** (tik qo'ymoq - Akk).\n- **sitzen** (o'tirmoq - Dat) vs **setzen** (o'tqazmoq - Akk).",
+            "example": "1. Das Buch **liegt** auf dem Tisch. (Kitob stol ustida yotipti.)\n2. Ich **lege** das Buch auf den Tisch. (Men kitobni stol ustiga qo'yyapman.)\n3. Er **steht** an der Tür. (U eshik oldida turibdi.)"
+        },
+        {
+            "id": "ub1_63",
+            "title": "Unit 63: Genitiv",
+            "description": "Qaratqich kelishigi",
+            "content": "Genitiv egalikni bildiradi (kimning? nimaning?).\n\n### 🔄 Artikl o'zgarishi:\n- Erkak/O'rta: **des ...-(e)s** (*des Vaters, des Hauses*).\n- Ayol/Ko'plik: **der** (*der Mutter, der Kinder*).\n\n> [!NOTE]\n> Ismlar bilan ham Genitiv ishlatiladi: *Max' Auto, Marias Tasche*.",
+            "example": "1. Das ist das Auto **meines Vaters**. (Bu dadamning mashinasi.)\n2. Die Hauptstadt **der Schweiz** ist Bern. (Shveysariyaning poytaxti - Bern.)\n3. Wir gedenken **der Toten**. (Biz o'lganlarni yod etamiz.)"
+        },
+        {
+            "id": "ub1_64",
+            "title": "Unit 64: N-Deklination",
+            "description": "N-turlanishi (erkak jinsi)",
+            "content": "Ba'zi erkak jinsidagi otlar Nominativdan tashqari barcha kelishiklarda **-n** yoki **-en** qo'shimchasini oladi.\n\n### 📝 Tipik otlar:\n- Yashovchilar: *der Franzose, der Russe*.\n- Hayvonlar: *der Löwe, der Hase*.\n- Kasb/Shaxs: *der Student, der Journalist, der Herr*.",
+            "example": "1. Ich frage den **Journalisten**. (Men jurnalistdan so'rayapman.)\n2. Er spricht mit dem **Studenten**. (U talaba bilan gaplashyapti.)\n3. Kennst du diesen **Herrn**? (Siz bu janobni taniysizmi?)"
+        },
+        {
+            "id": "ub1_66",
+            "title": "Unit 66: Adjektive als neutrale Nomen",
+            "description": "Sifatdan yasalgan o'rta jinsli otlar",
+            "content": "Sifatlar `etwas`, `nichts`, `viel`, `wenig`, `alles` so'zlaridan keyin kelganda o'rta jinsli otga aylanadi.\n\n### ⚒️ Yasalishi:\nSifatning birinchi harfi katta yoziladi va **-es** qo'shimchasi qo'shiladi.\n\n- `neu` -> **etwas Neues** (biror yangi narsa).\n- `gut` -> **alles Gute** (hamma yaxshi narsalar).",
+            "example": "1. Ich wünsche dir **alles Gute**. (Senga barcha yaxshiliklarni tilayman.)\n2. Hast du **etwas Neues** gehört? (Biror yangi gap eshitdingmi?)\n3. Das ist **nichts Besonderes**. (Bu alohida/g'ayrioddiy narsa emas.)"
+        },
+        {
+            "id": "ub1_67",
+            "title": "Unit 67: Infinitiv mit zu",
+            "description": "Fe'lning 'zu' bilan kelishi",
+            "content": "Agarda gapda ikkita fe'l kelsa va ikkinchi fe'l yordamchi yoki modal fe'l bo'lmasa, u gap oxirida `zu` bilan keladi.\n\n### 🧩 Ishlatilishi:\n1. Otlardan keyin: *Ich habe Lust, ... zu essen.*\n2. Sifatlardan keyin: *Es ist wichtig, ... zu lernen.*\n3. Ma'lum fe'llardan keyin: *Ich hoffe, ... zu kommen.*",
+            "example": "1. Ich habe vergessen, dich **anzurufen**. (Senga qo'ng'iroq qilishni unutibman.)\n2. Es ist schwierig, Deutsch **zu lernen**. (Nemis tilini o'rganish qiyin.)\n3. Er versucht, pünktlich **zu sein**. (U vaqtida kelishga harakat qilyapti.)"
+        },
+        {
+            "id": "ub1_68",
+            "title": "Unit 68: Infinitiv ohne zu",
+            "description": "'zu' yuklamasisiz infinitiv",
+            "content": "Ba'zi fe'llar o'zidan keyin keladigan ikkinchi fe'l bilan `zu` ni talab qilmaydi.\n\n### 📝 Ro'yxat:\n- **Modal fe'llar**: *können, müssen, ...*\n- **Hissiyot fe'llari**: *sehen, hören, fühlen*.\n- **Harakat fe'llari**: *gehen, fahren, kommen*.\n- **lassen** va **bleiben** (ba'zan).",
+            "example": "1. Ich **kann** gut **schwimmen**. (Men yaxshi suza olaman.)\n2. Ich **sehe** dich **kommen**. (Sening kelayotganingni ko'ryapman.)\n3. Wir **gehen** bugun **tanzen**. (Biz bugun raqsga tushgani boramiz.)"
+        },
+        {
+            "id": "ub1_69",
+            "title": "Unit 69: Relativsätze 1: Nominativ und Akkusativ",
+            "description": "Nisbiy gaplar (Kimki, qaysiki...)",
+            "content": "Nisbiy gaplar otdan keyin kelib, uni tushuntirib beradi. Ular nisbiy olmoshlar (der, die, das) orqali yasaladi.\n\n### ⚖️ Kelishiklar:\n- **Nominativ**: *Der Mann, **der** dort steht...*\n- **Akkusativ**: *Der Mann, **den** ich sehe...*",
+            "example": "1. Das ist der Film, **den** ich sehr **mag**. (bu men juda yaxshi ko'radigan film.)\n2. Die Frau, **die** dort **arbeitet**, ist meine Tante. (U yerda ishlaydigan ayol mening ammam/xolam.)\n3. Wo ist das Buch, **das** ich **gekauft habe**? (Men sotib olgan kitob qayerda?)"
+        },
+        {
+            "id": "ub1_70",
+            "title": "Unit 70: Relativsätze 2: Dativ und Präpositionen",
+            "description": "Predlogli nisbiy gaplar",
+            "content": "Nisbiy olmoshlar Dativda ham kelishi yoki predloglar bilan birga ishlatilishi mumkin.\n\n### 🔄 Dativ shakllari:\n- der -> **dem**\n- die -> **der**\n- das -> **dem**\n- die (Pl) -> **denen** \n\n*Die Kinder, **denen** ich helfe...*",
+            "example": "1. Das ist die Frau, **mit der** ich **gesprochen habe**. (Bu men gaplashgan ayol.)\n2. Die Leute, **denen** wir **helfen**, sind froh. (Biz yordam berayotgan odamlar xursand.)\n3. Das Haus, **in dem** ich **wohne**, ist alt. (Men yashayotgan uy eski.)"
+        },
+        {
+            "id": "ub1_71",
+            "title": "Unit 71: Temporale Nebensätze mit wenn und als",
+            "description": "Vaqt ergash gaplari (qachonki...)",
+            "content": "Vaqtni bildirish uchun `wenn` yoki `als` ishlatiladi. Tanlash o'tmishga bog'liq.\n\n### ⚖️ Farqi:\n- **als**: O'tmishda faqat **bir marta** sodir bo'lgan voqea uchun.\n- **wenn**: Hozirgi/kelasi zamon yoki o'tmishda **takrorlangan** voqea uchun.",
+            "example": "1. **Als** ich ein Kind **war**, hatte ich einen Hund. (Men bola bo'lganimda, itim bor edi - bir marta bo'lgan davr.)\n2. **Wenn** ich Zeit **habe**, besuche ich dich. (Vaqtim bo'lganda seni ko'rgani boraman - har doim.)\n3. Immer **wenn** er **kam**, brachte er Geschenke. (U qachon kelsa, sovg'alar keltirardi.)"
+        },
+        {
+            "id": "ub1_72",
+            "title": "Unit 72: Temporale Nebensätze: während, bevor, nachdem",
+            "description": "Ketma-ketlik va vaqt munosabatlari",
+            "content": "Harakatlarning vaqt bo'yicha bog'liqligini ko'rsatuvchi bog'lovchilar.\n\n- **während** : Bir vaqtda (davomida).\n- **bevor** : Oldin.\n- **nachdem** : Keyin.\n- **bis** : -gacha.",
+            "example": "1. **Während** ich **koche**, höre ich Musik. (Ovqat pishirayotganimda musiqa eshitaman.)\n2. Waschen Sie sich die Hände, **bevor** Sie **essen**. (Ovqatlanishdan oldin qo'lingizni yuving.)\n3. **Nachdem** er **gegessen hatte**, ging er spazieren. (U ovqatlangach, sayrga chiqdi.)"
+        },
+        {
+            "id": "ub1_73",
+            "title": "Unit 73: Finalsätze: um ... zu / damit",
+            "description": "Maqsad ergash gaplar",
+            "content": "Maqsadni bildirish uchun ikki xil usul bor.\n\n### ⚖️ Qoidalar:\n- **um ... zu** : Agar bosh va ergash gapda **ega bir xil** bo'lsa. (*Ich lerne, um zu verstehen.*)\n- **damit** : Agar **egalar har xil** bo'lsa. (*Ich helfe dir, damit du lernst.*)",
+            "example": "1. Er lernt Deutsch, **um** in Berlin **zu studieren**. (U Berlinda o'qish uchun nemis tilini o'rganyapti.)\n2. Ich gebe dir Geld, **damit** du dir ein Buch **kaufst**. (Senga kitob sotib olishing uchun pul beryapman.)\n3. Wir beeilen uns, **um** den Bus nicht **zu verpassen**. (Avtobusga kechikmaslik uchun shoshilyapmiz.)"
+        },
+        {
+            "id": "ub1_74",
+            "title": "Unit 74: Doppelkonnektoren",
+            "description": "Juftlik bog'lovchilari",
+            "content": "Ikki qismdan iborat bog'lovchilar gapda murakkab munosabatlarni bildiradi.\n\n- **sowohl ... als auch** : ham ... ham.\n- **nicht nur ... sondern auch** : nafaqat ... balki.\n- **entweder ... oder** : yo ... yoki.\n- **weder ... noch** : na ... va na.\n- **zwar ... aber** : to'g'ri ... lekin.",
+            "example": "1. Er spricht **sowohl** Deutsch **als auch** Englisch. (U ham nemischa, ham inglizcha gapiradi.)\n2. Ich möchte **entweder** Pizza **oder** Pasta. (Men yo pizza, yo pasta xohlayman.)\n3. Das Wetter ist **zwar** schön, **aber** kalt. (Ob-havo yaxshi-yu, lekin sovuq.)"
+        },
+        {
+            "id": "ub1_75",
+            "title": "Unit 75: Vergleichssätze: je ... desto",
+            "description": "Qiyosiy bog'lanish (qancha ... shuncha)",
+            "content": "Ikki holatning bir-biriga mutanosib ravishda o'zgarishini bildiradi.\n\n### ⚙️ Formula:\n**je** + `Sifat (komparativ)` + `Ega` ... + `Fe'l` (oxirida),\n**desto** + `Sifat (komparativ)` + `Fe'l` (2-o'rni) + `Ega` ...",
+            "example": "1. **Je mehr** du lernst, **desto besser** verstehst du. (Qancha ko'p o'qisang, shuncha yaxshi tushunasan.)\n2. **Je älter** man wird, **desto klüger** wird man. (Inson qancha keksaysa, shuncha dono bo'ladi.)\n3. **Je früher** du kommst, **desto besser**. (Qancha erta kelsang, shuncha yaxshi.)"
+        },
+        {
+            "id": "ub1_76",
+            "title": "Unit 76: Präpositionen mit Genitiv",
+            "description": "Genitivni talab qiluvchi predloglar",
+            "content": "Ushbu predloglardan keyin keladigan ot har doim Genitiv kelishigida bo'lishi kerak.\n\n- **wegen** : tufayli (sabab).\n- **trotz** : -ga qaramay.\n- **während** : davomida (vaqt).\n- **statt / anstatt** : o'rniga.",
+            "example": "1. **Wegen des Regens** bleiben wir zu Hause. (Yomg'ir tufayli uyda qolamiz.)\n2. **Trotz der Kälte** spielen die Kinder draußen. (Sovuqqa qaramay, bolalar tashqarida o'ynashyapti.)\n3. **Während des Urlaubs** habe ich viel gelesen. (Ta'til davomida ko'p kitob o'qidim.)"
+        },
+        {
+            "id": "ub1_77",
+            "title": "Unit 77: Adjektivdeklination: Zusammenfassung",
+            "description": "Sifat turlanishi (Umumlashtirish)",
+            "content": "Sifat turlanishining uchta turi (aniq artikl, noaniq artikl va artiklsiz) mavjudligini eslab qolish kerak.\n\n1. **Aniq artikldan keyin**: `-e` / `-en` (kuchli).\n2. **Noaniq artikldan keyin**: jins qo'shimchalari (kuchsiz).\n3. **Artiklsiz**: artikl qo'shimchalari (erkin).",
+            "example": "1. Der **gute** Wein. (Aniq)\n2. Ein **guter** Wein. (Noaniq)\n3. **Guter** Wein schmeckt. (Artiklsiz)"
+        },
+        {
+            "id": "ub1_78",
+            "title": "Unit 78: Partizip 1 als Adjektiv",
+            "description": "Sifatdosh 1 sifat vazifasida",
+            "content": "Fe'lning infinitiv shakliga **-d** qo'shish orqali yasaladi va hozirgi vaqtda davom etayotgan harakatni sifat sifatida ifodalaydi.\n\n*lachen + d = lachend* (kulayotgan)",
+            "example": "1. Ein **lachendes** Kind ist glücklich. (Kulayotgan bola baxtlidir.)\n2. Die **singenden** Vögel sind schön. (Sayrayotgan qushlar chiroyli.)\n3. Wir sehen die **untergehende** Sonne. (Biz botayotgan quyoshni ko'ryapmiz.)"
+        },
+        {
+            "id": "ub1_79",
+            "title": "Unit 79: Partizip 2 als Adjektiv",
+            "description": "Sifatdosh 2 sifat vazifasida",
+            "content": "Perfekt zamonidagi Partizip II shakli sifat sifatida ishlatiladi va tugallangan harakatni bildiradi.\n\n*kochen -> gekocht* (pishirilgan)",
+            "example": "1. Ich esse gern **gekochte** Eier. (Men pishirilgan tuxumlarni yaxshi ko'raman.)\n2. Ein **verkauftes** Auto ist weg. (Sotilgan mashina ketgan.)\n3. Die **geöffnete** Tür ist blau. (Ochilgan eshik ko'k rangda.)"
+        },
+        {
+            "id": "ub1_80",
+            "title": "Unit 80: Wortbildung: substantivierte Adjektive",
+            "description": "Sifatdan ot yasalishi",
+            "content": "Sifatlardan shaxs yoki mavhum tushunchalarni ifodalovchi otlar yasash mumkin.\n\n- **der Große** (katta kishi).\n- **das Schöne** (go'zallik).\n- **die Neue** (yangi kelgan ayol).",
+            "example": "1. **Der Alte** liest eine Zeitung. (Qariya gazeta o'qiyapti.)\n2. Ich liebe **das Besondere**. (Men o'zgachalikni yaxshi ko'raman.)\n3. **Die Angestellten** streiken. (Ishchilar ish tashlashmoqda.)"
+        }
+    ],
+    "B2": [
+        {
+            "id": "ub2_81",
+            "title": "Unit 81: Verbposition in einfachen Sätzen",
+            "description": "Sodda gapda fe'lning o'rni",
+            "content": "B2 darajasida gap tuzilishi yanada murakkablashadi, lekin asosiy qoida o'zgarmaydi: fe'l har doim 2-o'rinda.\n\n### 📐 Qoidalar:\n1. **Darak gap**: Fe'l 2-o'rinda. *Heute **gehe** ich nach Hause.*\n2. **So'roq gap (W-Frage)**: Fe'l 2-o'rinda. *Wann **kommst** du?*\n3. **Buyruq yoki ha/yo'q so'roq**: Fe'l 1-o'rinda. * **Komm** her! / **Kommst** du bugun?*\n\nGapning oxirida esa fe'lning ikkinchi qismi (infinitiv, prefiks yoki Partizip II) keladi. Bu 'Satzklammer' (gap qavsi) deb ataladi.",
+            "example": "1. **Gestern habe** ich viel gearbeitet. (Kecha ko'p ishladim.)\n2. **Vielleicht können** wir morgen ins Kino gehen. (Balki ertaga kinoga borarmiz.)\n3. **Trink** doch noch einen Kaffee! (Yana bir finjon kofe ichsang-chi!)"
+        },
+        {
+            "id": "ub2_82",
+            "title": "Unit 82: Verbposition in Satzverbindungen",
+            "description": "Bog'langan gaplarda fe'l tartibi",
+            "content": "Bog'lovchilar turiga qarab fe'lning o'rni o'zgaradi.\n\n### 🔗 Bog'lovchi turlari:\n1. **Null-Position (ADUSO)**: *aber, denn, und, sondern, oder*. Fe'l 2-o'rinda qoladi.\n2. **Position 1 (Ravishdoshlar)**: *deshalb, trotzdem, sonst, dann*. Fe'l darhol bog'lovchidan keyin keladi.\n3. **Endposition (Ergash gap)**: *weil, dass, obwohl, wenn*. Fe'l gap oxiriga o'tadi.\n\n> [!CAUTION]\n> Agar ergash gap gapning boshida kelsa, asosiy gapda fe'l darhol verguldan keyin (1-o'rinda) keladi.",
+            "example": "1. Ich bin müde, **aber** ich **arbeite** weiter. (Men charchaganman, lekin ishlashda davom etyapman.)\n2. Es regnet, **trotzdem gehen** wir spazieren. (Yomg'ir yog'yapti, shunga qaramay sayrga chiqyapman.)\n3. **Weil** es regnet, **bleibe** ich zu Hause. (Yomg'ir yog'ayotgani uchun uyda qolyapman.)"
+        },
+        {
+            "id": "ub2_83",
+            "title": "Unit 83: Position von Dativ- und Akkusativobjekt",
+            "description": "To'ldiruvchilarning gapdagi tartibi",
+            "content": "Gapda ham Dativ (kimga?), ham Akkusativ (nimani?) to'ldiruvchi bo'lsa, quyidagi tartibga amal qilinadi:\n\n1. **Ot + Ot**: Dativ + Akkusativ. (*Ich gebe **dem Mann** (D) **den Brief** (A).*)\n2. **Olmosh + Ot**: Olmosh + Ot. (*Ich gebe **ihm** (D) **den Brief** (A).* yoki *Ich gebe **ihn** (A) **dem Mann** (D).*)\n3. **Olmosh + Olmosh**: Akkusativ + Dativ. (*Ich gebe **ihn** (A) **ihm** (D).*)\n\n> [!TIP]\n> Olmoshlar har doim otlardan oldin kelishga intiladi (Pronomen vor Nomen).",
+            "example": "1. Er zeigt **seiner Freundin** (D) **das Foto** (A). (U o'z dugonasiga rasmni ko'rsatyapti.)\n2. Er zeigt **es** (A) **ihr** (D). (U uni unga ko'rsatyapti.)\n3. Kannst du **mir** (D) **das Buch** (A) leihen? (Menga kitobingni berib tura olasanmi?)"
+        },
+        {
+            "id": "ub2_84",
+            "title": "Unit 84: Position der Angaben im Satz (Te-Ka-Mo-Lo)",
+            "description": "Gap bo'laklarining mantiqiy tartibi",
+            "content": "Nemis tilida turli xil holatlar (vaqt, sabab, usul, joy) ma'lum bir tartibda keladi. Buni **Te-Ka-Mo-Lo** qoidasi deb atashadi.\n\n| Qisqartma | Ma'nosi | So'roq |\n| :--- | :--- | :--- |\n| **Te** | Temporal | Qachon? |\n| **Ka** | Kausal | Nima uchun? |\n| **Mo** | Modal | Qanday? |\n| **Lo** | Lokal | Qayerda? |\n\n> [!IMPORTANT]\n> Mantiqiy tartib: `Vaqt` -> `Sabab` -> `Usul` -> `Joy`.",
+            "example": "1. Er fährt **heute** (Te) **wegen des Regens** (Ka) **langsam** (Mo) **nach Hause** (Lo). (U bugun yomg'ir tufayli sekin uyga ketyapti.)\n2. Ich gehe **um 8 Uhr** (Te) **gern** (Mo) **ins Fitnessstudio** (Lo). (Men soat 8 da bajonidil fitnesga boraman.)"
+        },
+        {
+            "id": "ub2_85",
+            "title": "Unit 85: Informationen direkt zum Verb",
+            "description": "Fe'l bilan uzviy bog'langan bo'laklar",
+            "content": "Ba'zi gap bo'laklari fe'l bilan juda qattiq bog'langan bo'ladi va ko'pincha gap oxirida (Satzende) keladi:\n\n- **Harakat maqsadi (Lokalangabe)**: *nach Berlin*, *ins Bett*.\n- **Davomiylik (Dauer/Menge)**: *drei Stunden lang*, *10 Euro*.\n- **Natija/Holat**: *kaputt*, *fertig*.\n\nBu bo'laklar TeKaMoLo tartibidan keyin, fe'lning ikkinchi qismidan oldin keladi.",
+            "example": "1. Er hat **den ganzen Tag** intensiv **gelernt**. (U kun bo'yi qizg'in o'qidi.)\n2. Wir sind am Wochenende **nach Paris gefahren**. (Biz dam olish kuni Parijga bordik.)\n3. Ich möchte mit dir **ins Kino gehen**. (Men siz bilan kinoga borishni xohlayman.)"
+        },
+        {
+            "id": "ub2_86",
+            "title": "Unit 86: Position von 'nicht'",
+            "description": "Inkor so'zining gapdagi o'rni",
+            "content": "`nicht` so'zi qaysi bo'lakni inkor qilayotganiga qarab gapning turli joylarida kelishi mumkin.\n\n1. **Butun gapni inkor qilish**: `nicht` gap oxirida (lekin fe'l o'zagidan oldin). *Ich komme heute **nicht**.*\n2. **Ma'lum bir bo'lakni inkor qilish**: Inkor qilinayotgan so'zdan **oldin**. * **Nicht ich**, sondern du kommst.*\n3. **Predlogli birikmadan oldin**: *Ich warte **nicht auf dich**.*\n4. **Sifat yoki ravishdan oldin**: *Das ist **nicht gut**.*",
+            "example": "1. Ich habe das Buch **nicht gelesen**. (Men kitobni o'qimadim.)\n2. Wir gehen heute **nicht ins Kino**, sondern ins Theater. (Biz bugun kinoga emas, teatrga boramiz.)\n3. Er arbeitet **nicht viel**. (U ko'p ishlamaydi.)"
+        },
+        {
+            "id": "ub2_87",
+            "title": "Unit 87: Position von 'auch' und Fokuspartikeln",
+            "description": "Urg'u beruvchi yuklamalar o'rni",
+            "content": "`auch`, `nur`, `sogar`, `besonders` kabi so'zlar gapda urg'u berilayotgan so'zdan **to'g'ridan-to'g'ri oldin** keladi.\n\n- **nur** : faqat.\n- **sogar** : hatto.\n- **besonders** : ayniqsa.\n- **auch** : ham.\n\nAgar bu so'zlar butun gapga tegishli bo'lsa, xuddi `nicht` kabi gap oxirida (TeKaMoLo dan keyin) keladi.",
+            "example": "1. **Nur du** kannst mir helfen. (Faqatgina sen menga yordam bera olasan.)\n2. Er spricht **sogar Japanisch**. (U hatto yaponcha gapira oladi.)\n3. Kommst du **auch mit**? (Sen ham birga borasanmi?)"
+        },
+        {
+            "id": "ub2_88",
+            "title": "Unit 88: Informationsverteilung im Satz",
+            "description": "Gapdagi ma'lumotlar taqsimoti",
+            "content": "Nemis tilida ma'lumotlar 'ma'lum' (bekannt) va 'yangi' (neu) turlariga bo'linadi.\n\n1. **Ma'lum ma'lumot**: Odatda aniq artiklli bo'ladi va gapning boshrog'ida (TeKaMoLo dan oldin) keladi.\n2. **Yangi ma'lumot**: Odatda noaniq artiklli bo'ladi va gapning oxirrog'ida (TeKaMoLo dan keyin) keladi.\n\n> [!IMPORTANT]\n> Eng muhim va yangi ma'lumot har doim gapning **o'ng tomonida** (oxirida) turadi.",
+            "example": "1. Sie möchte **den Saft** (bekannt) sofort **trinken**. (U sharbatni darhol ichmoqchi.)\n2. Der Kellner serviert **dem Gast** (bekannt) sofort **einen Kaffee** (neu). (Ofitsiant mehmonga darhol kofe keltirdi.)"
+        },
+        {
+            "id": "ub2_89",
+            "title": "Unit 89: Konjunktiv 2 der Gegenwart: Formen",
+            "description": "Hozirgi zamon noreal shakllari",
+            "content": "B2 darajasida Konjunktiv 2 shakllarini (hatto kamyob fe'llarnikini ham) bilish talab qilinadi.\n\n### ⚙️ Yasalishi:\n1. **Umlaut shakllar**: Ko'pgina kuchli fe'llar Präteritum o'zagiga `-e` qo'shimchasi va `a, o, u` tovushlariga umlaut qo'shish orqali yasaladi. \n   *   *kommen -> käme*\n   *   *gehen -> ginge*\n   *   *wissen -> wüsste*\n2. **würde-konstruksiya**: Aksariyat fe'llar uchun `würde` + `Infinitiv` ishlatiladi.\n\n> [!TIP]\n> Modal fe'llarning Konjunktiv 2 shakli juda keng tarqalgan: `müsste, könnte, sollte, wollte, dürfte`.",
+            "example": "1. Wenn ich mehr Zeit **hätte**, **ginge** ich spazieren. (Agar ko'proq vaqtim bo'lganda, sayrga chiqardim.)\n2. Das **wäre** toll! (Bu ajoyib bo'lardi!)\n3. Ich **würde** gern nach Japan **reisen**. (Men Yaponiyaga sayohat qilishni xohlardim.)"
+        },
+        {
+            "id": "ub2_90",
+            "title": "Unit 90: Konjunktiv 2 der Vergangenheit: Formen",
+            "description": "O'tgan zamon noreal shakli",
+            "content": "O'tib ketgan voqealar haqidagi noreal farazlar uchun ishlatiladi.\n\n### ⚙️ Formula:\n`hätte / wäre` + `Partizip II` \n\n*   *Ich wäre gekommen.* (Kelgan bo'lardim.)\n*   *Ich hätte gelernt.* (O'qigan bo'lardim.)\n\n> [!IMPORTANT]\n> Modal fe'llar bilan: `hätte` + `Infinitiv` + `Infinitiv`. \n> *Ich hätte kommen können.* (Kela olgan bo'lardim.)",
+            "example": "1. Wenn ich das **gewusst hätte**! (Agar buni bilganimda edi!)\n2. Ich **wäre** gern mitgekommen, aber ich musste arbeiten. (Men birga borgan bo'lardim, lekin ishlashim kerak edi.)\n3. Er **hätte** die Prüfung **bestanden**, wenn er mehr gelernt **hätte**. (Agar ko'proq o'qiganda, imtihondan o'tgan bo'lardi.)"
+        },
+        {
+            "id": "ub2_91",
+            "title": "Unit 91: Höflichkeit, Vorschläge, Ratschläge und Vorwürfe",
+            "description": "Muloyimlik, maslahat va e'tirozlar",
+            "content": "Konjunktiv 2 kundalik muloqotda ohangni yumshatish uchun xizmat qiladi.\n\n### 🧩 Ishlatilishi:\n1. **Muloyim iltimos**: *Könnten Sie mir helfen?*\n2. **Vorschlag (Taklif)**: *Wir könnten ins Kino gehen.*\n3. **Ratschlag (Maslahat)**: *Du solltest mehr lernen. / An deiner Stelle würde ich...*\n4. **Vorwurf (E'tiroz/Ta'na)**: *Du hättest mir helfen können!* (O'tmish uchun).",
+            "example": "1. **Dürfte** ich Sie etwas fragen? (Sizdan bir narsa so'rasam maylimi?)\n2. Du **solltest** früher ins Bett gehen. (Sen vaqtliroq yotishing kerak.)\n3. **Hättest** du doch bloß angerufen! (Qaniydi qo'ng'iroq qilganingda!)"
+        },
+        {
+            "id": "ub2_92",
+            "title": "Unit 92: Wünsche, irreale Wünsche und irreale Bedingungen",
+            "description": "Nereal orzu va shartlar",
+            "content": "Amalga oshishi qiyin bo'lgan yoki imkonsiz orzularni ifodalash.\n\n### 📐 Konstruksiyalar:\n1. **Orzu gaplar**: Ko'pincha `doch`, `nur`, `bloß` so'zlari bilan keladi. \n   *   *Wenn ich doch reich wäre!* / *Wäre ich doch reich!*\n2. **Shart gaplar**: `wenn` bilan boshlanadi. \n   *   *Wenn ich Zeit hätte, käme ich.*\n\n> [!NOTE]\n> Agar `wenn` tushib qolsa, fe'l 1-o'ringa chiqadi: *Hätte ich Zeit, käme ich.*",
+            "example": "1. **Hätte** ich doch bloß mehr gelernt! (Qaniydi ko'proq o'qigan bo'lsam edi!)\n2. **Wäre** er doch hier! (Qaniydi u shu yerda bo'lsa!)"
+        },
+        {
+            "id": "ub2_93",
+            "title": "Unit 93: Irreale Vergleiche und irreale Folgen",
+            "description": "Nereal qiyoslash va natijalar",
+            "content": "Haqiqatga to'g'ri kelmaydigan o'xshatishlar.\n\n### 🔗 Bog'lovchilar:\n1. **als ob / als wenn**: *Er tut so, **als ob** er alles wüsste.* (U go'yo hamma narsani bilgandek tutyapti o'zini.)\n2. **zu..., als dass...**: Natijaning imkonsizligini bildiradi. \n   *   *Es ist **zu** spät, **als dass** men yana qo'ng'iroq qila olsam.* (Es ist zu spät, als dass ich noch anrufen könnte).\n\n> [!TIP]\n> `als ob` dan keyin fe'l gap oxirida, `als` dan keyin (ob-siz) fe'l 2-o'rinda keladi.",
+            "example": "1. Er sieht aus, **als ob** er krank **wäre**. (U xuddi kasalga o'xshab ko'rinyapti.)\n2. Du sprichst, **als wenn** du ein Experte **wärest**. (Sen xuddi ekspertdek gapiryapsan.)"
+        },
+        {
+            "id": "ub2_94",
+            "title": "Unit 94: Passiv in allen Zeiten",
+            "description": "Majhul nisbat barcha zamonlarda",
+            "content": "B2 darajasida Passivning zamonlarda tuslanishini mukammal bilish zarur.\n\n### ⌛️ Tuslanish jadvali:\n| Zamon | Shakli |\n| :--- | :--- |\n| **Präsens** | wird gebaut |\n| **Präteritum** | wurde gebaut |\n| **Perfekt** | ist gebaut worden |\n| **Plusquamperfekt** | war gebaut worden |\n| **Futur I** | wird gebaut werden |",
+            "example": "1. Das Haus **ist** 1990 **gebaut worden**. (Uy 1990-yilda qurilgan.)\n2. Der Plan **wird** gerade **besprochen**. (Reja hozir muhokama qilinyapti.)"
+        },
+        {
+            "id": "ub2_95",
+            "title": "Unit 95: Passiv mit Modalverben in allen Zeiten",
+            "description": "Modal fe'llar bilan Passiv",
+            "content": "Majhul nisbatda modal fe'llar harakatning imkoniyati yoki zaruratini bildiradi.\n\n### ⚙️ Formulalar:\n1. **Präsens**: `muss/kann/...` + `Partizip II` + `werden`.\n2. **Präteritum**: `musste/konnte/...` + `Partizip II` + `werden`.\n3. **Perfekt**: `hat` + `Partizip II` + `werden` + `müssen/können/...` (Ersatzinfinitiv).\n\n> [!IMPORTANT]\n> Perfekt shakli B2 darajasida asosan yozma nutqda uchraydi, lekin uni tanish juda muhim.",
+            "example": "1. Die Hausaufgabe **muss** heute **abgegeben werden**. (Uyga vazifa bugun topshirilishi shart.)\n2. Das Problem **hätte** früher **gelöst werden müssen**. (Muammo vaqtliroq hal qilinishi kerak edi - Konjunktiv 2 + Passiv.)"
+        },
+        {
+            "id": "ub2_96",
+            "title": "Unit 96: Alternativen zum Passiv",
+            "description": "Passivga muqobil variantlar",
+            "content": "Passiv konstruksiyasini ishlatmasdan pasiv ma'nosini (imkoniyat yoki zaruriyat) berish usullari.\n\n### 🔄 Eng ko'p qo'llaniladigan variantlar:\n1. **sein + zu + Infinitiv**: *Die Arbeit **ist** zu machen.* (= muss gemacht werden).\n2. **sich lassen + Infinitiv**: *Das Problem **lässt sich** lösen.* (= kann gelöst werden).\n3. **sein + Adjektiv (-bar, -lich)**: *Das ist **machbar**.* (= kann gemacht werden).\n4. **man**: * **Man** baut das Haus.* (= Das Haus wird gebaut).",
+            "example": "1. Diese Aufgabe **ist** leicht **zu erledigen**. (Bu vazifani bajarish oson.)\n2. Ein solches Verhalten **lässt sich** tidak **akzeptieren**. (Bunday muomalani qabul qilib bo'lmaydi.)"
+        },
+        {
+            "id": "ub2_97",
+            "title": "Unit 97: Formen mit Passivbedeutung",
+            "description": "Passiv ma'nosidagi maxsus shakllar",
+            "content": "Ba'zi fe'llar va qo'shimchalar o'z-o'zidan 'qilinishi mumkin/kerak' ma'nosini beradi.\n\n- **-bar qo'shimchasi**: *trinkbar* (ichsa bo'ladigan).\n- **-abel qo'shimchasi**: *rentabel* (foyda keltiradigan).\n- **bekommen/erhalten + Partizip II**: *Ich **bekomme** den Brief **zugeschickt**.* (Menga xat yuboriladi). Bu 'Rezipientenpassiv' deb ataladi.",
+            "example": "1. Die Theorie ist wissenschaftlich **nachprüfbar**. (Nazariya ilmiy jihatdan tekshirilishi mumkin.)\n2. Er **bekam** die Kosten **erstattet**. (Unga xarajatlar qoplab berildi.)"
+        },
+        {
+            "id": "ub2_98",
+            "title": "Unit 98: Lokale Präpositionen 3: Woher?",
+            "description": "Kelib chiqish predloglari",
+            "content": "Qayerdan kelayotganini bildirish uchun `aus` yoki `von` ishlatiladi.\n\n- **aus** : Ichkaridan yoki mamlakatdan.\n- **von** : Ma'lum bir nuqtadan yoki shaxsdan.",
+            "example": "1. Ich komme **aus Usbekistan**. (Men O'zbekistondanman.)\n2. Er kommt gerade **vom (von dem) Arzt**. (U hozirgina shifokordan kelyapti.)\n3. Wir kommen **aus der Stadt**. (Biz shahardan kelyapmiz.)"
+        },
+        {
+            "id": "ub2_99",
+            "title": "Unit 99: Wann ist Passiv möglich, wann nicht?",
+            "description": "Passivning cheklovlari",
+            "content": "Barcha fe'llar ham Passiv shaklida ishlatilmaydi. Quyidagilarni Passivda ishlatish xato hisoblanadi:\n\n1. **Reflexiv fe'llar**: *sich waschen, sich freuen*.\n2. **Holat fe'llari**: *sein, bleiben, werden, scheinen*.\n3. **Egalik/Miqdor fe'llari**: *haben, besitzen, kosten, wiegen*.\n4. **Shaxssiz fe'llar (Tabiat hodisalari)**: *regnen, schneien*.\n\n> [!CAUTION]\n> `haben` fe'li bilan Passiv aslo yasab bo'lmaydi!",
+            "example": "1. Ich **besitze** ein Haus. (Bu gapni Passiv qilib bo'lmaydi.)\n2. Es **schneit** heute. (Buni ham Passiv qilib bo'lmaydi.)"
+        },
+        {
+            "id": "ub2_100",
+            "title": "Unit 100: Wechselpräpositionen (B2 context)",
+            "description": "Ikki tomonlama predloglar (B2)",
+            "content": "B2 darajasida bu predloglarning (in, an, auf, unter, über, vor, hinter, neben, zwischen) ko'chma ma'nolari va murakkab fe'llar bilan kelishi o'rganiladi.\n\n### 📍 Asosiy farq:\n- **Dativ (Wo?)**: To'xtab turgan holat. *Das Buch liegt **auf dem** Tisch.*\n- **Akkusativ (Wohin?)**: Yo'nalish va harakat. *Ich lege das Buch **auf den** Tisch.*\n\n> [!TIP]\n> B2 darajasida predloglarni ko'pincha fe'llar bilan birga (Rektion) yodlash kerak: *warten **auf** + Akk*, *denken **an** + Akk*.",
+            "example": "1. Er hängt das Bild **an die Wand**. (U rasmni devorga iladi - Akkusativ.)\n2. Das Bild hängt **an der Wand**. (Rasm devorda ilinib turibdi - Dativ.)"
+        },
+        {
+            "id": "ub2_101",
+            "title": "Unit 101: Oft gebrauchte lokale Präpositionen",
+            "description": "Ko'p qo'llaniladigan joy predloglari",
+            "content": "Joyni bildirishda predlog tanlash qayerga (**Wohin?**), qayerda (**Wo?**) va qayerdan (**Woher?**) so'roqlariga bog'liq.\n\n### 📍 Asosiy predloglar:\n- **in** : Mamlakatlar (artikl bilan), bino ichi, ko'cha nomi.\n- **nach** : Shahar va artiklsiz mamlakatlar, yo'nalishlar (nach oben).\n- **an** : Suv bo'yi, vertikal kontakt (devor), bino atrofi.\n- **auf** : Gorizontal yuza (stol), ochiq maydon, muassasa/idora.\n- **zu** : Shaxslar, tadbirlar, aniq bir nuqta.\n- **bei** : Shaxsda (uyida/yonida), ish joyida, tadbirda.\n- **aus** : Ichkaridan chiqish, mamlakatdan kelish.\n- **von** : Biror nuqtadan yoki shaxsdan uzoqlashish.",
+            "example": "1. Ich fahre **nach Berlin** und **in die Schweiz**. (Men Berlinga va Shveysariyaga ketyapman.)\n2. Er arbeitet **bei Siemens**, ist aber gerade **auf dem Bauamt**. (U Siemensda ishlaydi, lekin hozir qurilish idorasida.)\n3. Ich komme gerade **vom Arzt**. (Men hozirgina shifokordan kelyapman.)"
+        },
+        {
+            "id": "ub2_102",
+            "title": "Unit 102: Weitere lokale Präpositionen",
+            "description": "Boshqa joy predloglari",
+            "content": "B2 darajasida yanada aniqroq joy munosabatlarini ifodalovchi predloglar ishlatiladi.\n\n### 🗺 Ro'yxat:\n- **entlang** (+ Akk): -yoqalab.\n- **gegenüber** (+ Dat): -qarshisida/ro'parasida.\n- **inmitten** (+ Gen): -ning o'rtasida.\n- **oberhalb / unterhalb** (+ Gen): -ning yuqorisida / pastida.\n- **jenseits / diesseits** (+ Gen): -ning u tomonida / bu tomonida.\n- **innerhalb / außerhalb** (+ Gen): -ning ichida / tashqarisida.\n- **durch** (+ Akk): -orqali / -ichidan kesib o'tish.\n- **um** (+ Akk): -atrofida.",
+            "example": "1. Gehen Sie den Fluss **entlang**. (Daryo yoqalab yuring.)\n2. Das Hotel liegt **außerhalb des Dorfes**. (Mehmonxona qishloq chetida joylagan.)\n3. Wir fahren **durch den Tunnel**. (Biz tunnel orqali o'tyapmiz.)"
+        },
+        {
+            "id": "ub2_103",
+            "title": "Unit 103: Die wichtigsten temporalen Präpositionen",
+            "description": "Vaqt predloglari (Asosiylari)",
+            "content": "Vaqt munosabatlarini to'g'ri ifodalash uchun predloglar va ularning kelishik boshqaruvi.\n\n- **um** (+ Akk): Aniq soat bilan. (*um 9 Uhr*).\n- **am** (+ Dat): Kunlar, kun qismlari, sanalar. (*am Montag, am 1. September*).\n- **im** (+ Dat): Oylar, fasllar, asrlar, uzoq muddatlar. (*im Mai, im Sommer, im 20. Jh.*).\n- **in** (+ Dat): Biror vaqtdan keyin. (*in einer Stunde*).\n- **vor / nach** (+ Dat): -dan oldin / -dan keyin.\n- **seit** (+ Dat): -dan beri (o'tmishdan hozirgacha).",
+            "example": "1. **Am Montag um 18 Uhr** habe ich Zeit. (Dushanba kuni soat 18 da vaqtim bor.)\n2. **Seit drei Jahren** lerne ich Deutsch. (Uch yildan beri nemis tilini o'rganyapman.)\n3. Wir treffen uns **vor der Pause**. (Biz tanaffusdan oldin ko'rishamiz.)"
+        },
+        {
+            "id": "ub2_104",
+            "title": "Unit 104: Weitere temporale Präpositionen",
+            "description": "Boshqa vaqt predloglari",
+            "content": "Professional muloqotda vaqt oralig'i va muddatini ifodalash.\n\n- **ab** (+ Dat): -dan boshlab (faqat kelajak/hozir). (*ab morgen*).\n- **bis** (+ Akk): -gacha. (*bis nächste Woche*).\n- **von... bis** : -dan ... gacha. \n- **innerhalb / binnen** (+ Gen): -ichida (muddat). (*innerhalb von zwei Tagen*).\n- **außerhalb** (+ Gen): -vaqtidan tashqari. (*außerhalb der Sprechzeit*).\n- **über** (+ Akk): -davomida (vaqt davomiyligi). (*über das Wochenende*).\n- **während** (+ Gen): -davomida (parallel harakat). (*während der Sitzung*).",
+            "example": "1. Die Arbeit must **innerhalb von drei Tagen** fertig sein. (Ish uch kun ichida tayyor bo'lishi kerak.)\n2. Es hat die ganze Nacht **über** geregnet. (Tun bo'yi yomg'ir yog'di.)\n3. **Ab morgen** rauche ich nicht mehr. (Ertadan boshlab chekmayman.)"
+        },
+        {
+            "id": "ub2_105",
+            "title": "Unit 105: Kausale Präpositionen",
+            "description": "Sabab va maqsad predloglari",
+            "content": "Harakatning sababini bildirish uchun Genitiv yoki Dativli predloglar qo'llaniladi.\n\n- **aus** (+ Dat): Ichki hissiyot, ongli sabab. (*aus Liebe, aus Angst*).\n- **vor** (+ Dat): Beixtiyoriy jismoniy reaksiya. (*vor Kälte zittern*).\n- **wegen** (+ Gen/Dat): Ma'lum bir sabab tufayli. (*wegen des Regens*).\n- **aufgrund** (+ Gen): Ma'lumot yoki dalilga asoslangan holda. (*aufgrund eines Fehlers*).\n- **dank** (+ Gen/Dat): Ijobiy natija uchun (minnatdorchilik bilan). (*dank seiner Hilfe*).\n- **infolge** (+ Gen): Natija o'laroq. (*infolge des Unfalls*).",
+            "example": "1. Er hat **aus Neugier** gefragt. (U qiziquvchanlikdan so'radi.)\n2. Der Junge zitterte **vor Kälte**. (Bola sovuqdan titradi.)\n3. **Aufgrund der hohen Kosten** brechen wir ab. (Xarajatlar yuqoriligi sababli to'xtatyapmiz.)"
+        },
+        {
+            "id": "ub2_106",
+            "title": "Unit 106: Präpositionen der Redewiedergabe und Referenz",
+            "description": "Manba va havola berish predloglari",
+            "content": "Professional nutqda ma'lumot manbasini ko'rsatish (C1 darajasi) uchun maxsus predloglar ishlatiladi.\n\n### 📢 Manba ko'rsatish:\n- **laut** (+ Gen/Dat): -ga ko'ra. (*Laut Statistik...*).\n- **zufolge** (+ Dat): -ga ko'ra (ko'pincha otning orqasida keladi). (*Der Statistik zufolge...*).\n- **nach** (+ Dat): -ga ko'ra. (*Nach meiner Meinung...*).\n- **gemäß** (+ Dat): -ga muvofiq / -ga asosan (huquqiy).\n\n### 🔗 Havola berish:\n- **hinsichtlich** (+ Gen): -nuqtai nazaridan / -ga nisbatan. (*hinsichtlich seines Verhaltens*).\n- **bezüglich** (+ Gen): -ga tegishli ravishda / -haqida.\n- **entsprechend** (+ Dat): -ga muvofiq / -ga mos ravishda.",
+            "example": "1. **Laut** einer neuen Statistik sind 80% der Deutschen übergewichtig. (Yangi statistikaga ko'ra, nemislarning 80 foizi ortiqcha vaznga ega.)\n2. Ich möchte etwas **bezüglich** der Steuer anmerken. (Soliqqa tegishli ravishda bir narsani qayd etmoqchi edim.)"
+        },
+        {
+            "id": "ub2_107",
+            "title": "Unit 107: Präpositionen mit verschiedenen Positionen",
+            "description": "Turli pozitsiyali predloglar",
+            "content": "Ba'zi predloglar otning oldida (Preposition) yoki orqasida (Postposition) kelishi mumkin. Bu ko'pincha uslubiy farq yoki kelishik o'zgarishiga sabab bo'ladi.\n\n- **entlang**: Oldida (+ Gen) -> *entlang des Flusses*; Orqasida (+ Akk) -> *den Fluss entlang*.\n- **gegenüber**: Oldida yoki orqasida (+ Dat). Shaxslar bilan ko'pincha orqada keladi: *mir gegenüber*.\n- **nach**: *Meiner Meinung nach* (Mening fikrimcha).\n- **wegen**: Oldida (+ Gen); Orqasida ham kelishi mumkin (lekin kamdan-kam).",
+            "example": "1. Er lief die Straße **entlang**. (U ko'cha bo'ylab yugurdi.)\n2. **Meiner Meinung nach** ist das falsch. (Mening fikrimcha, bu xato.)\n3. Er saß **mir gegenüber**. (U menga qarama-qarshi o'tirgan edi.)"
+        },
+        {
+            "id": "ub2_108",
+            "title": "Unit 108: \"Sprechende\" Präpositionen",
+            "description": "Aniq ma'no ifodalovchi predloglar",
+            "content": "Bu predloglar nutqqa aniqlik kiritadi va ularning ko'pchiligi Genitiv kelishigini talab qiladi.\n\n- **zuliebe** (+ Dat, postposition): -ning xursandchiligi uchun. (*seiner Frau zuliebe*).\n- **zugunsten** (+ Gen): -ning foydasiga. (*zugunsten seiner Schwester*).\n- **anhand** (+ Gen): -yordamida / -asosida (dalillar bilan).\n- **zwecks** (+ Gen): -maqsadida. (*zwecks Gewichtsreduktion*).\n- **anstelle** (+ Gen): -ning o'rniga. (*anstelle eines Autos*).\n- **jenseits** (+ Gen): -ning u tomonida. (*jenseits des Berges*).",
+            "example": "1. Er lernt seinen Eltern **zuliebe** sehr fleißig. (U ota-onasi uchun (ularni xursand qilish uchun) juda tirishib o'qiyapti.)\n2. Wir lösen das Problem **mithilfe** eines Experten. (Biz muammoni ekspert yordamida hal qilamiz.)"
+        },
+        {
+            "id": "ub2_109",
+            "title": "Unit 109: Bedeutungen von in, an, auf, über, unter, vor",
+            "content": "B2/C1 darajasida asosiy predloglarning o'nlab qo'shimcha ma'nolari mavjud.\n\n| Predlog | Ma'no turi | Masalan |\n| :--- | :--- | :--- |\n| **in** | Holat | in Sorge (tashvishda), in Trauer |\n| **an** | Taxmin | an die 20 Jahre (taxminan 20 yoshlar) |\n| **auf** | Maqsad/Tilla | auf Deutsch (nemis tilida), auf Wunsch |\n| **über** | Mavzu | über das Thema sprechen |\n| **unter** | Shart | unter der Bedingung (sharti bilan) |\n| **vor** | Sabab | vor Angst zittern (qo'rquvdan titrash) |",
+            "example": "1. Das Buch ist **auf Deutsch** geschrieben. (Kitob nemis tilida yozilgan.)\n2. Er ist **an die 50 Jahre** alt. (U taxminan 50 yoshlarda.)\n3. Wir sind **in großer Sorge**. (Biz katta tashvishdamiz.)"
+        },
+        {
+            "id": "ub2_110",
+            "title": "Unit 110: Bedeutungen von um, bei, von, nach, aus, mit, zu",
+            "content": "Murakkab ma'nolarni ifodalovchi predloglar jadvali.\n\n| Predlog | Ma'no turi | Masalan |\n| :--- | :--- | :--- |\n| **um** | Farq | um 5% steigen (5 foizga oshish) |\n| **bei** | Shart | bei Bestehen (muvaffaqiyatli o'tganda) |\n| **von** | Egalik/Manba | die Frau von meinem Bruder |\n| **nach** | Intilish | riechen nach (hidi kelmoq), suchen nach |\n| **aus** | Sabab/Material | aus Liebe (muhabbatdan), aus Leder (charimdan) |\n| **mit** | Qurol/Asbob | mit dem Messer (pichoq bilan) |",
+            "example": "1. Es riecht hier **nach Kaffee**. (Bu yerda qahva hidi kelyapti.)\n2. Die Schuhe sind **aus Leder**. (Poyabzal charimdan qilingan.)\n3. Die Preise sind **um 10%** gestiegen. (Narxlar 10 foizga oshdi.)"
+        },
+        {
+            "id": "ub2_111",
+            "title": "Unit 111: Verben mit Nominativ, Akkusativ und Dativ",
+            "description": "Fe'llar kelishik boshqaruvi (Chuqurlashtirilgan)",
+            "content": "Nemis tilida gapning markazi fe'l hisoblanadi va u boshqa bo'laklarning qaysi kelishikda kelishini belgilaydi.\n\n### 🧬 Fe'llar turlari:\n- **Faqat Nominativ**: *sein, werden, bleiben* (Ikkinchi Nominativ - Identitätsnominativ).\n- **Nominativ + Akkusativ**: Eng katta guruh. (*Ich liebe meine Frau*).\n- **Nominativ + Dativ**: Shaxslarga yo'naltirilgan harakatlar. (*Es gefällt mir*).\n- **Nominativ + Dativ + Akkusativ**: Kimga nimani topshirish/berish. (*Er schenkt seinem Sohn ein Fahrrad*).\n- **Nominativ + ikki Akkusativ**: *nennen, lehren, kosten, schimpfen*.",
+            "example": "1. Er **nannte** ihn **einen Träumer**. (U uni xayolparast deb atadi - double Akkusativ.)\n2. Das **kostet** mich **einen Euro**. (Bu menga bir evroga tushadi.)\n3. Deutsch **gefällt** ihm sehr. (Nemis tili unga juda yoqadi.)"
+        },
+        {
+            "id": "ub2_112",
+            "title": "Unit 112: Verben mit Genitiv",
+            "description": "Genitiv boshqaruvli fe'llar",
+            "content": "B2/C1 darajasida Genitiv kelishigini talab qiluvchi fe'llar asosan rasmiy va adabiy nutqda qo'llaniladi.\n\n### ⚖️ Rasmiy fe'llar:\n- **anklagen / beschuldigen / bezichtigen** (+ Akk + Gen): -da ayblamoq.\n- **bedürfen** (+ Gen): -ga ehtiyoji bo'lmoq. (*Die Sache bedarf der Klärung*).\n- **entbehren** (+ Gen): -dan mahrum bo'lmoq.\n- **sich erbarmen** (+ Gen): -ga rahm qilmoq.\n- **sich rühmen** (+ Gen): -bilan maqtanmoq.\n- **sich enthalten** (+ Gen): -dan tiyilmoq.",
+            "example": "1. Man hat sie **des Diebstahls angeklagt**. (Uni o'g'rilikda ayblashdi.)\n2. Jeder Mensch **bedarf eines Freundes**. (Har bir kishi do'stga muhtoj.)\n3. Er **schämt sich** seiner Tat. (U o'z qilmishidan uyalyapti.)"
+        },
+        {
+            "id": "ub2_113",
+            "title": "Unit 113: Verben, Nomen und Adjektive mit Präpositionen",
+            "description": "Predlogli bog'lamalar va so'roq olmoshlari",
+            "content": "Fe'llar predlog bilan kelganda, so'roq berish va u haqida gapirish uchun maxsus shakllar ishlatiladi.\n\n### ❓ So'roq olmoshlari (Fragewörter):\n- **Narsa/Hodisa**: `wo` + predlog. (*worauf, wofür, womit*).\n- **Shaxslar**: Predlog + `wen/wem`. (*auf wen, für wen, mit wem*).\n\n### 🔗 Predlogli olmoshlar (Präpositionalpronomen):\n- `da` + predlog. (*darauf, dafür, damit*). Bular butun bir gapga yoki fikrga havola berish uchun ishlatiladi.",
+            "example": "1. **Worauf** warten Sie? - Auf den Bus. (Nimani kutyapsiz? - Avtobusni.)\n2. **Auf wen** wartest du? - Auf Marja. (Kimni kutyapsan? - Marjani.)\n3. Er hat den Termin vergessen. Er hat sich **darüber** geärgert. (U uchrashuvni unutib qo'ydi. U shundan g'azablandi.)"
+        },
+        {
+            "id": "ub2_114",
+            "title": "Unit 114: Feste Präpositionen mit Akkusativ",
+            "description": "Akkusativli doimiy predloglar",
+            "content": "Ba'zi predloglar fe'l bilan kelganda har doim Akkusativ kelishigini talab qiladi.\n\n- **auf**: *aufpassen auf, antworten auf, warten auf, sich freuen auf* (Future).\n- **für**: *sich entscheiden für, sich entschuldigen für, danken für, sorgen für*.\n- **über**: *sprechen über, nachdenken über, sich freuen über* (Present/Past).\n- **gegen**: *protestieren gegen, sich entscheiden gegen*.\n- **um**: *sich bewerben um, sich kümmern um, es geht um*.",
+            "example": "1. Ich freue mich **auf das Wochenende**. (Men dam olish kunini (intizorlik bilan) kutyapman.)\n2. Wir müssen **über das Problem** nachdenken. (Biz muammo haqida o'ylab ko'rishimiz kerak.)\n3. Er bewirbt sich **um eine Stelle**. (U ish o'riniga hujjat topshiryapti.)"
+        },
+        {
+            "id": "ub2_115",
+            "title": "Unit 115: Feste Präpositionen mit Dativ",
+            "description": "Dativli doimiy predloglar",
+            "content": "Fe'l bilan kelganda Dativ kelishigini talab qiluvchi doimiy predloglar.\n\n- **aus**: *bestehen aus, stammen aus, übersetzen aus*.\n- **bei**: *sich bewerben bei* (muassasa), *anrufen bei, sich bedanken bei*.\n- **mit**: *anfangen mit, telefonieren mit, sprechen mit, vergleichen mit*.\n- **nach**: *fragen nach, suchen nach, riechen nach*.\n- **von**: *träumen von, erzählen von, abhängen von*.\n- **vor**: *Angst haben vor, schützen vor, warnen vor*.\n- **zu**: *gratulieren zu, einladen zu, gehören zu*.",
+            "example": "1. Ich **träume von** einem Urlaub. (Men ta'til haqida orzu qilyapman.)\n2. Er **gratuliert** mir **zum Geburtstag**. (U meni tug'ilgan kunim bilan tabriklayapti.)\n3. Das **hängt vom** Wetter **ab**. (Bu ob-havoga bog'liq.)"
+        },
+        {
+            "id": "ub2_116",
+            "title": "Unit 116: Bildung der Vergangenheitszeiten",
+            "description": "O'tgan zamonlar hosil qilinishi (B2/C1)",
+            "content": "Professional nutqda o'tgan zamon shakllarini (Perfekt, Präteritum, Plusquamperfekt) to'g'ri tanlash va hosil qilish muhim.\n\n### 🕒 Zamonlar hosil bo'lishi:\n- **Perfekt**: *haben/sein* + Partizip II. (*Er hat gegessen / Er ist gekommen*).\n- **Plusquamperfekt**: *hatten/waren* + Partizip II. O'tmishdagi ikki harakatdan birinchisini bildiradi.\n- **Präteritum**: Fe'l o'zagiga *-te* qo'shish (to'g'ri fe'llar) yoki o'zak o'zgarishi (noto'g'ri fe'llar).\n\n### 🔀 Haben yoki Sein?\n- **Sein**: Harakat yo'nalishi, holat o'zgarishi, *sein, bleiben, werden, passieren, gelingen*.\n- **Haben**: Barcha o'timli fe'llar va refleksiv fe'llar.",
+            "example": "1. Er **war** gestern zu spät nach Hause **gekommen**. (U kecha uyga kech kelgan edi - Plusquamperfekt.)\n2. Das Glas **ist zerbrochen**. (Stakan sindi - holat o'zgarishi.)\n3. Ich **habe** mir das Auto **gewaschen**. (Men mashinamni yuvdim - reflexive.)"
+        },
+        {
+            "id": "ub2_117",
+            "title": "Unit 117: Besondere Perfektformen: Modalverben und sehen, hören, lassen",
+            "description": "Maxsus Perfekt shakllari (Ikki infinitiv)",
+            "content": "Modal fe'llar va ba'zi fe'llar (*sehen, hören, lassen*) boshqa fe'l bilan kelganda Perfektda Partizip II o'rniga infinitiv shaklida qoladi (Ersatzinfinitiv).\n\n### ⚡️ Qurilmalar:\n- **Modal fe'llar**: *Ich habe gehen müssen.* (Menga ketishga to'g'ri keldi.)\n- **Sehen/Hören**: *Ich habe sie kommen sehen.* (Men ularning kelayotganini ko'rdim.)\n- **Ergash gapda**: Fe'l tartibi o'zgaradi: *... weil ich habe arbeiten müssen.* (yordamchi fe'l infinitivlardan oldinga o'tadi).",
+            "example": "1. Er **hat** nicht **kommen können**. (U kela olmadi.)\n2. Ich **habe** das Lied **gehört**. (Men qo'shiqni eshitdim - yolg'iz kelganda partizip.)\n3. Sie **hat** die Freunde **winken sehen**. (U do'stlarining qo'l silkiganini ko'rdi.)"
+        },
+        {
+            "id": "ub2_118",
+            "title": "Unit 118: Gebrauch von Zeiten der Vergangenheit",
+            "description": "O'tgan zamonlarning qo'llanilishi",
+            "content": "Qaysi zamonni qachon ishlatish vaziyatga bog'liq.\n\n- **Perfekt**: Og'zaki nutqda, elektron pochta va qisqa xabarlarda.\n- **Präteritum**: Yozma nutqda, hikoyalarda, yangiliklarda va rasmiy hisobotlarda. *Sein, haben* va modal fe'llar og'zaki nutqda ham ko'pincha Präteritumda ishlatiladi.\n- **Plusquamperfekt**: Faqat boshqa bir o'tgan zamon harakatidan oldin sodir bo'lgan voqeani hikoya qilishda (ko'pincha *nachdem* bilan).",
+            "example": "1. **Nachdem** u ovqatlanib bo'lganidan so'ng, ko'chaga chiqdi. (Nachdem er gegessen hatte, ging er aus.)\n2. Er **hat** viel **gelernt**, bevor er die Prüfung machte. (U imtihon topshirishdan oldin ko'p o'qigan edi.)"
+        },
+        {
+            "id": "ub2_119",
+            "title": "Unit 119: Vermutung und Zukunft mit dem Futur",
+            "description": "Futur 1 va Futur 2 (Taxminlar)",
+            "content": "Futur zamonlari nafaqat kelajakni, bakal hozirgi yoki o'tgan zamon haqidagi taxminlarni ham bildiradi.\n\n- **Futur 1** (*werden* + Infinitiv): Kelajakdagi reja yoki hozirgi zamon haqida taxmin. (*Er wird wohl krank sein*).\n- **Futur 2** (*werden* + Partizip II + *haben/sein*): Kelajakda tugallanadigan harakat yoki o'tmish haqida taxmin. (*Er wird den Zug verpasst haben*).",
+            "example": "1. Er **wird** bestimmt gleich da **sein**. (U hozir albatta shu yerda bo'ladi - Taxmin.)\n2. Bis morgen **wird** er alles **erledigt haben**. (Ertagacha u hamma narsani bajarib bo'ladi - Futur 2.)\n3. Er **wird** wohl gestern krank **gewesen sein**. (U kecha kasal bo'lgan bo'lsa kerak - Futur 2 orqali o'tmishga taxmin.)"
+        },
+        {
+            "id": "ub2_120",
+            "title": "Unit 120: Überblick über die Zeiten im Deutschen",
+            "description": "Zamonlar tizimi bo'yicha xulosa",
+            "content": "Nemis tili zamonlar tizimining umumiy ko'rinishi va ularning bir-biriga nisbati.\n\n| Zamon | Ma'nosi | Misol |\n| :--- | :--- | :--- |\n| **Präsens** | Hozirgi / Kelajak | Ich lerne Deutsch. |\n| **Perfekt** | O'tgan (og'zaki) | Ich habe gelernt. |\n| **Präteritum** | O'tgan (yozma) | Ich lernte. |\n| **Plusquamperfekt** | O'tgan oldi | Ich hatte gelernt. |\n| **Futur 1** | Taxmin / Kelajak | Ich werde lernen. |\n| **Futur 2** | Tugallangan taxmin | Ich werde gelernt haben. |",
+            "example": "1. Morgen **werde** ich dich **besuchen**. (Ertaga seni yo'qlayman.)\n2. Herr Müller **ist** gestern **operiert worden**. (Janob Myuller kecha operatsiya qilindi - Passiv Perfekt.)"
+        },
+        {
+            "id": "ub2_121",
+            "title": "Unit 121: Modalverben in der Grundbedeutung",
+            "description": "Modal fe'llarning asosiy ma'nolari",
+            "content": "B2 darajasida modal fe'llarning barcha nuanslari va ularning o'rnini bosuvchi qurilmalarni bilish talab etiladi.\n\n- **müssen**: Zaruriyat, burch. (*Alternative: haben + zu + Infinitiv*).\n- **können**: Qobiliyat, imkoniyat, ruxsat. (*Alternative: fähig sein zu*).\n- **sollen**: Maslahat, birovning topshirig'i.\n- **wollen**: Reja, xohish.\n- **dürfen**: Ruxsat, taqiq (negativda).\n- **mögen**: Yoqtirish.",
+            "example": "1. Du **hast** das sofort **zu tun**. (Sen buni darhol qilishing shart.)\n2. Er **kann** sehr gut jonglieren. (U juda yaxshi jonglyorlik qila oladi.)\n3. Ich **sollte** mehr Sport treiben. (Men ko'proq sport bilan shug'ullanishim kerak - Maslahat.)"
+        },
+        {
+            "id": "ub2_122",
+            "title": "Unit 122: Modalverben: Vermutungen über die Gegenwart",
+            "description": "Hozirgi zamon haqida taxminlar",
+            "content": "Modal fe'llar orqali biror voqeaga ishonch darajasini ifodalash mumkin.\n\n- **muss** (100%): Aniq shunday. (*Er muss gleich kommen*).\n- **müsste** (85%): Katta ehtimol bilan.\n- **dürfte** (75%): Taxminan shunday.\n- **kann / könnte** (50%): Balki, bo'lishi mumkin.\n- **mag** (30%): Kam ehtimol.",
+            "example": "1. Das **muss** stimmen. (Bu albatta to'g'ri.)\n2. Er **könnte** im Stau stecken. (U tirbandlikda qolib ketgan bo'lishi mumkin.)\n3. Sie **dürfte** keine Lust mehr haben. (Uning boshqa xohishi bo'lmasa kerak.)"
+        },
+        {
+            "id": "uc1_123",
+            "title": "Unit 123: Modalverben: Vermutungen über die Vergangenheit",
+            "description": "O'tgan zamon haqida taxminlar (C1)",
+            "content": "O'tgan zamon haqida taxmin bildirish uchun: **Modal fe'l + Infinitiv Perfekt** (*Partizip II + sein/haben*) qurilmasi ishlatiladi.\n\n- **muss ... sein/haben**: Aniq shunday bo'lgan. (*Sie muss wohl zu Fuß gegangen sein*).\n- **dürfte ... sein/haben**: Shunday bo'lgan ko'rinadi.\n- **könnte ... sein/haben**: Balki shunday bo'lgandir.",
+            "example": "1. Er **muss** den Zug **verpasst haben**. (U poezdga kechikkan bo'lsa kerak - 100% ishonch.)\n2. Sie **könnte** Lust **gehabt haben**. (Uning xohishi bo'lgan bo'lishi mumkin.)\n3. Der Aufzug **dürfte** repariert **worden sein**. (Lift tuzatilgan bo'lsa kerak - Passiv taxmin.)"
+        },
+        {
+            "id": "ub2_124",
+            "title": "Unit 124: Subjektive Bedeutung von Modalverben (Hearsay)",
+            "description": "Birovdan eshitilgan ma'lumot",
+            "content": "Modal fe'llar birovning gapi yoki da'vosini bildirish uchun ham ishlatiladi.\n\n- **sollen**: Birovlar shunday deyishyapti (Eshitishicha). (*Er soll reich sein*).\n- **wollen**: O'zi shunday deb da'vo qilyapti (lekin ishonchli emas). (*Er will den Chef kennen*).",
+            "example": "1. Der neue Film **soll** sehr gut **sein**. (Eshitishimcha, yangi film juda yaxshi ekan.)\n2. Er **will** alles alleine **gemacht haben**. (U hamma narsani o'zi qilganini da'vo qilyapti.)"
+        },
+        {
+            "id": "ub2_125",
+            "title": "Unit 125: Alternativen zu Modalverben",
+            "description": "Modal fe'llarning o'rnini bosuvchi qurilmalar",
+            "content": "Akademik nutqda modal fe'llar o'rniga sinonimik qurilmalardan foydalaniladi.\n\n- **können** -> *imstande sein zu, die Möglichkeit haben zu*.\n- **müssen** -> *verpflichtet sein zu, die Notwendigkeit besteht*.\n- **dürfen** -> *jemandem ist es gestattet*.\n- **nicht brauchen** -> *nicht müssen*.",
+            "example": "1. Wir sind **imstande**, das Problem zu lösen. (Biz muammoni hal qilishga qodirmiz.)\n2. Es ist **erforderlich**, pünktlich zu sein. (Vaqtida kelish talab etiladi.)\n3. Er **braucht** nicht zu kommen. (Ukelishi shart emas.)"
+        },
+        {
+            "id": "uc1_126",
+            "title": "Unit 126: Nominalisierung",
+            "content": "Fe'lli ifodalarni (Verbalstil) otli ifodalarga (Nominalstil) aylantirish. Bu akademik va rasmiy nutq uchun juda muhim.\n\n- *Wenn es regnet...* -> *Bei Regen...*\n- *Weil er krank ist...* -> *Aufgrund seiner Krankheit...*",
+            "description": "Otlashtirish (C1)",
+            "example": "1. **Nach Abschluss des Studiums** reise ich. (O'qishni tugatgach, sayohat qilaman.)\n2. **Trotz der Bemühungen** scheiterte der Plan. (Harakatlarga qaramay, reja amalga oshmadi.)"
+        },
+        {
+            "id": "uc1_136",
+            "title": "Unit 136: Wortbildung: Suffixe (-lich, -ig, -bar)",
+            "description": "Sifat yasovchi qo'shimchalar",
+            "content": "Sifatlarning oxiriga qo'shiladigan qo'shimchalar ma'noni aniqlashtiradi.\n\n- **-lich** : doimiylik yoki xususiyat.\n- **-ig** : sifat sifatidagi xususiyat.\n- **-bar** : imkoniyat (Passiv ma'nosida).",
+            "example": "1. Eine **brauchbare** Idee. (Ishlatishga arzigulik g'oya.)\n2. Er ist **freundlich**. (U do'stona/xushmuomala.)\n3. Das ist **unvermeidbar**. (Buning oldini olib bo'lmaydi.)"
+        },
+        {
+            "id": "uc1_137",
+            "title": "Unit 137: Wortbildung: Präfixe (miss-, ent-, un-)",
+            "description": "Old qo'shimchalar",
+            "content": "Fe'l va sifatlarning ma'nosini inkor qilish yoki o'zgartirish uchun ishlatiladi.\n\n- **miss-** : noto'g'ri (missverstehen).\n- **ent-** : uzoqlashish yoki teskari harakat (entladen).\n- **un-** : inkor (unglücklich).",
+            "example": "1. Bitte **missverstehen** Sie mich nicht. (Iltimos, meni noto'g'ri tushunmang.)\n2. Er hat das Paket **entladen**. (U paketni (yukni) tushirdi.)"
+        },
+        {
+            "id": "uc1_138",
+            "title": "Unit 138: Negation (Systematische Übersicht)",
+            "description": "Inkor tizimi (B2/C1)",
+            "content": "Nemis tilida inkorning barcha usullarini (nicht, kein, niemas, nirgends, un-, miss-) tizimli qo'llash.\n\n*Men hech qachon hech qayerda bunday narsani ko'rmaganman.*",
+            "example": "1. Er hat **keinerlei** Erfahrung. (Uning hech qanday tajribasi yo'q.)\n2. Das ist **keineswegs** wahr. (Bu aslo to'g'ri emas.)\n3. Wir haben **weder** Zeit **noch** Geld. (Bizda na vaqt, na pul bor.)"
+        },
+        {
+            "id": "uc1_139",
+            "title": "Unit 139: Vergleichssätze: 'je...desto' und 'als ob'",
+            "description": "Qiyosiy gaplar (Murakkab)",
+            "content": "Ikki holatni bir-biriga bog'lab qiyoslash.\n\n- **je...desto/umso** : qancha...shuncha.\n- **als ob** (+ Konjunktiv 2) : go'yoki.",
+            "example": "1. **Je** mehr du lernst, **desto** besser wird dein Deutsch. (Qancha ko'p o'qisang, nemis tiling shuncha yaxshi bo'ladi.)\n2. Er tut so, **als ob** u hamma narsani bilsa. (Er tut so, als ob er alles wüsste.)"
+        },
+        {
+            "id": "uc1_140",
+            "title": "Unit 140: Indirekte Rede (Zusammenfassung)",
+            "description": "Bilvosita nutq (Takrorlash)",
+            "content": "Konjunktiv 1 va Konjunktiv 2 ning bilvosita nutqdagi farqlari va qo'llanilishi haqida umumiy xulosa.",
+            "example": "Er sagte, er **würde** kommen, wenn u vaqti bo'lsa. (U vaqti bo'lsa, kelishini aytdi.)"
+        },
+        {
+            "id": "uc1_141",
+            "title": "Unit 141: Modale Satzverbindungen: 'indem' und 'dadurch dass'",
+            "description": "Usul ergash gaplar (B2/C1)",
+            "content": "Asosiy gapdagi harakatning qanday bajarilishini tushuntiruvchi bog'lovchilar.",
+            "example": "Er spart Energie, **indem** u chiroqlarni o'chiradi. (Er spart Energie, indem er das Licht ausschaltet.)"
+        },
+        {
+            "id": "uc1_142",
+            "title": "Unit 142: Kausale und Konzesseive (zumal, obgleich)",
+            "description": "Sabab va to'siqsizlik (C1 darajali)",
+            "content": "Oddiy `weil` va `obwohl` o'rniga akademik nutqda ishlatiladigan variantlar.\n\n- **zumal** : ayniqsa (chunki).\n- **obgleich / obschon** : -ga qaramay.",
+            "example": "1. Ich gehe nicht raus, **zumal** yomg'ir yog'yapti. (Ich gehe nicht raus, zumal es regnet.)\n2. **Obgleich** u kasal bo'lsa-da, ishga bordi. (Obgleich er krank war, ging er zur Arbeit.)"
+        },
+        {
+            "id": "uc1_143",
+            "title": "Unit 143: Konditionalsätze (falls, sofern, es sei denn)",
+            "description": "Shart ergash gaplar (C1)",
+            "content": "Sharoit va shartlarni ifodalashning turli usullari.\n\n- **falls** : agar (ehtimol kamroq).\n- **sofern** : agar (shart bilan).\n- **es sei denn** : faqat bir holdagina (agar bo'lmasa).",
+            "example": "1. **Falls** u kelsa, menga ayt. (Falls er kommt, sag mir Bescheid.)\n2. Wir kommen, **es sei denn**, yomg'ir yog'sa. (Wir kommen, es sei denn, es regnet.)"
+        },
+        {
+            "id": "uc1_144",
+            "title": "Unit 144: Alternative Konnektoren (andernfalls, demnach, folglich)",
+            "description": "Mantiqiy bog'lovchilar",
+            "content": "Gaplar o'rtasidagi mantiqiy bog'liqlikni (natija, xulosa) ko'rsatadi.\n\n- **andernfalls** : aks holda.\n- **demnach / folglich** : shunga ko'ra / natijada.",
+            "example": "1. Du musst lernen, **andernfalls** imtihondan yiqilasan. (Du musst lernen, andernfalls fällst du durch die Prüfung.)\n2. Er hat nicht gelernt, **folglich** u o'ta olmadi. (Er hat nicht gelernt, folglich hat er nicht bestanden.)"
+        },
+        {
+            "id": "uc1_145",
+            "title": "Unit 145: Textkohärenz (Satzverknüpfung)",
+            "description": "Matn yaxlitligi",
+            "content": "C1 darajasida gaplarni mantiqan bir-biriga bog'lab, uzun va mazmunli matnlar yaratish usullari.",
+            "example": "Erstens..., zweitens..., schließlich..."
+        },
+        {
+            "id": "uc1_146",
+            "title": "Unit 146: Partikeln (ebenso, genauso, ebenfalls)",
+            "description": "O'xshashlikni bildiruvchi so'zlar",
+            "content": "Ikki narsaning o'xshashligini urg'ulash uchun ishlatiladi.\n\n- **ebenfalls / gleichfalls** : xuddi shunday.",
+            "example": "1. Danke, **ebenfalls**! (Rahmat, sizga ham xuddi shunday!)"
+        },
+        {
+            "id": "uc1_147",
+            "title": "Unit 147: Redemittel: Referieren und Zitieren",
+            "description": "Manbalarga tayanish va iqtibos",
+            "content": "Akademik nutqda boshqa mualliflarning fikrlarini yetkazish iboralari.\n\n- **Laut...** : -ga ko'ra.\n- **Wie ... berichtet, ...** : ... xabar berganidek.",
+            "example": "1. **Laut** statistikaga ko'ra, narxlar oshmoqda. (Laut der Statistik steigen die Preise.)"
+        },
+        {
+            "id": "uc1_148",
+            "title": "Unit 148: Redemittel: Zusammenfassen",
+            "description": "Xulosa qilish iboralari",
+            "content": "Matn yoki nutq oxirida asosiy fikrlarni jamlash.\n\n- **Zusammenfassend lässt sich sagen...**\n- **Kurzum...**",
+            "example": "1. **Zusammenfassend** ko'rishimiz mumkinki... (Zusammenfassend lässt sich sagen, dass...)"
+        },
+        {
+            "id": "uc1_149",
+            "title": "Unit 149: Redemittel: Grafiken beschreiben",
+            "description": "Grafik va diagrammalarni tasvirlash",
+            "content": "Vizual ma'lumotlarni so'z bilan ifodalash uchun zarur bo'lgan lug'at va grammatika.\n\n- **Die Grafik zeigt...**\n- **Der Anteil beträgt...**",
+            "example": "1. Die Grafik zeigt den **Anstieg** der Kosten. (Grafik xarajatlarning o'sishini ko'rsatmoqda.)"
+        },
+        {
+            "id": "uc1_150",
+            "title": "Unit 150: Redemittel: Argumentieren und Abwägen",
+            "description": "Dalillar keltirish va baholash",
+            "content": "Biror fikrning ijobiy va salbiy tomonlarini muhokama qilish.",
+            "example": "Einerseits..., andererseits..."
+        },
+        {
+            "id": "uc1_151",
+            "title": "Unit 151: Passiversatz: Gerundivum (sein + zu + Inf.)",
+            "description": "Zaruriyat formasi (Takrorlash)",
+            "content": "Passive o'rnida ishlatiladigan, 'bajarilishi shart' ma'nosidagi murakkab konstruksiya.",
+            "example": "Die Arbeit **ist** bis morgen **zu erledigen**. (Ish ertaga gacha bajarilishi shart.)"
+        },
+        {
+            "id": "uc1_152",
+            "title": "Unit 152: Funktionsverbgefüge (C1 Übersicht)",
+            "description": "Barqaror birikmalar (C1 xulosasi)",
+            "content": "Eng ko'p ishlatiladigan ot-fe'l birikmalarining kengaytirilgan ro'yxati.",
+            "example": "in Erwägung ziehen (o'ylab ko'rmoq)."
+        },
+        {
+            "id": "uc1_153",
+            "title": "Unit 153: Adjektive mit Präpositionen (C1 Professional)",
+            "description": "Sifatlarning predloglar bilan kelishi",
+            "content": "C1 darajasidagi maxsus sifatlar va ularning boshqaruvi.",
+            "example": "angewiesen sein auf (+ Akk) (muhtoj bo'lmoq)."
+        },
+        {
+            "id": "uc1_154",
+            "title": "Unit 154: Nomen mit Präpositionen (C1 Professional)",
+            "description": "Otlarning predloglar bilan kelishi",
+            "content": "C1 darajasidagi maxsus otlar va ularning boshqaruvi.",
+            "example": "Bereitschaft zu (+ Dat) (tayyorlik)."
+        },
+        {
+            "id": "uc1_155",
+            "title": "Unit 155: Verben mit Präpositionen (C1 Professional)",
+            "description": "Fe'llarning predloglar bilan kelishi",
+            "content": "C1 darajasidagi murakkab fe'llar va ularning boshqaruvi.",
+            "example": "beruhen auf (+ Dat) (asoslanmoq)."
+        },
+        {
+            "id": "uc1_156",
+            "title": "Unit 156: Partizipien als Adjektive (C1 Advanced)",
+            "description": "Murakkab sifatdosh aniqlovchilar",
+            "content": "C1 darajasida sifatdoshlar nafaqat otni aniqlaydi, balki gapning butun mazmunini qisqartirish uchun xizmat qiladi.\n\n- *die zu treffende Entscheidung* (qabul qilinishi kerak bo'lgan qaror).\n- *die bereits getroffene Entscheidung* (allaqachon qabul qilingan qaror).",
+            "example": "1. Es handelt sich um ein **nicht zu vernachlässigendes** Thema. (Bu e'tiborsiz qoldirib bo'lmaydigan mavzudir.)\n2. Die **unvorhergesehenen** Ereignisse. (Kutilmagan hodisalar.)"
+        },
+        {
+            "id": "uc1_157",
+            "title": "Unit 157: Redemittel: Kritik üben und Feedback geben",
+            "description": "Tanqid va mulohaza bildirish",
+            "content": "Professional muhitda tanqidni muloyim va asosli tarzda yetkazish iboralari.\n\n- **Ich habe da gewisse Bedenken...**\n- **Könnten wir das vielleicht anders lösen?**",
+            "example": "1. **An diesem Punkt** bin ich noch nicht ganz überzeugt. (Bu nuqtada hali to'liq ishonchim komil emas.)"
+        },
+        {
+            "id": "uc1_158",
+            "title": "Unit 158: Redemittel: Vorschläge und Alternativen",
+            "description": "Takliflar va muqobil variantlar",
+            "content": "Yangi g'oyalarni taqdim etish va variantlarni muhokama qilish.\n\n- **Wäre es nicht sinnvoll, ... zu tun?**\n- **Alternativ dazu könnten wir...**",
+            "example": "1. **Wie wäre es**, wenn wir morgen anfangen? (Ertaga boshlasak qanday bo'ladi?)"
+        },
+        {
+            "id": "uc1_159",
+            "title": "Unit 159: Redemittel: Zustimmen und Widersprechen",
+            "description": "Qo'shilish va e'tiroz bildirish",
+            "content": "Bahs davomida o'z pozitsiyasini aniq ko'rsatuvchi iboralar.\n\n- **Das sehe ich genauso.** (Men ham xuddi shunday deb o'ylayman.)\n- **Das ist nur bedingt richtig.** (Bu faqat qisman to'g'ri.)",
+            "example": "1. **In diesem Punkt** stimme ich Ihnen vollkommen zu. (Bu masalada sizga to'liq qo'shilaman.)"
+        },
+        {
+            "id": "uc1_160",
+            "title": "Unit 160: Redemittel: Schlussfolgerungen ziehen",
+            "description": "Mantiqiy xulosalar chiqarish",
+            "content": "Nutq yoki matn oxirida yig'indini chiqarish uchun qo'llaniladigan iboralar.\n\n- **Daraus lässt sich schließen, dass...**\n- **Zusammenfassend kann man sagen...**",
+            "example": "1. **Folglich** ist diese Methode effizienter. (Demak, bu metod samaraliroq.)"
+        },
+        {
+            "id": "uc1_161",
+            "title": "Unit 161: Wortbildung im Überblick (C1 Revision)",
+            "description": "So'z yasalishi (Umumiy xulosa)",
+            "content": "Nemis tilidagi barcha so'z yasalishi usullarini (suffix, prefix, composita) birlashtirgan yakuniy ko'zdan kechirish.",
+            "example": "Söz yasalishi grammatikaning eng boy qismidir."
+        },
+        {
+            "id": "uc1_162",
+            "title": "Unit 162: Syntax im Überblick (C1 Revision)",
+            "description": "Gap tuzilishi (Umumiy xulosa)",
+            "content": "Turli darajadagi gap tartiblarini (Position 1, 2, End) va ularning stilistik xususiyatlarini takrorlash.",
+            "example": "Gap tartibi nemis tili mantiqidir."
+        },
+        {
+            "id": "uc1_163",
+            "title": "Unit 163: Kasus im Überblick (C1 Revision)",
+            "description": "Kelishiklar (Umumiy xulosa)",
+            "content": "Nominativ, Akkusativ, Dativ va Genitivning barcha vazifalarini tizimli takrorlash.",
+            "example": "Kelishiklar gapdagi rollarni belgilaydi."
+        },
+        {
+            "id": "uc1_164",
+            "title": "Unit 164: Präpositionen im Überblick (C1 Revision)",
+            "description": "Predloglar (Umumiy xulosa)",
+            "content": "Joy, vaqt, mantiqiy va boshqa barcha predloglar guruhlarini yakuniy ko'zdan kechirish.",
+            "example": "Predloglar munosabatlarni bildiradi."
+        },
+        {
+            "id": "uc1_165",
+            "title": "Unit 165: Tipps zum Deutschlernen (C1+ Niveau)",
+            "description": "Nemis tilini o'rganish bo'yicha maslahatlar",
+            "content": "C1 darajasiga yetgandan keyin tilni qanday saqlash va rivojlantirish bo'yicha amaliy maslahatlar (podkastlar, akademik adabiyotlar).",
+            "example": "Til o'rganish - davomiy jarayon."
+        },
+        {
+            "id": "uc1_166",
+            "title": "Unit 166: Prüfungsvorbereitung (TestDaF/Goethe C1)",
+            "description": "Imtihonlarga tayyorgarlik",
+            "content": "Xalqaro imtihonlarda uchraydigan tipik grammatik topshiriqlar va ularni yechish strategiyalari.",
+            "example": "Sertifikat - bilimingiz tasdig'idir."
+        },
+        {
+            "id": "uc1_167",
+            "title": "Unit 167: Deutsch in Berufsleben",
+            "description": "Kasbiy faoliyatda nemis tili",
+            "content": "Ish joyida muloqot, xatlar yozish va rasmiyatchilik qoidalari haqida qisqacha ma'lumot.",
+            "example": "Professional nemis tili yangi eshiklar ochadi."
+        },
+        {
+            "id": "uc1_168",
+            "title": "Unit 168: Abschluss der Grammatik-Reise",
+            "description": "Hammasi yakunlandi!",
+            "content": "Tabriklaymiz! Siz 168 ta grammatik unitdan iborat to'liq kursni yakunladingiz. Endi bilimingizni amalda qo'llash vaqti keldi.\n\n*Viel Erfolg auf Ihrem Weg!*",
+            "example": "Unit 168: Herzlichen Glückwunsch!"
+        }
+    ]
+}

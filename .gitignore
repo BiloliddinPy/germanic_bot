@@ -1,0 +1,27 @@
+.DS_Store
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Runtime / local artifacts
+bot.log
+*.log
+germanic.db
+*.sqlite
+*.sqlite3
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# OS / editor
+.idea/
+.vscode/
+
+# Large local study files (kept outside git history)
+data/Grammatik Aktiv A1B1.docx
