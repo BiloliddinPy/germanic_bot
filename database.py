@@ -619,6 +619,20 @@ def get_random_words(level, limit=4):
     conn.close()
     return [dict(row) for row in rows]
 
+def get_words_by_ids(word_ids):
+    """Returns a list of word dictionaries for the given IDs."""
+    if not word_ids:
+        return []
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    # Use placeholders for the IN clause
+    placeholders = ",".join(["?"] * len(word_ids))
+    cursor.execute(f"SELECT * FROM words WHERE id IN ({placeholders})", word_ids)
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
 # --- User Management ---
 
 def add_user(user_id, full_name, username):
