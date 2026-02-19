@@ -70,9 +70,14 @@ async def quiz_start_questions(call: CallbackQuery, state: FSMContext):
 @router.callback_query(QuizState.in_progress, F.data.startswith("quiz_answer_"))
 async def quiz_answer_handler(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    idx = data["current_idx"]
-    questions = data["questions"]
-    score = data["score"]
+    idx = data.get("current_idx")
+    questions = data.get("questions")
+    score = data.get("score")
+    
+    if idx is None or not questions:
+        await call.answer("Sessiya muddati tugagan. Iltimos, qaytadan boshlang.", show_alert=True)
+        await quiz_start_handler(call.message, state)
+        return
     
     selected_answer = call.data.replace("quiz_answer_", "")
     correct_answer = questions[idx]["correct_answer"]

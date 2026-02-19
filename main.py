@@ -69,6 +69,21 @@ async def main():
     for router in routers:
         dp.include_router(router)
 
+    # Global Error Handler
+    @dp.error()
+    async def global_error_handler(event: types.ErrorEvent):
+        logging.exception(f"Global error: {event.exception}")
+        if event.update.message:
+            await event.update.message.answer(
+                "⚠️ Kechirasiz, kutilmagan xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring yoki /start buyrug'ini bosing."
+            )
+        elif event.update.callback_query:
+            await event.update.callback_query.answer(
+                "⚠️ Xatolik yuz berdi. Iltimos, bosh menyuga qayting.",
+                show_alert=True
+            )
+        return True
+
     # Bot Commands
     await bot.set_my_commands([
         types.BotCommand(command="start", description="Botni ishga tushirish"),

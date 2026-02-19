@@ -35,7 +35,7 @@ def get_alphabet_keyboard(level: str):
     for letter in alphabet:
         builder.button(text=letter, callback_data=f"dict_letter_{level}_{letter}")
     builder.adjust(5)
-    builder.row(InlineKeyboardButton(text=BTN_BACK, callback_data="dict_back"))
+    builder.row(InlineKeyboardButton(text=BTN_BACK, callback_data="dict_back"), InlineKeyboardButton(text=BTN_HOME, callback_data="home"))
     return builder.as_markup()
 
 def get_main_menu_keyboard():
@@ -57,7 +57,7 @@ def get_main_menu():
     """Alias for backward compatibility."""
     return get_main_menu_keyboard()
 
-def get_practice_categories_keyboard():
+def get_practice_categories_keyboard(callback_prefix: str = "practice_cat"):
     categories = [
         ("🏠 Kundalik hayot", "daily"),
         ("💼 Ish va karyera", "work"),
@@ -68,5 +68,5 @@ def get_practice_categories_keyboard():
     for text, code in categories:
         builder.button(text=text, callback_data=f"practice_cat_{code}")
     builder.adjust(2)
-    builder.row(InlineKeyboardButton(text=BTN_BACK, callback_data="practice_back"))
+    builder.row(InlineKeyboardButton(text=BTN_BACK, callback_data="practice_back_main"))
     return builder.as_markup()

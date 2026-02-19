@@ -3,15 +3,24 @@ import sqlite3
 import datetime
 import logging
 
-def get_due_reviews(user_id: int, limit: int = 20):
+def get_due_reviews(user_id: int, level: str = None, limit: int = 20):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT item_id FROM user_mastery 
-        WHERE user_id = ? AND next_review <= CURRENT_TIMESTAMP
-        ORDER BY next_review ASC
-        LIMIT ?
-    """, (user_id, limit))
+    if level:
+        cursor.execute("""
+            SELECT m.item_id FROM user_mastery m
+            JOIN words w ON m.item_id = w.id
+            WHERE m.user_id = ? AND w.level = ? AND m.next_review <= CURRENT_TIMESTAMP
+            ORDER BY m.next_review ASC
+            LIMIT ?
+        """, (user_id, level, limit))
+    else:
+        cursor.execute("""
+            SELECT item_id FROM user_mastery 
+            WHERE user_id = ? AND next_review <= CURRENT_TIMESTAMP
+            ORDER BY next_review ASC
+            LIMIT ?
+        """, (user_id, limit))
     rows = cursor.fetchall()
     conn.close()
     return [row[0] for row in rows]
@@ -68,15 +77,24 @@ def get_level_progress_stats(user_id: int, level: str):
     
     return mastered, total
 
-def get_weighted_mistake_word_ids(user_id: int, limit: int = 20):
+def get_weighted_mistake_word_ids(user_id: int, level: str = None, limit: int = 20):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT item_id FROM user_mistakes 
-        WHERE user_id = ? AND module = 'vocab' AND mastered = 0
-        ORDER BY mistake_count DESC, last_mistake_at DESC
-        LIMIT ?
-    """, (user_id, limit))
+    if level:
+        cursor.execute("""
+            SELECT m.item_id FROM user_mistakes m
+            JOIN words w ON m.item_id = w.id
+            WHERE m.user_id = ? AND w.level = ? AND m.module = 'vocab' AND m.mastered = 0
+            ORDER BY m.mistake_count DESC, m.last_mistake_at DESC
+            LIMIT ?
+        """, (user_id, level, limit))
+    else:
+        cursor.execute("""
+            SELECT item_id FROM user_mistakes 
+            WHERE user_id = ? AND module = 'vocab' AND mastered = 0
+            ORDER BY mistake_count DESC, last_mistake_at DESC
+            LIMIT ?
+        """, (user_id, limit))
     rows = cursor.fetchall()
     conn.close()
     return [int(row[0]) for row in rows]

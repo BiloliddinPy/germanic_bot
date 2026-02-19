@@ -157,6 +157,9 @@ async def daily_step_callback(call: CallbackQuery):
         state["step"] = next_step
         save_daily_lesson_state(user_id, state)
         await _render_step(call.message, user_id, state)
+    else:
+        await call.answer("Dars sessiyasi topilmadi.")
+        await _show_entry_screen(call.message, user_id)
 
 @router.callback_query(F.data == "daily_finish")
 async def daily_finish_callback(call: CallbackQuery):

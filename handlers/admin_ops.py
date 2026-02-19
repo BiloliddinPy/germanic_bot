@@ -15,7 +15,6 @@ from utils.backup_manager import (
     BACKUP_SEND_MAX_BYTES
 )
 from utils.runtime_state import get_uptime_seconds, get_last_update_handled_iso
-from utils.scheduler import get_scheduler_health
 from utils.error_notifier import (
     get_ops_alerts_status,
     set_ops_alerts_enabled,
@@ -48,6 +47,7 @@ async def health_cmd(message: Message):
     uptime_seconds = get_uptime_seconds()
     last_update = get_last_update_handled_iso() or get_last_event_timestamp() or "-"
 
+    from utils.scheduler import get_scheduler_health
     scheduler = get_scheduler_health()
     scheduler_started = "yes" if scheduler.get("started") else "no"
     scheduler_next_run = scheduler.get("next_run_time") or "-"

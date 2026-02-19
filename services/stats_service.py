@@ -3,12 +3,12 @@ from database.repositories.mastery_repository import get_level_progress_stats
 
 class StatsService:
     @staticmethod
-    def log_navigation(user_id: int, section: str, level: str = None):
-        record_navigation_event(user_id, section, level=level)
+    def log_navigation(user_id: int, section: str, level: str = None, **kwargs):
+        record_navigation_event(user_id, section, level=level, **kwargs)
 
     @staticmethod
-    def log_activity(user_id: int, event: str, metadata: dict = None):
-        log_event(user_id, event, metadata=metadata)
+    def log_activity(user_id: int, event: str, metadata: dict = None, **kwargs):
+        log_event(user_id, event, metadata=metadata, **kwargs)
 
     @staticmethod
     def mark_progress(user_id: int, module: str, level: str, completed: bool = False):
