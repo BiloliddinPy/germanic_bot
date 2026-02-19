@@ -370,6 +370,23 @@ def create_table():
     # Index for fast retrieval of due items
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_mastery_due ON user_mastery(user_id, next_review)")
 
+    # User Submissions (Speaking/Writing) - Phase 2
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_submissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            module TEXT, -- 'writing' or 'speaking'
+            level TEXT,
+            topic_id TEXT,
+            content TEXT, -- Text for writing, file_id for speaking
+            feedback_ai TEXT, -- Placeholder for Phase 3
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    # Index for checking recent submissions
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_submissions_user ON user_submissions(user_id, module)")
+
     # Navigation Event Logging (Foundation Day 1)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS events (
@@ -1790,3 +1807,54 @@ def update_mastery(user_id, item_id, module, is_correct):
     
     conn.commit()
     conn.close()
+
+
+# --- Phase 2: User Submissions (Speaking/Writing) ---
+
+def save_user_submission(user_id, module, level, topic_id, content):
+    """Saves a user's writing or speaking submission (Phase 2)."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO user_submissions (user_id, module, level, topic_id, content)
+        VALUES (?, ?, ?, ?, ?)
+    """, (user_id, module, level, str(topic_id), str(content)))
+    conn.commit()
+    conn.close()
+
+def get_mastery_stats(user_id):
+    """Returns count of items in each Leitner box."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT box, COUNT(*) FROM user_mastery 
+        WHERE user_id = ? GROUP BY box
+    """, (user_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return dict(rows)
+
+def get_submission_stats(user_id):
+    """Returns count of writing and speaking submissions."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT module, COUNT(*) FROM user_submissions 
+        WHERE user_id = ? GROUP BY module
+    """, (user_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return dict(rows)
+
+def get_due_review_count(user_id):
+    """Returns number of items currently due for SRS review."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    today = datetime.date.today().isoformat()
+    cursor.execute("""
+        SELECT COUNT(*) FROM user_mastery 
+        WHERE user_id = ? AND next_review <= ? AND is_suspended = 0
+    """, (user_id, today))
+    count = cursor.fetchone()[0]
+    conn.close()
+    return count

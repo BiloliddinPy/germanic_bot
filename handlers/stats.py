@@ -8,7 +8,10 @@ from database import (
     record_navigation_event,
     get_latest_daily_plan_audit,
     get_recent_topic_mistake_scores,
-    get_user_profile
+    get_user_profile,
+    get_mastery_stats,
+    get_submission_stats,
+    get_due_review_count
 )
 from handlers.common import send_single_ui_message
 
@@ -65,6 +68,14 @@ async def stats_handler(message: Message):
     weak_level = plan_level or profile.get("current_level") or "A1"
     weak_topics = get_recent_topic_mistake_scores(message.from_user.id, weak_level, days=14, limit=3)
 
+    # Phase 2: SRS & Submission Stats
+    mastery = get_mastery_stats(message.from_user.id)
+    submissions = get_submission_stats(message.from_user.id)
+    due_count = get_due_review_count(message.from_user.id)
+    
+    total_mastered = sum(count for box, count in mastery.items() if box >= 4)
+    total_learning = sum(count for box, count in mastery.items() if box < 4)
+
     if plan_source == "generated":
         source_text = "yangidan tuzilgan"
     elif plan_source == "cache":
@@ -111,18 +122,23 @@ async def stats_handler(message: Message):
         "📊 **Natijalar**\n\n"
         f"🔥 **Joriy streak:** {streak.get('current_streak', 0)} kun\n"
         f"🏆 **Eng yaxshi streak:** {streak.get('best_streak', 0)} kun\n"
-        f"✅ **Kunlik dars (so'nggi 7 kun):** {completion_rate_7d}%\n\n"
-        "🧭 **Oxirgi kunlik dars rejasi**\n"
+        f"✅ **Kunlik dars (7 kun):** {completion_rate_7d}%\n\n"
+        "🧠 **O'zlashtirish (SRS)**\n"
+        f"▫️ O'rganilmoqda: {total_learning} ta so'z\n"
+        f"▫️ Mukammal bilasiz: {total_mastered} ta so'z\n"
+        f"🔄 **Takrorlash kerak:** {due_count} ta so'z\n\n"
+        "✍️ **Sprechen & Schreiben**\n"
+        f"▫️ Yozma matnlar: {submissions.get('writing', 0)} ta\n"
+        f"▫️ Gapirish mashqlari: {submissions.get('speaking', 0)} ta\n\n"
+        "🧭 **Oxirgi dars rejasi**\n"
         f"▫️ Mavzu: {plan_topic_text}\n"
-        f"▫️ Manba: {source_text}\n"
-        f"▫️ Tanlash sababi: {reason_text}\n\n"
-        f"🧩 **Top 3 zaif mavzu ({weak_level})**\n"
+        f"▫️ Sabab: {reason_text}\n\n"
+        f"🧩 **Zaif mavzular ({weak_level})**\n"
         f"{weak_topics_text}\n\n"
         "📚 **Modullar bo'yicha**\n"
         f"▫️ Lug'at: {dict_comp}/{dict_attempts} ({dict_rate}%)\n"
-        f"▫️ Test va Quiz: {quiz_comp}/{quiz_attempts} ({quiz_rate}%)\n"
-        f"▫️ Grammatika: {grammar_comp}/{grammar_attempts} ({grammar_rate}%)\n"
-        f"▫️ Materiallar: {materials_comp}/{materials_attempts} ({materials_rate}%)\n\n"
+        f"▫️ Quiz: {quiz_comp}/{quiz_attempts} ({quiz_rate}%)\n"
+        f"▫️ Grammatika: {grammar_comp}/{grammar_attempts} ({grammar_rate}%)\n\n"
         f"{motivation}"
     )
     

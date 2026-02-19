@@ -12,7 +12,7 @@ from database import (
 from config import DAILY_LESSON_ENABLED, ADMIN_ID
 
 router = Router()
-UI_BUILD = "build-2026-02-18-01"
+UI_TEST_MODE = "🛠️ Bot hozirda test rejimida ishlayapti"
 MAIN_MENU_STATE_KEY = "main_menu_message_id"
 ACTIVE_UI_STATE_KEY = "active_ui_message_id"
 MAIN_MENU_TEXT = "Asosiy menyu:\nKerakli bo'limni tanlang."
@@ -135,7 +135,7 @@ async def cmd_start(message: Message):
         "🎓 **Imtihon tayyorgarligi** — Imtihonga tayyorgarlik\n"
         "📊 **Natijalar** — Natijalaringiz\n"
         "⚙️ **Profil** — Shaxsiy sozlamalar\n\n"
-        f"🔖 {UI_BUILD}\n\n"
+        f"🔖 {UI_TEST_MODE}\n\n"
         "Kerakli bo'limni tanlang:"
     )
     await _send_fresh_main_menu(message, text, user_id=message.from_user.id)
@@ -173,7 +173,7 @@ async def cmd_about(message: Message):
     text = (
         "🏢 **Germanic Bot**\n\n"
         "Nemis tilini o'rganuvchilar uchun maxsus ishlab chiqilgan.\n\n"
-        f"🔖 Versiya: {UI_BUILD}"
+        f"🔖 {UI_TEST_MODE}"
     )
     await send_single_ui_message(message, text, reply_markup=get_main_menu(), parse_mode="Markdown")
 

@@ -1,5 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.exceptions import TelegramBadRequest
 
 from database import (
@@ -26,6 +27,9 @@ from database import (
     get_recent_topic_mistake_scores,
     get_daily_lesson_state,
     save_daily_lesson_state,
+    save_user_submission,
+    get_due_reviews,
+    update_mastery,
 )
 import sqlite3
 import json
@@ -475,15 +479,23 @@ def _entry_finished_text(state_obj):
 
 def _entry_markup(status):
     if status == STATUS_IDLE:
-        return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Boshlash", callback_data="daily_begin")]])
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Boshlash", callback_data="daily_begin")],
+            [InlineKeyboardButton(text="🔄 Takrorlash (SRS)", callback_data="daily_review_mastery")],
+            [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+        ])
     if status == STATUS_IN_PROGRESS:
         return InlineKeyboardMarkup(
             inline_keyboard=[
                 [InlineKeyboardButton(text="Davom ettirish", callback_data="daily_resume")],
                 [InlineKeyboardButton(text="Bekor qilish", callback_data="daily_cancel")],
+                [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
             ]
         )
-    return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Ertangi darsni kutish", callback_data="daily_wait")]])
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Ertangi darsni kutish", callback_data="daily_wait")],
+        [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+    ])
 
 
 def _safe_edit_or_send(message: Message, text: str, markup: InlineKeyboardMarkup):
@@ -567,7 +579,10 @@ async def _render_step(message: Message, user_id: int):
             "📘 **Lug'at (3-5 so'z)**\n\n"
             + ("\n".join(lines) if lines else "So'z topilmadi")
         )
-        markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Davom", callback_data="daily_vocab_next")]])
+        markup = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Davom", callback_data="daily_vocab_next")],
+            [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+        ])
         await _safe_edit_or_send(message, text, markup)
         return
 
@@ -581,7 +596,10 @@ async def _render_step(message: Message, user_id: int):
             f"{_md_escape(content or '-')}\n\n"
             f"📝 Misol: {_md_escape(topic.get('example', '-'))}"
         )
-        markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Davom", callback_data="daily_grammar_next")]])
+        markup = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Davom", callback_data="daily_grammar_next")],
+            [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+        ])
         await _safe_edit_or_send(message, text, markup)
         return
 
@@ -602,6 +620,7 @@ async def _render_step(message: Message, user_id: int):
         rows = []
         for opt_idx, opt in enumerate(q.get("options", [])):
             rows.append([InlineKeyboardButton(text=opt, callback_data=f"daily_quiz_{q_idx}_{opt_idx}")])
+        rows.append([InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")])
         await _safe_edit_or_send(message, text, InlineKeyboardMarkup(inline_keyboard=rows))
         return
 
@@ -616,7 +635,10 @@ async def _render_step(message: Message, user_id: int):
                 f"Mavzu: **{_md_escape(topic.get('title', 'Umumiy mavzu'))}**\n\n"
                 "45-60 soniyalik voice xabar yuboring."
             )
-            markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Tekshirish", callback_data="daily_production_check")]])
+            markup = InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="Tekshirish", callback_data="daily_production_check")],
+                [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+            ])
             await _safe_edit_or_send(message, text, markup)
             return
 
@@ -629,7 +651,10 @@ async def _render_step(message: Message, user_id: int):
             f"Mavzu: **{_md_escape(topic.get('title', 'Umumiy mavzu'))}**\n"
             f"{sentence_target} ta qisqa gap yozing, keyin tasdiqlang."
         )
-        markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Bajarildi", callback_data="daily_prod_done")]])
+        markup = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Bajarildi", callback_data="daily_prod_done")],
+            [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+        ])
         await _safe_edit_or_send(message, text, markup)
         return
 
@@ -645,7 +670,10 @@ async def _render_step(message: Message, user_id: int):
             f"🔥 Streak: **{streak.get('current_streak', 0)}**\n"
             f"⭐ XP: **+{int(summary.get('xp_earned') or 0)}**"
         )
-        markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Yakunlash", callback_data="daily_finish")]])
+        markup = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Yakunlash", callback_data="daily_finish")],
+            [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+        ])
         await _safe_edit_or_send(message, text, markup)
         return
 
@@ -798,6 +826,9 @@ async def daily_cancel_callback(call: CallbackQuery):
 @router.callback_query(F.data == "daily_wait")
 async def daily_wait_callback(call: CallbackQuery):
     await call.answer("Ertangi darsni kutamiz.", show_alert=False)
+    # Redirect to home
+    from handlers.common import _send_fresh_main_menu, MAIN_MENU_TEXT
+    await _send_fresh_main_menu(call.message, MAIN_MENU_TEXT, user_id=call.from_user.id)
 
 
 @router.callback_query(F.data.startswith("daily_warmup_"))
@@ -927,7 +958,18 @@ async def daily_production_done_callback(call: CallbackQuery):
 
     topic_id = (session.get("topic") or {}).get("id")
     level = session.get("level", "A1")
+    
+    # Save submission (New Phase 2 logic)
+    # Since we don't have the message text here directly (it was likely handled by a different flow or implied), 
+    # we might need to check how writing_done is triggered.
+    # In daily_lesson, writing is handled by the user typing then clicking 'Bajarildi'.
+    # We should add a message handler for writing in daily_lesson too.
+    
     mark_writing_task_completed(call.from_user.id, level, topic_id, "daily_writing")
+    
+    # Check if we have recent text from user to save as submission
+    # This is a bit tricky as we don't 'own' the text yet as a separate state.
+    # For now, we rely on the user sending text then clicking the button.
 
     session = _commit_summary_if_needed(call.from_user.id, session)
     _save_session_state(call.from_user.id, STEP_SUMMARY, session, xp_earned=(session.get("summary") or {}).get("xp_earned", 0))
@@ -972,6 +1014,10 @@ async def daily_voice_message_handler(message: Message):
 
     level = session.get("level", "A1")
     topic_id = (session.get("topic") or {}).get("id")
+    
+    # Save submission (New Phase 2 logic)
+    save_user_submission(message.from_user.id, "speaking", level, topic_id, message.voice.file_id)
+    
     mark_writing_task_completed(message.from_user.id, level, topic_id, "speaking_voice")
 
     log_event(
@@ -983,6 +1029,27 @@ async def daily_voice_message_handler(message: Message):
     )
     _save_session_state(message.from_user.id, STEP_PRODUCTION, session)
     await message.answer("Voice qabul qilindi ✅\nDavom etish uchun dars oynasidagi 'Tekshirish' tugmasini bosing.")
+
+@router.message(F.text)
+async def daily_text_message_handler(message: Message):
+    if message.text.startswith("/") or message.text in ["🚀 Kunlik dars", "📘 Lug‘at (A1–C1)", "📐 Grammatika"]:
+        return
+        
+    session, state_obj = _load_active_session(message.from_user.id)
+    if not session or int(state_obj.get("daily_step") or 0) != STEP_PRODUCTION:
+        return
+
+    production = session.get("production") or {}
+    if production.get("mode") != "writing":
+        return
+
+    # Store text for later save_user_submission when 'Bajarildi' is clicked
+    # OR save it immediately as a draft
+    level = session.get("level", "A1")
+    topic_id = (session.get("topic") or {}).get("id")
+    save_user_submission(message.from_user.id, "writing", level, topic_id, message.text)
+    
+    await message.answer("Matn qabul qilindi ✅\nDavom etish uchun dars oynasidagi 'Bajarildi' tugmasini bosing.")
 
 
 @router.callback_query(F.data == "daily_finish")
@@ -1004,5 +1071,107 @@ async def daily_finish_callback(call: CallbackQuery):
         mark_completed=True,
     )
 
-    await call.answer("Bugungi dars yakunlandi.", show_alert=False)
-    await _show_entry_screen(call.message, call.from_user.id)
+@router.callback_query(F.data == "daily_review_mastery")
+async def daily_review_mastery_start(call: CallbackQuery, state: FSMContext):
+    user_id = call.from_user.id
+    due_items = get_due_reviews(user_id, limit=10)
+    
+    if not due_items:
+        # Fallback: check mistakes
+        from database import get_user_mistakes_overview
+        mistakes = get_user_mistakes_overview(user_id)
+        if not mistakes:
+            await call.answer("Hozircha takrorlash uchun so'zlar yo'q. ✅", show_alert=True)
+            return
+        
+        # If mistakes exist but not in mastery yet, we can't 'review' by mastery rules easily
+        # but we can just say "Good job" for now or start a mistake review.
+        await call.answer("Barcha so'zlarni o'zlashtirgansiz! Yangi so'zlar o'rganishda davom eting.", show_alert=True)
+        return
+
+    # Start Mastery Review Session
+    # We'll use a simplified version of the quiz logic
+    # We need to fetch the actual words for these item_ids
+    item_ids = [int(item['item_id']) for item in due_items if item['module'] == 'dictionary'] # Assuming mostly words for now
+    words = get_words_by_ids(item_ids)
+    
+    if not words:
+        await call.answer("Xatolik: so'zlar topilmadi.", show_alert=True)
+        return
+
+    questions = []
+    for word in words:
+        # Find which mastery record corresponds to this word
+        q = build_quiz_question(word, word['level'], "srs_review", "srs")
+        if q:
+            questions.append(q)
+
+    if not questions:
+        await call.answer("Savollar tayyorlanmadi.", show_alert=True)
+        return
+
+    await state.update_data(
+        srs_questions=questions,
+        current_idx=0,
+        correct_count=0,
+        session_type="srs_review"
+    )
+    
+    await _render_srs_step(call.message, questions[0], 0, len(questions))
+
+async def _render_srs_step(message: Message, question: dict, index: int, total: int):
+    builder = InlineKeyboardBuilder()
+    for idx, opt in enumerate(question['options']):
+        builder.button(text=opt, callback_data=f"srs_ans_{index}_{idx}")
+    builder.adjust(1)
+    builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
+    
+    text = (
+        f"🔄 **SRS Takrorlash ({index+1}/{total})**\n\n"
+        f"{question['text']}"
+    )
+    await message.edit_text(text, reply_markup=builder.as_markup(), parse_mode="Markdown")
+
+@router.callback_query(F.data.startswith("srs_ans_"))
+async def srs_answer_handler(call: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    if data.get("session_type") != "srs_review":
+        return
+
+    questions = data.get("srs_questions", [])
+    current_idx = data.get("current_idx", 0)
+    correct_count = data.get("correct_count", 0)
+    
+    parsed = parse_indexed_callback(call.data, "srs_ans_", 2)
+    if not parsed or parsed[0] != current_idx:
+        await call.answer("Eski savol!", show_alert=True)
+        return
+    
+    _, opt_idx = parsed
+    question = questions[current_idx]
+    selected = question['options'][opt_idx]
+    is_correct = selected == question['correct']
+    
+    # Update SRS Mastery in DB!
+    update_mastery(call.from_user.id, question['word_id'], "dictionary", is_correct)
+    
+    if is_correct:
+        correct_count += 1
+        await call.answer("To'g'ri! ✅", show_alert=False)
+    else:
+        await call.answer(f"Noto'g'ri! ❌ To'g'ri javob: {question['correct']}", show_alert=True)
+
+    next_idx = current_idx + 1
+    if next_idx < len(questions):
+        await state.update_data(current_idx=next_idx, correct_count=correct_count)
+        await _render_srs_step(call.message, questions[next_idx], next_idx, len(questions))
+    else:
+        # Finish Review
+        text = (
+            "🏁 **Takrorlash yakunlandi!**\n\n"
+            f"📊 Natija: {correct_count}/{len(questions)}\n"
+            "So'zlar o'zlashtirish darajasiga qarab keyingi safar yana chiqadi."
+        )
+        markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]])
+        await call.message.edit_text(text, reply_markup=markup, parse_mode="Markdown")
+        await state.clear()
