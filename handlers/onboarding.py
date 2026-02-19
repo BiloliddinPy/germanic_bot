@@ -1,110 +1,79 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-from database import update_user_profile, get_user_profile, log_event
-from utils.ui_utils import _send_fresh_main_menu, MAIN_MENU_TEXT, _md_escape
+from services.user_service import UserService
+from services.stats_service import StatsService
+from core.texts import ONBOARDING_WELCOME
+from utils.ui_utils import send_single_ui_message, _send_fresh_main_menu
+from keyboards.builders import get_levels_keyboard, get_main_menu_keyboard
 
 router = Router()
 
 class OnboardingState(StatesGroup):
     waiting_for_level = State()
     waiting_for_goal = State()
-    waiting_for_target = State()
-
-def get_onboarding_levels_keyboard():
-    levels = ["A1", "A2", "B1", "B2", "C1"]
-    keyboard = []
-    row = []
-    for lvl in levels:
-        row.append(InlineKeyboardButton(text=lvl, callback_data=f"ob_level_{lvl}"))
-        if len(row) == 2:
-            keyboard.append(row)
-            row = []
-    if row:
-        keyboard.append(row)
-    return InlineKeyboardMarkup(inline_keyboard=keyboard)
-
-def get_onboarding_goals_keyboard():
-    goals = [
-        ("💼 Ish va karyera", "work"),
-        ("✈️ Sayohat va hayot", "travel"),
-        ("🎓 Imtihon (Goethe/TestDaF)", "exam"),
-        ("🌟 Shunchaki qiziqish", "fun")
-    ]
-    keyboard = [[InlineKeyboardButton(text=t, callback_data=f"ob_goal_{s}")] for t, s in goals]
-    return InlineKeyboardMarkup(inline_keyboard=keyboard)
-
-def get_onboarding_target_keyboard():
-    targets = [
-        ("☕️ 5 daqiqa (Yengil)", "5"),
-        ("⚡️ 15 daqiqa (O'rtacha)", "15"),
-        ("🔥 30 daqiqa (Intensiv)", "30")
-    ]
-    keyboard = [[InlineKeyboardButton(text=t, callback_data=f"ob_target_{s}")] for t, s in targets]
-    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+    waiting_for_daily_target = State()
 
 async def start_onboarding(message: Message, state: FSMContext):
     await state.clear()
-    text = (
-        "🌟 **Germanic-ga xush kelibsiz!**\n\n"
-        "Botni sizning ehtiyojlaringizga moslashtirishimiz uchun 3 ta qisqa savolga javob bering.\n\n"
-        "1️⃣ **Hozirgi nemis tili darajangiz qanday?**"
+    StatsService.log_activity(message.from_user.id, "onboarding_started")
+    
+    await send_single_ui_message(
+        message,
+        ONBOARDING_WELCOME,
+        reply_markup=get_levels_keyboard("onboarding")
     )
-    await message.answer(text, reply_markup=get_onboarding_levels_keyboard(), parse_mode="Markdown")
     await state.set_state(OnboardingState.waiting_for_level)
 
-@router.callback_query(F.data.startswith("ob_level_"), OnboardingState.waiting_for_level)
-async def ob_level_callback(call: CallbackQuery, state: FSMContext):
-    level = call.data.replace("ob_level_", "")
-    await state.update_data(current_level=level)
+@router.callback_query(OnboardingState.waiting_for_level, F.data.startswith("onboarding_"))
+async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
+    level = call.data.split("_")[1]
+    UserService.update_level(call.from_user.id, level)
     
-    text = (
-        f"✅ Daraja: **{level}**\n\n"
-        "2️⃣ **Sizning asosiy maqsadingiz nima?**"
+    from core.texts import GOAL_LABELS
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+    from aiogram.types import InlineKeyboardButton
+    
+    builder = InlineKeyboardBuilder()
+    for slug, label in GOAL_LABELS.items():
+        builder.row(InlineKeyboardButton(text=label, callback_data=f"goal_{slug}"))
+    
+    await call.message.edit_text(
+        "Maqsadingizni tanlang:",
+        reply_markup=builder.as_markup()
     )
-    await call.message.edit_text(text, reply_markup=get_onboarding_goals_keyboard(), parse_mode="Markdown")
     await state.set_state(OnboardingState.waiting_for_goal)
 
-@router.callback_query(F.data.startswith("ob_goal_"), OnboardingState.waiting_for_goal)
-async def ob_goal_callback(call: CallbackQuery, state: FSMContext):
-    goal_slug = call.data.replace("ob_goal_", "")
-    goal_map = {
-        "work": "Ish va karyera",
-        "travel": "Sayohat va hayot",
-        "exam": "Imtihon tayyorgarligi",
-        "fun": "Shunchaki qiziqish"
-    }
-    await state.update_data(goal=goal_slug)
+@router.callback_query(OnboardingState.waiting_for_goal, F.data.startswith("goal_"))
+async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
+    goal = call.data.split("_")[1]
+    UserService.set_goal(call.from_user.id, goal)
     
-    text = (
-        f"✅ Maqsad: **{goal_map.get(goal_slug)}**\n\n"
-        "3️⃣ **Kuniga necha daqiqa shug'ullanmoqchisiz?**"
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+    from aiogram.types import InlineKeyboardButton
+    
+    builder = InlineKeyboardBuilder()
+    builder.row(InlineKeyboardButton(text="15 daqiqa", callback_data="target_15"))
+    builder.row(InlineKeyboardButton(text="30 daqiqa", callback_data="target_30"))
+    builder.row(InlineKeyboardButton(text="60 daqiqa", callback_data="target_60"))
+    
+    await call.message.edit_text(
+        "Kunlik qancha vaqt ajratmoqchisiz?",
+        reply_markup=builder.as_markup()
     )
-    await call.message.edit_text(text, reply_markup=get_onboarding_target_keyboard(), parse_mode="Markdown")
-    await state.set_state(OnboardingState.waiting_for_target)
+    await state.set_state(OnboardingState.waiting_for_daily_target)
 
-@router.callback_query(F.data.startswith("ob_target_"), OnboardingState.waiting_for_target)
-async def ob_target_callback(call: CallbackQuery, state: FSMContext):
-    target = int(call.data.replace("ob_target_", ""))
-    data = await state.get_data()
+@router.callback_query(OnboardingState.waiting_for_daily_target, F.data.startswith("target_"))
+async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
+    minutes = int(call.data.split("_")[1])
+    UserService.update_daily_target(call.from_user.id, minutes)
+    UserService.complete_onboarding(call.from_user.id)
     
-    update_user_profile(
-        call.from_user.id,
-        current_level=data['current_level'],
-        goal=data['goal'],
-        daily_target=target,
-        onboarding_completed=1
-    )
-    
-    log_event(call.from_user.id, "onboarding_completed", metadata=data)
-    
-    await call.message.delete()
-    welcome_text = (
-        "🎉 **Ajoyib! Profilingiz muvaffaqiyatli sozlandi.**\n\n"
-        "Endi siz uchun shaxsiy dars rejasi va materiallar tayyor.\n"
-        "Boshlash uchun menyudan kerakli bo'limni tanlang."
-    )
-    await _send_fresh_main_menu(call.message, welcome_text, user_id=call.from_user.id)
+    await call.answer("Muvaffaqiyatli yakunlandi! 🎉")
     await state.clear()
+    
+    StatsService.log_activity(call.from_user.id, "onboarding_completed")
+    
+    await _send_fresh_main_menu(call.message, call.from_user.id)
