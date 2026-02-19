@@ -40,7 +40,7 @@ import random
 import os
 import datetime
 import re
-from handlers.common import send_single_ui_message
+from handlers.common import send_single_ui_message, _md_escape
 from utils.ops_logging import log_structured
 
 router = Router()
@@ -176,14 +176,6 @@ def build_quiz_question(word, level, phase, grammar_topic_id):
 def _safe_topic(topic):
     return topic or {"id": None, "title": "Grammatika", "content": "", "example": "-"}
 
-
-_MD_ESC_RE = re.compile(r"([\\_*`\[\]()~>#+\-=|{}.!])")
-
-
-def _md_escape(value):
-    if value is None:
-        return ""
-    return _MD_ESC_RE.sub(r"\\\1", str(value))
 
 
 def _normalize_profile(user_id):

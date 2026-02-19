@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, KeyboardButton, CallbackQuery
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
+import re
 from database import (
     add_user,
     record_navigation_event,
@@ -16,6 +17,13 @@ UI_TEST_MODE = "🛠️ Bot hozirda test rejimida ishlayapti"
 MAIN_MENU_STATE_KEY = "main_menu_message_id"
 ACTIVE_UI_STATE_KEY = "active_ui_message_id"
 MAIN_MENU_TEXT = "Asosiy menyu:\nKerakli bo'limni tanlang."
+
+_MD_ESC_RE = re.compile(r"([\\_*`\[\]()~>#+\-=|{}.!])")
+
+def _md_escape(value):
+    if value is None:
+        return ""
+    return _MD_ESC_RE.sub(r"\\\1", str(value))
 
 async def _safe_delete_message(message: Message):
     try:
