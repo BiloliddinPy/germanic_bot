@@ -12,11 +12,20 @@ from utils.update_tracking import UpdateTrackingMiddleware
 from utils.single_instance import SingleInstanceLock
 from utils.fsm_utils import StateCleanupMiddleware
 
-from handlers import (
-    common, dictionary, quiz, grammar, video, 
-    materials, exams, daily_lesson, practice, 
-    onboarding, stats, profile, admin_ops, fallback
-)
+from handlers.common import router as common_router
+from handlers.onboarding import router as onboarding_router
+from handlers.dictionary import router as dictionary_router
+from handlers.quiz import router as quiz_router
+from handlers.grammar import router as grammar_router
+from handlers.video import router as video_router
+from handlers.materials import router as materials_router
+from handlers.exams import router as exams_router
+from handlers.daily_lesson import router as daily_lesson_router
+from handlers.practice import router as practice_router
+from handlers.stats import router as stats_router
+from handlers.profile import router as profile_router
+from handlers.admin_ops import router as admin_ops_router
+from handlers.fallback import router as fallback_router
 
 async def main():
     logging.basicConfig(
@@ -51,11 +60,11 @@ async def main():
     
     # Register Routers
     routers = [
-        common.router, onboarding.router, dictionary.router,
-        quiz.router, grammar.router, video.router,
-        materials.router, exams.router, practice.router,
-        daily_lesson.router, stats.router, profile.router,
-        admin_ops.router, fallback.router
+        common_router, onboarding_router, dictionary_router,
+        quiz_router, grammar_router, video_router,
+        materials_router, exams_router, practice_router,
+        daily_lesson_router, stats_router, profile_router,
+        admin_ops_router, fallback_router
     ]
     for router in routers:
         dp.include_router(router)

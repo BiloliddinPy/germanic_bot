@@ -3,7 +3,6 @@ from aiogram import Bot
 import logging
 
 from core.config import settings
-from handlers.daily import send_daily_word_to_all
 from utils.backup_manager import run_backup_async
 
 SCHEDULER_JOB_ID_DAILY_WORD = "send_daily_word_to_all"
@@ -12,6 +11,7 @@ _scheduler: AsyncIOScheduler | None = None
 
 
 async def start_scheduler(bot: Bot):
+    from handlers.daily import send_daily_word_to_all
     global _scheduler
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
