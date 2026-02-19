@@ -1,7 +1,6 @@
 import json
 import os
-from database.repositories.progress_repository import mark_grammar_topic_seen, update_module_progress, log_event
-from database.repositories.stats_repository import get_recent_topic_mistake_scores # Need to create stats_repository
+from database.repositories.progress_repository import mark_grammar_topic_seen, update_module_progress, log_event, get_recent_topic_mistake_scores
 
 class GrammarService:
     DATA_DIR = "data"
@@ -36,8 +35,7 @@ class GrammarService:
 
     @staticmethod
     def get_recommendation(user_id: int, level: str):
-        # This needs the stats repository which I'll merge into progress/stats
-        from database.repositories.progress_repository import get_recent_topic_mistake_scores
+        # This uses the progress repository
         try:
             weak_topics = get_recent_topic_mistake_scores(user_id, level, days=14, limit=1)
             if weak_topics:

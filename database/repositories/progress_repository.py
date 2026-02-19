@@ -91,15 +91,19 @@ def add_quiz_result(user_id: int, level: str, score: int, total: int):
 def mark_grammar_topic_seen(user_id: int, topic_id: str):
     update_module_progress(user_id, "grammar", topic_id, completed=False)
 
-def get_recent_topic_mistake_scores(user_id: int, module: str = 'grammar', limit: int = 10):
+def get_recent_topic_mistake_scores(user_id: int, module: str = 'grammar', days: int = 14, limit: int = 10):
     conn = get_connection()
     cursor = conn.cursor()
+    # Simple date filter if possible, otherwise just limit
+    import datetime
+    cutoff = (datetime.datetime.now() - datetime.timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
+    
     cursor.execute("""
         SELECT item_id, mistake_count FROM user_mistakes 
-        WHERE user_id = ? AND module = ?
+        WHERE user_id = ? AND module = ? AND last_mistake_at >= ?
         ORDER BY last_mistake_at DESC
         LIMIT ?
-    """, (user_id, module, limit))
+    """, (user_id, module, cutoff, limit))
     rows = cursor.fetchall()
     conn.close()
-    return {row[0]: row[1] for row in rows}
+    return [(row[0], row[1]) for row in rows]
