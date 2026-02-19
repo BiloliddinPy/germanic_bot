@@ -5,19 +5,12 @@ from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from database import (
-    get_or_create_user_profile,
-    record_navigation_event,
-    update_module_progress,
-    mark_writing_task_completed,
-    log_event,
-    save_user_submission,
-    get_recent_submissions,# New helper
-    get_words_by_level
-)
+from database import get_or_create_user_profile
+from database.repositories.progress_repository import record_navigation_event, update_module_progress, log_event
+from database.repositories.session_repository import save_user_submission, get_recent_submissions, mark_writing_task_completed
+from database.repositories.word_repository import get_words_by_level
 from utils.ui_utils import send_single_ui_message, MAIN_MENU_TEXT, _md_escape
 from keyboards.builders import get_levels_keyboard, get_practice_categories_keyboard
-from utils.ops_logging import log_structured
 
 router = Router()
 GRAMMAR_PATH = "data/grammar.json"
@@ -33,7 +26,6 @@ def _load_topics(level: str):
         return []
 
 def _pick_topic(level: str, category: str = "daily"):
-    """Returns a situational topic based on level and category."""
     situations = {
         "A1": {
             "daily": ["Mening oilam", "Sevimli ovqatim", "Uy hayvonim"],
@@ -50,7 +42,6 @@ def _pick_topic(level: str, category: str = "daily"):
             "leisure": ["Ijtimoiy tarmoqlar foydasi", "Hobbilarning ahamiyati"]
         }
     }
-    # Default to A1 if level not found, default to daily if category not found
     level_data = situations.get(level, situations["A1"])
     topics = level_data.get(category, level_data["daily"])
     title = random.choice(topics)
@@ -67,10 +58,9 @@ def _practice_main_menu():
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
 
-@router.message(F.text.contains("Gapirish va yozish"))
-@router.message(F.text.contains("Sprechen & Schreiben"))
+@router.message(F.text.contains("Gapirish va yozish") | F.text.contains("Sprechen & Schreiben"))
 async def speaking_writing_handler(message: Message, state: FSMContext):
-    await state.clear() # Clear any existing state when entering from main menu
+    await state.clear()
     try:
         await message.delete()
     except Exception:
@@ -88,9 +78,6 @@ async def speaking_writing_handler(message: Message, state: FSMContext):
 async def practice_mode_callback(call: CallbackQuery, state: FSMContext):
     mode = call.data.split(":")[1]
     await state.update_data(mode=mode)
-    
-    # Professional Step: Level Selection
-    from keyboards.builders import get_levels_keyboard
     text = (
         f"📍 **Bosqich: Darajani tanlang**\n\n"
         f"{'✍️ Yozish' if mode == 'writing' else '🎤 Gapirish'} uchun mos darajani tanlang:"
@@ -101,8 +88,6 @@ async def practice_mode_callback(call: CallbackQuery, state: FSMContext):
 async def practice_level_callback(call: CallbackQuery, state: FSMContext):
     level = call.data.replace("practice_level_", "")
     await state.update_data(level=level)
-    
-    # New Step: Category Selection
     text = (
         f"🎯 **Bosqich: Mavzu yo'nalishi**\n\n"
         f"Qaysi yo'nalishda mashq qilishni xohlaysiz? ({level})"
@@ -115,14 +100,12 @@ async def practice_category_callback(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     mode = data.get("mode", "writing")
     level = data.get("level", "A1")
-    
     topic = _pick_topic(level, category)
     await _show_task(call.message, state, mode, level, topic)
 
 async def _show_task(message: Message, state: FSMContext, mode: str, level: str, topic: dict):
     topic_title = topic.get("title", "Umumiy mavzu")
     await state.update_data(level=level, topic_id=topic.get("id", "general"), mode=mode)
-    
     if mode == "writing":
         icon, title = "✍️", "Yozish (Schreiben)"
         instr = "3-5 ta gapdan iborat matn yozib yuboring."
@@ -136,12 +119,10 @@ async def _show_task(message: Message, state: FSMContext, mode: str, level: str,
         f"📝 **Vazifa:** {_md_escape(instr)}\n\n"
         "✅ Xabar yuborishingiz bilan u saqlanadi."
     )
-    
     markup = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🔁 Boshqa mavzu", callback_data=f"practice_refresh:{mode}:{level}")],
         [InlineKeyboardButton(text="🔙 Orqaga", callback_data="practice_back_main")]
     ])
-    
     await message.edit_text(text, reply_markup=markup, parse_mode="Markdown")
     await state.set_state(PracticeState.waiting_for_submission)
 
@@ -154,10 +135,7 @@ async def practice_refresh_callback(call: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "practice_back_main")
 async def practice_back_main(call: CallbackQuery, state: FSMContext):
     await state.clear()
-    await call.message.edit_text(
-        "🗣️ **Sprechen & Schreiben**\n\nTanlang:",
-        reply_markup=_practice_main_menu()
-    )
+    await call.message.edit_text("🗣️ **Sprechen & Schreiben**\n\nTanlang:", reply_markup=_practice_main_menu())
 
 @router.callback_query(F.data == "practice_history")
 async def practice_history_callback(call: CallbackQuery):
@@ -165,66 +143,39 @@ async def practice_history_callback(call: CallbackQuery):
     if not subs:
         await call.answer("Hali ishlar mavjud emas.", show_alert=True)
         return
-
     text = "📜 **Mening oxirgi ishlarim:**\n\n"
     for i, s in enumerate(subs, 1):
         m_type = "✍️ Yozma" if s['module'] == 'writing' else "🎤 Ovozli"
         content = s['content'] if s['module'] == 'writing' else "[Voice message]"
         date = s['created_at'].split()[0]
         text += f"{i}. {m_type} ({s['level']}) - {date}\n_{content[:40]}..._\n\n"
-    
-    markup = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔙 Orqaga", callback_data="practice_back_main")]
-    ])
+    markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🔙 Orqaga", callback_data="practice_back_main")]])
     await call.message.edit_text(text, reply_markup=markup, parse_mode="Markdown")
-
-# Replace existing handlers that are now handled by _show_task or logic above
-
 
 @router.message(PracticeState.waiting_for_submission, F.voice)
 async def handle_practice_voice(message: Message, state: FSMContext):
     data = await state.get_data()
     level = data.get("level", "A1")
     topic_id = data.get("topic_id", "general")
-    
-    file_id = message.voice.file_id
-    save_user_submission(message.from_user.id, "speaking", level, topic_id, file_id)
+    save_user_submission(message.from_user.id, "speaking", message.voice.file_id, level, {"topic_id": topic_id})
     update_module_progress(message.from_user.id, "practice", level, completed=True)
     log_event(message.from_user.id, "practice_speaking_submitted", section_name="practice", level=level, metadata={"topic_id": topic_id})
-    
     await message.answer("Sizning nutqingiz saqlandi! ✅\nAI tez orada uni tahlil qiladi (Phase 3).")
-    # Show main menu or return to practice
-    from utils.ui_utils import _send_fresh_main_menu, MAIN_MENU_TEXT
     await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=message.from_user.id)
     await state.clear()
 
 @router.message(PracticeState.waiting_for_submission, F.text)
 async def handle_practice_text(message: Message, state: FSMContext):
-    if message.text.startswith("/") or message.text in ["🚀 Kunlik dars", "📘 Lug‘at (A1–C1)", "📐 Grammatika", "🧠 Test va Quiz", "📊 Natijalar", "🗣️ Sprechen & Schreiben"]:
+    if message.text.startswith("/") or message.text in ["🏠 Bosh menyu"]:
         await state.clear()
-        # We don't return here so that other handlers in other routers can pick it up
-        # However, aiogram might need us to trigger them manually or just not catch it.
-        # A better way is to move these menu checks to the filter.
         return 
-        
     data = await state.get_data()
     level = data.get("level", "A1")
     topic_id = data.get("topic_id", "general")
-    
-    save_user_submission(message.from_user.id, "writing", level, topic_id, message.text)
+    save_user_submission(message.from_user.id, "writing", message.text, level, {"topic_id": topic_id})
     mark_writing_task_completed(message.from_user.id, level, topic_id, "short_paragraph")
     update_module_progress(message.from_user.id, "practice", level, completed=True)
     log_event(message.from_user.id, "practice_writing_submitted", section_name="practice", level=level, metadata={"topic_id": topic_id})
-    
     await message.answer("Sizning matningiz saqlandi! ✅\nAI tez orada xatolaringizni tekshiradi (Phase 3).")
-    from utils.ui_utils import _send_fresh_main_menu, MAIN_MENU_TEXT
     await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=message.from_user.id)
     await state.clear()
-
-
-@router.callback_query(F.data.startswith("practice_done_"))
-async def practice_done_legacy_handler(call: CallbackQuery):
-    # This handled the old "Done" buttons that didn't save content.
-    # We can keep it for users who just want to mark completion without typing, 
-    # but we should encourage typing/speaking.
-    await call.answer("Iltimos, matn yozing yoki voice yuboring!", show_alert=True)

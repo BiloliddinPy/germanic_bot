@@ -1,7 +1,7 @@
 import os
 from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, FSInputFile
-from database import record_navigation_event, log_event
+from database.repositories.progress_repository import record_navigation_event, log_event
 from utils.ui_utils import send_single_ui_message
 
 router = Router()
@@ -26,7 +26,6 @@ MATERIALS = [
     },
 ]
 
-
 def _materials_menu_markup():
     rows = [
         [InlineKeyboardButton(text=f"📘 {m['title']}", callback_data=f"material_send_{m['id']}")]
@@ -35,7 +34,6 @@ def _materials_menu_markup():
     rows.append([InlineKeyboardButton(text="🔙 Orqaga", callback_data="video_materials_back")])
     rows.append([InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
-
 
 def _find_material(material_id: str):
     return next((m for m in MATERIALS if m["id"] == material_id), None)
@@ -53,7 +51,6 @@ async def materials_handler(message: Message):
     )
     await send_single_ui_message(message, text, reply_markup=_materials_menu_markup(), parse_mode="Markdown")
 
-
 @router.callback_query(F.data == "materials_open")
 @router.callback_query(F.data == "materials_main_menu")
 async def materials_open_callback(call: CallbackQuery):
@@ -63,7 +60,6 @@ async def materials_open_callback(call: CallbackQuery):
         "Quyidagi materiallardan birini tanlang va bot ichida yuklab oling."
     )
     await call.message.edit_text(text, reply_markup=_materials_menu_markup(), parse_mode="Markdown")
-
 
 @router.callback_query(F.data.startswith("material_send_"))
 async def material_send_callback(call: CallbackQuery):

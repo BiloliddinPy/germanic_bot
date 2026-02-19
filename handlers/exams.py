@@ -3,22 +3,14 @@ from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from database import (
-    get_total_words_count,
-    get_random_words,
-    record_navigation_event,
-    update_module_progress,
-    add_quiz_result,
-    log_mistake
-)
+from database.repositories.word_repository import get_total_words_count, get_random_words
+from database.repositories.progress_repository import record_navigation_event, update_module_progress, add_quiz_result, log_mistake
 from utils.ui_utils import send_single_ui_message
 
 router = Router()
 
-
 class ExamState(StatesGroup):
     in_progress = State()
-
 
 def _exam_levels_keyboard():
     levels = ["A1", "A2", "B1", "B2", "C1"]
@@ -30,7 +22,6 @@ def _exam_levels_keyboard():
         rows.append(row)
     rows.append([InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
-
 
 def _build_exam_questions(level: str, total: int = 10):
     pool = get_random_words(level, limit=min(total * 6, 120))
@@ -55,7 +46,6 @@ def _build_exam_questions(level: str, total: int = 10):
         })
     return questions
 
-
 def _placement_message(score: int, total: int, level: str):
     pct = int((score / total) * 100) if total else 0
     if pct >= 85:
@@ -66,10 +56,7 @@ def _placement_message(score: int, total: int, level: str):
         recommendation = f"{level} bazasini mustahkamlash tavsiya etiladi."
     return pct, recommendation
 
-
 @router.message(F.text == "🎓 Imtihon tayyorgarligi")
-@router.message(F.text == "🎓 Prüfungsvorbereitung")
-@router.message(F.text == "🎓 Exam Preparation")
 async def exams_handler(message: Message, state: FSMContext):
     try:
         await message.delete()
@@ -82,7 +69,6 @@ async def exams_handler(message: Message, state: FSMContext):
         "Darajani tanlang va 10 savollik mini placement testni boshlang."
     )
     await send_single_ui_message(message, text, reply_markup=_exam_levels_keyboard(), parse_mode="Markdown")
-
 
 @router.callback_query(F.data.startswith("exam_level_"))
 async def exam_level_selected(call: CallbackQuery, state: FSMContext):
@@ -108,7 +94,6 @@ async def exam_level_selected(call: CallbackQuery, state: FSMContext):
     )
     await _send_exam_question(call.message, questions[0], 0, len(questions))
 
-
 async def _send_exam_question(message: Message, question: dict, index: int, total: int):
     rows = []
     for opt_idx, option in enumerate(question["options"]):
@@ -119,7 +104,6 @@ async def _send_exam_question(message: Message, question: dict, index: int, tota
         parse_mode="Markdown"
     )
 
-
 @router.callback_query(F.data.startswith("exam_answer_"))
 async def exam_answer_handler(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
@@ -129,9 +113,6 @@ async def exam_answer_handler(call: CallbackQuery, state: FSMContext):
     level = data.get("exam_level", "A1")
 
     parts = call.data.split("_")
-    if len(parts) < 4:
-        await call.answer("Noto'g'ri javob formati.", show_alert=True)
-        return
     q_idx = int(parts[2])
     opt_idx = int(parts[3])
 
@@ -140,9 +121,6 @@ async def exam_answer_handler(call: CallbackQuery, state: FSMContext):
         return
 
     question = questions[current_index]
-    if opt_idx < 0 or opt_idx >= len(question["options"]):
-        await call.answer("Noto'g'ri tanlov.", show_alert=True)
-        return
     selected = question["options"][opt_idx]
     if selected == question["correct"]:
         score += 1
@@ -174,7 +152,6 @@ async def exam_answer_handler(call: CallbackQuery, state: FSMContext):
         ]),
         parse_mode="Markdown"
     )
-
 
 @router.callback_query(F.data.startswith("exam_restart_"))
 async def exam_restart_handler(call: CallbackQuery, state: FSMContext):

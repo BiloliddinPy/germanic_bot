@@ -4,7 +4,7 @@ import os
 import datetime
 from aiogram import Router, F, Bot
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from database import get_subscribed_users
+from database.repositories.user_repository import get_subscribed_users
 from utils.ui_utils import send_single_ui_message
 
 router = Router()

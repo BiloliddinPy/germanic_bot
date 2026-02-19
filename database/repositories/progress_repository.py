@@ -1,5 +1,6 @@
 from database.connection import get_connection
 import logging
+import json
 
 def update_module_progress(user_id: int, module_name: str, level: str, completed: bool = False):
     conn = get_connection()
@@ -22,7 +23,7 @@ def update_module_progress(user_id: int, module_name: str, level: str, completed
             """, (user_id, module_name, level))
         conn.commit()
     except Exception as e:
-        logging.error(f"Error updating module progress for {user_id}/{module_name}: {e}")
+        logging.error(f"Error updating module progress: {e}")
     finally:
         conn.close()
 
@@ -59,7 +60,6 @@ def log_mistake(user_id: int, item_id: int, module: str, mistake_type: str = "vo
         conn.close()
 
 def log_event(user_id: int, event_type: str, section_name: str = None, level: str = None, metadata: dict = None):
-    import json
     conn = get_connection()
     cursor = conn.cursor()
     meta_json = json.dumps(metadata) if metadata else None
@@ -71,5 +71,19 @@ def log_event(user_id: int, event_type: str, section_name: str = None, level: st
         conn.commit()
     except Exception as e:
         logging.error(f"Error logging event: {e}")
+    finally:
+        conn.close()
+
+def add_quiz_result(user_id: int, level: str, score: int, total: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO quiz_results (user_id, level, score, total)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, level, score, total))
+        conn.commit()
+    except Exception as e:
+        logging.error(f"Error adding quiz result: {e}")
     finally:
         conn.close()

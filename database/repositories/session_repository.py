@@ -16,7 +16,7 @@ def save_daily_lesson_state(user_id: int, state_data: dict):
         """, (user_id, state_json))
         conn.commit()
     except Exception as e:
-        logging.error(f"Error saving daily lesson state for {user_id}: {e}")
+        logging.error(f"Error saving daily lesson state: {e}")
     finally:
         conn.close()
 
@@ -40,6 +40,8 @@ def save_user_submission(user_id: int, module: str, content: str, level: str = N
     cursor = conn.cursor()
     meta_json = json.dumps(metadata) if metadata else None
     try:
+        # Check if table exists, if not create it (safe fallback for legacy schema)
+        cursor.execute("CREATE TABLE IF NOT EXISTS user_submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, module TEXT, content TEXT, level TEXT, metadata TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
         cursor.execute("""
             INSERT INTO user_submissions (user_id, module, content, level, metadata)
             VALUES (?, ?, ?, ?, ?)
@@ -49,3 +51,19 @@ def save_user_submission(user_id: int, module: str, content: str, level: str = N
         logging.error(f"Error saving user submission: {e}")
     finally:
         conn.close()
+
+def get_recent_submissions(user_id: int, limit: int = 5):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT * FROM user_submissions WHERE user_id = ? ORDER BY created_at DESC LIMIT ?", (user_id, limit))
+        rows = cursor.fetchall()
+        return [dict(row) for row in rows]
+    except Exception:
+        return []
+    finally:
+        conn.close()
+
+def mark_writing_task_completed(user_id: int, level: str, topic_id: str, task_type: str):
+    from database.repositories.progress_repository import log_event
+    log_event(user_id, f"writing_task_completed_{task_type}", level=level, metadata={"topic_id": topic_id})

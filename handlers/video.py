@@ -3,7 +3,7 @@ import os
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.builders import get_levels_keyboard
-from database import record_navigation_event
+from database.repositories.progress_repository import record_navigation_event, log_event
 from utils.ui_utils import send_single_ui_message
 
 router = Router()
@@ -17,8 +17,6 @@ def load_videos():
         return json.load(f)
 
 @router.message(F.text == "🎥 Video va materiallar")
-@router.message(F.text == "🎥 Videos & Materialien")
-@router.message(F.text == "🎥 Video + Materiallar")
 async def video_materials_menu(message: Message):
     try:
         await message.delete()
@@ -100,7 +98,6 @@ async def video_watch_handler(call: CallbackQuery):
         await call.answer("Video topilmadi.", show_alert=True)
         return
         
-    from database import log_event
     log_event(call.from_user.id, "video_watch", section_name="video", level=video['level'], metadata={"video_id": video_id})
         
     text = (
