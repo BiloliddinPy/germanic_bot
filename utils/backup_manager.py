@@ -8,6 +8,7 @@ import shutil
 import sqlite3
 import subprocess
 import threading
+from pathlib import Path
 from core.config import settings
 from database import log_ops_error
 from utils.error_notifier import schedule_ops_error_notification
