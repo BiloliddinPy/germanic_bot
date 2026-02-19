@@ -1,0 +1,20 @@
+[Unit]
+Description=Germanic Telegram Bot (aiogram polling)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/germanic_bot
+EnvironmentFile=/opt/germanic_bot/.env
+ExecStart=/opt/germanic_bot/.venv/bin/python /opt/germanic_bot/main.py
+Restart=always
+RestartSec=5
+
+# Hardening (optional but safe defaults)
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

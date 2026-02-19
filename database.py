@@ -3,8 +3,187 @@ import logging
 import random
 import datetime
 import json
+import os
+import glob
+from collections import Counter
+from config import DB_PATH, DB_PATH_DEFAULT
 
-DB_NAME = "germanic.db"
+LEGACY_DB_NAME = "germanic.db"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+def _to_abs_db_path(db_path: str) -> str:
+    raw = (db_path or "").strip()
+    if not raw:
+        return raw
+    expanded = os.path.expanduser(raw)
+    if os.path.isabs(expanded):
+        return expanded
+    return os.path.join(PROJECT_ROOT, expanded)
+
+
+def _resolve_db_name():
+    configured = _to_abs_db_path(DB_PATH)
+    legacy_db = os.path.join(PROJECT_ROOT, LEGACY_DB_NAME)
+    default_db = _to_abs_db_path(DB_PATH_DEFAULT)
+
+    def _words_count(db_path: str):
+        if not db_path or not os.path.exists(db_path):
+            return -1
+        try:
+            conn = sqlite3.connect(db_path)
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM words")
+            count = int(cur.fetchone()[0])
+            conn.close()
+            return count
+        except Exception:
+            return 0
+
+    candidates = []
+    for path in [configured, legacy_db, default_db]:
+        if path and path not in candidates:
+            candidates.append(path)
+
+    # Prefer DB files that already contain dictionary data.
+    best_with_words = None
+    best_count = -1
+    for path in candidates:
+        count = _words_count(path)
+        if count > best_count:
+            best_count = count
+            best_with_words = path
+
+    if best_count > 0:
+        if configured and configured != best_with_words:
+            logging.warning(
+                "Configured DB_PATH=%s has no words; auto-switching to %s (%s words).",
+                configured,
+                best_with_words,
+                best_count,
+            )
+        return best_with_words
+
+    # If no populated DB found, keep explicit DB_PATH if provided.
+    if configured:
+        return configured
+    if os.path.exists(legacy_db):
+        return legacy_db
+    return default_db
+
+
+def _ensure_db_parent_dir(db_path: str):
+    try:
+        parent = os.path.dirname(os.path.abspath(db_path))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+    except Exception:
+        pass
+
+
+DB_NAME = _resolve_db_name()
+_ensure_db_parent_dir(DB_NAME)
+
+
+def _safe_words_count(db_path: str) -> int:
+    if not db_path or not os.path.exists(db_path):
+        return -1
+    try:
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM words")
+        count = int(cur.fetchone()[0])
+        conn.close()
+        return count
+    except Exception:
+        return 0
+
+
+def bootstrap_words_if_empty() -> int:
+    """
+    Self-heal: if current DB has no words, copy dictionary from best local source.
+    Returns imported row count.
+    """
+    current_count = _safe_words_count(DB_NAME)
+    if current_count > 0:
+        return 0
+
+    legacy_db = os.path.join(PROJECT_ROOT, LEGACY_DB_NAME)
+    default_db = _to_abs_db_path(DB_PATH_DEFAULT)
+    backups = sorted(glob.glob(os.path.join(PROJECT_ROOT, "backups", "*.sqlite")), reverse=True)
+
+    source_candidates = []
+    for path in [legacy_db, default_db] + backups:
+        if path and path != DB_NAME and path not in source_candidates:
+            source_candidates.append(path)
+
+    best_source = None
+    best_count = 0
+    for path in source_candidates:
+        cnt = _safe_words_count(path)
+        if cnt > best_count:
+            best_count = cnt
+            best_source = path
+
+    # Case A: Found a populated DB source
+    if best_source and best_count > 0:
+        src = sqlite3.connect(best_source)
+        src.row_factory = sqlite3.Row
+        src_cur = src.cursor()
+        src_cur.execute(
+            "SELECT level, de, uz, pos, plural, example_de, example_uz, category, created_at "
+            "FROM words"
+        )
+        rows = [tuple(r) for r in src_cur.fetchall()]
+        src.close()
+    else:
+        # Case B: No DB source, try JSON seed
+        seed_path = os.path.join(PROJECT_ROOT, "data", "dictionary_seed.json")
+        if os.path.exists(seed_path):
+            try:
+                with open(seed_path, "r", encoding="utf-8") as f:
+                    seed_data = json.load(f)
+                rows = [
+                    (
+                        r["level"],
+                        r["de"],
+                        r["uz"],
+                        r.get("pos"),
+                        r.get("plural"),
+                        r.get("example_de"),
+                        r.get("example_uz"),
+                        r.get("category"),
+                        datetime.datetime.now().isoformat(),
+                    )
+                    for r in seed_data
+                ]
+                best_source = "JSON_SEED"
+            except Exception as e:
+                logging.error("Failed to load JSON seed: %s", e)
+                return 0
+        else:
+            return 0
+    if not rows:
+        return 0
+
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+    cur.executemany(
+        """
+        INSERT INTO words (level, de, uz, pos, plural, example_de, example_uz, category, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        rows,
+    )
+    conn.commit()
+    conn.close()
+    logging.warning(
+        "Words table was empty in %s. Restored %s rows from %s.",
+        DB_NAME,
+        len(rows),
+        best_source,
+    )
+    return len(rows)
 
 def create_table():
     conn = sqlite3.connect(DB_NAME)
@@ -96,7 +275,8 @@ def create_table():
         ("timezone", "TEXT"),
         ("created_at", "TEXT"),
         ("updated_at", "TEXT"),
-        ("first_seen_at", "TEXT")
+        ("first_seen_at", "TEXT"),
+        ("xp", "INTEGER DEFAULT 0")
     ]
     for col_name, col_type in columns_to_add:
         try:
@@ -174,6 +354,22 @@ def create_table():
         except sqlite3.OperationalError:
             pass
 
+    # User Mastery (Spaced Repetition System) - Phase 2
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_mastery (
+            user_id INTEGER,
+            item_id TEXT,
+            module TEXT,
+            box INTEGER DEFAULT 1,
+            next_review DATE,
+            last_reviewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            is_suspended BOOLEAN DEFAULT 0,
+            PRIMARY KEY (user_id, item_id, module)
+        )
+    """)
+    # Index for fast retrieval of due items
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_mastery_due ON user_mastery(user_id, next_review)")
+
     # Navigation Event Logging (Foundation Day 1)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS events (
@@ -208,6 +404,18 @@ def create_table():
             PRIMARY KEY (user_id, lesson_date)
         )
     """)
+    daily_lesson_columns_to_add = [
+        ("daily_status", "TEXT DEFAULT 'idle'"),
+        ("daily_step", "INTEGER DEFAULT 0"),
+        ("session_json", "TEXT"),
+        ("xp_earned", "INTEGER DEFAULT 0"),
+        ("updated_at", "TIMESTAMP")
+    ]
+    for col_name, col_type in daily_lesson_columns_to_add:
+        try:
+            cursor.execute(f"ALTER TABLE daily_lesson_log ADD COLUMN {col_name} {col_type}")
+        except sqlite3.OperationalError:
+            pass
 
     # Daily plan cache (Day 6)
     cursor.execute("""
@@ -257,6 +465,20 @@ def create_table():
             PRIMARY KEY (user_id, task_date)
         )
     """)
+
+    # Ops error log (Phase: Ops Hardening Foundation)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ops_error_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_utc TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            severity TEXT,
+            where_ctx TEXT,
+            user_id INTEGER,
+            update_id INTEGER,
+            error_type TEXT,
+            message_short TEXT
+        )
+    """)
     
     # Indexes for speed
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_level ON words(level)")
@@ -267,6 +489,7 @@ def create_table():
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_grammar_coverage_user_level ON user_grammar_coverage(user_id, level)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_writing_task_user_date ON writing_task_log(user_id, task_date)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_ui_state_user_key ON user_ui_state(user_id, state_key)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_ops_error_log_ts ON ops_error_log(ts_utc)")
 
     conn.commit()
     conn.close()
@@ -740,6 +963,122 @@ def set_ui_state(user_id, state_key, state_value):
     except Exception as e:
         logging.error(f"Failed to write ui state: {e}")
 
+def get_daily_lesson_state(user_id, lesson_date=None):
+    """
+    Returns today's daily lesson state.
+    Shape:
+    {
+      lesson_date, started_at, completed_at,
+      daily_status: idle|in_progress|finished,
+      daily_step: int,
+      session: dict,
+      xp_earned: int
+    }
+    """
+    try:
+        if not lesson_date:
+            lesson_date = datetime.date.today().isoformat()
+        conn = sqlite3.connect(DB_NAME)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT lesson_date, started_at, completed_at, daily_status, daily_step, session_json, xp_earned
+            FROM daily_lesson_log
+            WHERE user_id = ? AND lesson_date = ?
+        """, (user_id, lesson_date))
+        row = cursor.fetchone()
+        conn.close()
+        if not row:
+            return {
+                "lesson_date": lesson_date,
+                "started_at": None,
+                "completed_at": None,
+                "daily_status": "idle",
+                "daily_step": 0,
+                "session": None,
+                "xp_earned": 0
+            }
+        raw = dict(row)
+        session = None
+        session_raw = raw.get("session_json")
+        if session_raw:
+            try:
+                session = json.loads(session_raw)
+            except Exception:
+                session = None
+        status = raw.get("daily_status") or "idle"
+        if raw.get("completed_at"):
+            status = "finished"
+        return {
+            "lesson_date": raw.get("lesson_date") or lesson_date,
+            "started_at": raw.get("started_at"),
+            "completed_at": raw.get("completed_at"),
+            "daily_status": status,
+            "daily_step": int(raw.get("daily_step") or 0),
+            "session": session,
+            "xp_earned": int(raw.get("xp_earned") or 0)
+        }
+    except Exception as e:
+        logging.error(f"Failed to get daily lesson state: {e}")
+        return {
+            "lesson_date": lesson_date or datetime.date.today().isoformat(),
+            "started_at": None,
+            "completed_at": None,
+            "daily_status": "idle",
+            "daily_step": 0,
+            "session": None,
+            "xp_earned": 0
+        }
+
+def save_daily_lesson_state(
+    user_id,
+    daily_status,
+    daily_step,
+    session=None,
+    xp_earned=None,
+    lesson_date=None,
+    ensure_started=False,
+    mark_completed=False
+):
+    """Upserts today's state row for deterministic daily lesson resume."""
+    try:
+        if not lesson_date:
+            lesson_date = datetime.date.today().isoformat()
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO daily_lesson_log (user_id, lesson_date, started_at, daily_status, daily_step, session_json, xp_earned, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(user_id, lesson_date) DO UPDATE SET
+                daily_status = excluded.daily_status,
+                daily_step = excluded.daily_step,
+                session_json = excluded.session_json,
+                xp_earned = COALESCE(excluded.xp_earned, daily_lesson_log.xp_earned, 0),
+                started_at = CASE
+                    WHEN ? = 1 THEN COALESCE(daily_lesson_log.started_at, CURRENT_TIMESTAMP)
+                    ELSE daily_lesson_log.started_at
+                END,
+                completed_at = CASE
+                    WHEN ? = 1 THEN COALESCE(daily_lesson_log.completed_at, CURRENT_TIMESTAMP)
+                    ELSE daily_lesson_log.completed_at
+                END,
+                updated_at = CURRENT_TIMESTAMP
+        """, (
+            user_id,
+            lesson_date,
+            datetime.datetime.now().isoformat() if ensure_started else None,
+            daily_status,
+            int(daily_step or 0),
+            json.dumps(session) if session is not None else None,
+            int(xp_earned or 0) if xp_earned is not None else 0,
+            1 if ensure_started else 0,
+            1 if mark_completed else 0
+        ))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        logging.error(f"Failed to save daily lesson state: {e}")
+
 def mark_daily_lesson_started(user_id):
     """Creates/updates today's daily lesson entry as started."""
     try:
@@ -747,10 +1086,19 @@ def mark_daily_lesson_started(user_id):
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO daily_lesson_log (user_id, lesson_date, started_at)
-            VALUES (?, ?, CURRENT_TIMESTAMP)
+            INSERT INTO daily_lesson_log (user_id, lesson_date, started_at, daily_status, daily_step, updated_at)
+            VALUES (?, ?, CURRENT_TIMESTAMP, 'in_progress', 1, CURRENT_TIMESTAMP)
             ON CONFLICT(user_id, lesson_date) DO UPDATE SET
-                started_at = COALESCE(daily_lesson_log.started_at, CURRENT_TIMESTAMP)
+                started_at = COALESCE(daily_lesson_log.started_at, CURRENT_TIMESTAMP),
+                daily_status = CASE
+                    WHEN daily_lesson_log.completed_at IS NOT NULL THEN 'finished'
+                    ELSE 'in_progress'
+                END,
+                daily_step = CASE
+                    WHEN daily_lesson_log.daily_step IS NULL OR daily_lesson_log.daily_step = 0 THEN 1
+                    ELSE daily_lesson_log.daily_step
+                END,
+                updated_at = CURRENT_TIMESTAMP
         """, (user_id, today))
         conn.commit()
         conn.close()
@@ -793,7 +1141,10 @@ def mark_daily_lesson_completed(user_id):
             cursor = conn.cursor()
             cursor.execute("""
                 UPDATE daily_lesson_log
-                SET completed_at = CURRENT_TIMESTAMP
+                SET completed_at = CURRENT_TIMESTAMP,
+                    daily_status = 'finished',
+                    daily_step = 6,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE user_id = ? AND lesson_date = ? AND completed_at IS NULL
             """, (user_id, today_str))
             conn.commit()
@@ -1182,3 +1533,260 @@ def mark_writing_task_completed(user_id, level, topic_id, task_type, task_date=N
         conn.close()
     except Exception as e:
         logging.error(f"Failed to mark writing task completed: {e}")
+
+
+def get_last_event_timestamp():
+    """Returns latest events.timestamp value as text (or None)."""
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute("SELECT MAX(timestamp) FROM events")
+        row = cursor.fetchone()
+        conn.close()
+        return row[0] if row and row[0] else None
+    except Exception:
+        return None
+
+
+def get_admin_stats_snapshot():
+    """
+    Admin analytics snapshot.
+    Safe-by-default: returns best-effort values if some tables/columns are missing.
+    """
+    snapshot = {
+        "total_users": 0,
+        "active_users_today": 0,
+        "daily_completions_today": 0,
+        "daily_completions_last_7_days": 0,
+        "total_mistakes_logged": 0,
+        "top_weak_topics": []
+    }
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("SELECT COUNT(*) AS c FROM users")
+            row = cursor.fetchone()
+            snapshot["total_users"] = int(row["c"]) if row else 0
+        except Exception:
+            snapshot["total_users"] = 0
+
+        active_today = 0
+        try:
+            cursor.execute("""
+                SELECT COUNT(DISTINCT user_id) AS c
+                FROM daily_lesson_log
+                WHERE (
+                    started_at IS NOT NULL AND DATE(started_at) = DATE('now')
+                ) OR (
+                    completed_at IS NOT NULL AND DATE(completed_at) = DATE('now')
+                ) OR (
+                    lesson_date = DATE('now')
+                )
+            """)
+            row = cursor.fetchone()
+            active_today = int(row["c"]) if row else 0
+        except Exception:
+            active_today = 0
+        if active_today == 0:
+            try:
+                cursor.execute("""
+                    SELECT COUNT(DISTINCT user_id) AS c
+                    FROM events
+                    WHERE DATE(timestamp) = DATE('now')
+                """)
+                row = cursor.fetchone()
+                active_today = int(row["c"]) if row else 0
+            except Exception:
+                active_today = 0
+        snapshot["active_users_today"] = active_today
+
+        try:
+            cursor.execute("""
+                SELECT COUNT(*) AS c
+                FROM daily_lesson_log
+                WHERE lesson_date = DATE('now')
+                  AND completed_at IS NOT NULL
+            """)
+            row = cursor.fetchone()
+            snapshot["daily_completions_today"] = int(row["c"]) if row else 0
+        except Exception:
+            snapshot["daily_completions_today"] = 0
+
+        try:
+            cursor.execute("""
+                SELECT COUNT(*) AS c
+                FROM daily_lesson_log
+                WHERE lesson_date >= DATE('now', '-6 day')
+                  AND completed_at IS NOT NULL
+            """)
+            row = cursor.fetchone()
+            snapshot["daily_completions_last_7_days"] = int(row["c"]) if row else 0
+        except Exception:
+            snapshot["daily_completions_last_7_days"] = 0
+
+        try:
+            cursor.execute("SELECT COALESCE(SUM(mistake_count), 0) AS c FROM user_mistakes")
+            row = cursor.fetchone()
+            snapshot["total_mistakes_logged"] = int(row["c"]) if row else 0
+        except Exception:
+            snapshot["total_mistakes_logged"] = 0
+
+        topic_scores = Counter()
+        try:
+            cursor.execute("""
+                SELECT tags, COALESCE(mistake_count, 1) AS mistake_count
+                FROM user_mistakes
+                WHERE tags IS NOT NULL
+                  AND COALESCE(mastered, 0) = 0
+                LIMIT 5000
+            """)
+            for row in cursor.fetchall():
+                raw_tags = row["tags"]
+                if not raw_tags:
+                    continue
+                try:
+                    tags_obj = json.loads(raw_tags)
+                except Exception:
+                    continue
+                topic_id = tags_obj.get("topic_id")
+                if not topic_id:
+                    continue
+                topic_scores[topic_id] += int(row["mistake_count"] or 1)
+        except Exception:
+            pass
+
+        snapshot["top_weak_topics"] = [
+            {"topic_id": topic_id, "score": score}
+            for topic_id, score in topic_scores.most_common(5)
+        ]
+
+        conn.close()
+    except Exception as e:
+        logging.error(f"Failed to build admin stats snapshot: {e}")
+    return snapshot
+
+
+def log_ops_error(severity, where_ctx, user_id, update_id, error_type, message_short):
+    """
+    Writes compact ops error records. Must never raise.
+    """
+    try:
+        conn = sqlite3.connect(DB_NAME, timeout=2)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO ops_error_log (severity, where_ctx, user_id, update_id, error_type, message_short)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            severity,
+            where_ctx,
+            user_id,
+            update_id,
+            error_type,
+            (str(message_short)[:280] if message_short is not None else None)
+        ))
+        conn.commit()
+        conn.close()
+    except Exception:
+        # Never crash request flow due to ops logging failure.
+        return
+
+
+def get_recent_ops_errors(limit=10):
+    """
+    Returns latest compact ops error records.
+    Safe on missing table/schema.
+    """
+    try:
+        safe_limit = max(1, min(int(limit), 50))
+    except Exception:
+        safe_limit = 10
+    try:
+        conn = sqlite3.connect(DB_NAME, timeout=2)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT id, ts_utc, severity, where_ctx, user_id, update_id, error_type, message_short
+            FROM ops_error_log
+            ORDER BY id DESC
+            LIMIT ?
+        """, (safe_limit,))
+        rows = [dict(r) for r in cursor.fetchall()]
+        conn.close()
+        return rows
+    except Exception:
+        return []
+
+# --- Spaced Repetition System (SRS) Helpers ---
+
+def get_due_reviews(user_id, limit=20):
+    """
+    Fetches items due for review based on Spaced Repetition (Leitner).
+    Items in box 1 are reviewed daily, box 2 every 3 days, etc.
+    """
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    today = datetime.date.today().isoformat()
+    
+    # Priority:
+    # 1. Overdue items (next_review <= today)
+    # 2. Ordered by box (lowest box first - review "hard" items first)
+    cursor.execute("""
+        SELECT * FROM user_mastery
+        WHERE user_id = ? 
+          AND next_review <= ?
+          AND is_suspended = 0
+        ORDER BY box ASC, next_review ASC
+        LIMIT ?
+    """, (user_id, today, limit))
+    
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+def update_mastery(user_id, item_id, module, is_correct):
+    """
+    Updates the Leitner box for an item.
+    - Correct: Box + 1 (capped at 5), next_review pushed further.
+    - Incorrect: Box = 1, next_review = tomorrow.
+    """
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    # Intervals in days for boxes 1-5
+    intervals = {1: 1, 2: 3, 3: 7, 4: 14, 5: 30}
+    
+    # Check current box
+    cursor.execute("""
+        SELECT box FROM user_mastery 
+        WHERE user_id = ? AND item_id = ? AND module = ?
+    """, (user_id, str(item_id), module))
+    row = cursor.fetchone()
+    
+    current_box = row[0] if row else 0 # 0 means new
+    
+    if is_correct:
+        # If new (0), start at 1. If 1, go to 2, etc.
+        new_box = min(current_box + 1, 5)
+        if current_box == 0: new_box = 1
+    else:
+        new_box = 1 # Reset to start on mistake
+        
+    days_to_add = intervals.get(new_box, 1)
+    next_review = datetime.date.today() + datetime.timedelta(days=days_to_add)
+    
+    cursor.execute("""
+        INSERT INTO user_mastery (user_id, item_id, module, box, next_review, last_reviewed_at)
+        VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(user_id, item_id, module) DO UPDATE SET
+            box = excluded.box,
+            next_review = excluded.next_review,
+            last_reviewed_at = CURRENT_TIMESTAMP
+    """, (user_id, str(item_id), module, new_box, next_review.isoformat()))
+    
+    conn.commit()
+    conn.close()

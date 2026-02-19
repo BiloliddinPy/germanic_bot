@@ -1,4 +1,5 @@
 import os
+import logging
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, FSInputFile
 
@@ -9,7 +10,8 @@ from database import (
     get_dictionary_progress, 
     get_words_by_level, 
     get_total_words_count,
-    record_navigation_event
+    record_navigation_event,
+    DB_NAME
 )
 from handlers.common import send_single_ui_message
 
@@ -34,6 +36,7 @@ async def show_dictionary_levels(message: Message):
 @router.callback_query(F.data.startswith("dict_"))
 async def dictionary_callback_handler(call: CallbackQuery):
     data = call.data
+    logging.info("dict_callback data=%s db=%s", data, DB_NAME)
     
     if data == "dict_back":
         await call.message.edit_text(
@@ -55,6 +58,15 @@ async def dictionary_callback_handler(call: CallbackQuery):
     # DATABASE FETCH
     words = get_words_by_level(level, limit=PAGE_SIZE, offset=offset)
     total_count = get_total_words_count(level)
+    logging.info(
+        "dict_fetch user=%s level=%s offset=%s fetched=%s total=%s db=%s",
+        call.from_user.id,
+        level,
+        offset,
+        len(words),
+        total_count,
+        DB_NAME
+    )
     
     if not words:
         if offset == 0:

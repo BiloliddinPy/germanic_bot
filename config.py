@@ -5,6 +5,8 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = os.getenv("ADMIN_ID")
+DB_PATH = os.getenv("DB_PATH")
+DB_PATH_DEFAULT = "./data/app.db"
 
 # Feature Flags
 DAILY_LESSON_ENABLED = os.getenv("DAILY_LESSON_ENABLED", "True").lower() == "true"
@@ -20,6 +22,9 @@ REVIEW_AI_ENABLED = os.getenv("REVIEW_AI_ENABLED", "False").lower() == "true"
 # Daily Lesson Adaptive Tuning (AI-free)
 DAILY_MISTAKE_BLEND = float(os.getenv("DAILY_MISTAKE_BLEND", "0.5"))
 DAILY_AVOID_SAME_WRITING = os.getenv("DAILY_AVOID_SAME_WRITING", "True").lower() == "true"
+
+# Ops / Backup
+BACKUP_TIME_UTC = os.getenv("BACKUP_TIME_UTC", "03:00")
 
 def flag_enabled(name: str) -> bool:
     """Consistently check feature flags."""

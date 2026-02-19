@@ -23,6 +23,26 @@ python3 scripts/smoke_day7.py
 python3 scripts/smoke_daily_lesson.py
 ```
 
+## 3.2 Ops Monitoring Report (read-only, production-safe)
+```bash
+python3 scripts/ops_report.py --days 7 --top 10
+```
+
+Optional:
+```bash
+python3 scripts/ops_report.py --days 30 --top 20 --db germanic.db --log bot.log
+```
+
+## 3.3 Polling Conflict Check (Railway log analysis)
+```bash
+python3 scripts/check_polling_conflict.py --file bot.log --minutes 10 --warn 3 --crit 10
+```
+
+Railway plain text logni stdin orqali:
+```bash
+cat railway.log | python3 scripts/check_polling_conflict.py --file - --minutes 10
+```
+
 ## 4. Admin
 Your Admin ID (`1299147498`) is configured in `.env`.
 Users will be able to click "Aloqa" to contact you directly via Telegram link.

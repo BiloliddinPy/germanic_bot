@@ -12,6 +12,7 @@
 - `python3 scripts/health_check.py`
 - `python3 scripts/smoke_day7.py`
 - `python3 scripts/smoke_daily_lesson.py`
+- `python3 scripts/ops_report.py --days 7 --top 10` (read-only operational snapshot)
 
 ## 4. Manual smoke (Telegram)
 - `/start` -> menyu chiqishini tekshiring.

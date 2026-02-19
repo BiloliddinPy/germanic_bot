@@ -1,4 +1,5 @@
 import random
+import logging
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
@@ -10,9 +11,11 @@ from database import (
     get_total_words_count, 
     record_navigation_event,
     log_mistake,
-    update_module_progress
+    update_module_progress,
+    DB_NAME
 )
 from handlers.common import send_single_ui_message
+from utils.ops_logging import log_structured
 
 router = Router()
 
@@ -44,6 +47,14 @@ async def quiz_level_handler(call: CallbackQuery, state: FSMContext):
     record_navigation_event(call.from_user.id, "quiz_test", level=level, entry_type="callback")
     
     count = get_total_words_count(level)
+    logging.info(
+        "quiz_level user=%s callback=%s level=%s count=%s db=%s",
+        call.from_user.id,
+        call.data,
+        level,
+        count,
+        DB_NAME
+    )
     if count < 4:
         await call.answer("Bu daraja uchun savollar yetarli emas (kamida 4 ta).", show_alert=True)
         return
@@ -81,6 +92,15 @@ async def quiz_start_questions(call: CallbackQuery, state: FSMContext):
     
     pool_size = min(length * 5, 100) # Cap at 100 for perf
     word_pool = get_random_words(level, limit=pool_size)
+    logging.info(
+        "quiz_start user=%s level=%s length=%s pool_size=%s fetched_pool=%s db=%s",
+        call.from_user.id,
+        level,
+        length,
+        pool_size,
+        len(word_pool),
+        DB_NAME
+    )
     
     if len(word_pool) < 4:
          await call.answer("Savollar yetarli emas.", show_alert=True)
@@ -128,6 +148,7 @@ async def quiz_start_questions(call: CallbackQuery, state: FSMContext):
         wrong_answers=[]
     )
     await state.set_state(QuizState.in_progress)
+    log_structured("quiz_start", user_id=call.from_user.id, level=level, total_questions=len(questions))
     
     # Track attempt (Day 3)
     update_module_progress(call.from_user.id, "quiz_test", level)
@@ -198,6 +219,13 @@ async def finish_quiz(message, score, total, wrong_answers, level):
     # Track completion (Day 3)
     update_module_progress(message.chat.id, "quiz_test", level, completed=True)
     add_quiz_result(message.chat.id, level, score, total)
+    log_structured(
+        "quiz_finish",
+        user_id=message.chat.id,
+        level=level,
+        score=score,
+        total=total
+    )
     
     percentage = int((score / total) * 100)
     result_text = (

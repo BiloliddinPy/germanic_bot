@@ -852,13 +852,6 @@
             "example": "1. Das **muss** stimmen. (Bu albatta to'g'ri.)\n2. Er **könnte** im Stau stecken. (U tirbandlikda qolib ketgan bo'lishi mumkin.)\n3. Sie **dürfte** keine Lust mehr haben. (Uning boshqa xohishi bo'lmasa kerak.)"
         },
         {
-            "id": "uc1_123",
-            "title": "Unit 123: Modalverben: Vermutungen über die Vergangenheit",
-            "description": "O'tgan zamon haqida taxminlar (C1)",
-            "content": "O'tgan zamon haqida taxmin bildirish uchun: **Modal fe'l + Infinitiv Perfekt** (*Partizip II + sein/haben*) qurilmasi ishlatiladi.\n\n- **muss ... sein/haben**: Aniq shunday bo'lgan. (*Sie muss wohl zu Fuß gegangen sein*).\n- **dürfte ... sein/haben**: Shunday bo'lgan ko'rinadi.\n- **könnte ... sein/haben**: Balki shunday bo'lgandir.",
-            "example": "1. Er **muss** den Zug **verpasst haben**. (U poezdga kechikkan bo'lsa kerak - 100% ishonch.)\n2. Sie **könnte** Lust **gehabt haben**. (Uning xohishi bo'lgan bo'lishi mumkin.)\n3. Der Aufzug **dürfte** repariert **worden sein**. (Lift tuzatilgan bo'lsa kerak - Passiv taxmin.)"
-        },
-        {
             "id": "ub2_124",
             "title": "Unit 124: Subjektive Bedeutung von Modalverben (Hearsay)",
             "description": "Birovdan eshitilgan ma'lumot",
@@ -871,6 +864,15 @@
             "description": "Modal fe'llarning o'rnini bosuvchi qurilmalar",
             "content": "Akademik nutqda modal fe'llar o'rniga sinonimik qurilmalardan foydalaniladi.\n\n- **können** -> *imstande sein zu, die Möglichkeit haben zu*.\n- **müssen** -> *verpflichtet sein zu, die Notwendigkeit besteht*.\n- **dürfen** -> *jemandem ist es gestattet*.\n- **nicht brauchen** -> *nicht müssen*.",
             "example": "1. Wir sind **imstande**, das Problem zu lösen. (Biz muammoni hal qilishga qodirmiz.)\n2. Es ist **erforderlich**, pünktlich zu sein. (Vaqtida kelish talab etiladi.)\n3. Er **braucht** nicht zu kommen. (Ukelishi shart emas.)"
+        }
+    ],
+    "C1": [
+        {
+            "id": "uc1_123",
+            "title": "Unit 123: Modalverben: Vermutungen über die Vergangenheit",
+            "description": "O'tgan zamon haqida taxminlar (C1)",
+            "content": "O'tgan zamon haqida taxmin bildirish uchun: **Modal fe'l + Infinitiv Perfekt** (*Partizip II + sein/haben*) qurilmasi ishlatiladi.\n\n- **muss ... sein/haben**: Aniq shunday bo'lgan. (*Sie muss wohl zu Fuß gegangen sein*).\n- **dürfte ... sein/haben**: Shunday bo'lgan ko'rinadi.\n- **könnte ... sein/haben**: Balki shunday bo'lgandir.",
+            "example": "1. Er **muss** den Zug **verpasst haben**. (U poezdga kechikkan bo'lsa kerak - 100% ishonch.)\n2. Sie **könnte** Lust **gehabt haben**. (Uning xohishi bo'lgan bo'lishi mumkin.)\n3. Der Aufzug **dürfte** repariert **worden sein**. (Lift tuzatilgan bo'lsa kerak - Passiv taxmin.)"
         },
         {
             "id": "uc1_126",
@@ -878,6 +880,69 @@
             "content": "Fe'lli ifodalarni (Verbalstil) otli ifodalarga (Nominalstil) aylantirish. Bu akademik va rasmiy nutq uchun juda muhim.\n\n- *Wenn es regnet...* -> *Bei Regen...*\n- *Weil er krank ist...* -> *Aufgrund seiner Krankheit...*",
             "description": "Otlashtirish (C1)",
             "example": "1. **Nach Abschluss des Studiums** reise ich. (O'qishni tugatgach, sayohat qilaman.)\n2. **Trotz der Bemühungen** scheiterte der Plan. (Harakatlarga qaramay, reja amalga oshmadi.)"
+        },
+        {
+            "id": "uc1_127",
+            "title": "Unit 127: Erweiterte Partizipien (Linksattribute)",
+            "description": "Kengaytirilgan sifatdosh aniqlovchilar",
+            "content": "C1 darajasida nisbiy gaplar (Relativsatz) o'rniga kengaytirilgan sifatdosh birikmalaridan foydalaniladi. Bu uslub 'Linksattribut' deb ataladi va otning chap tomonida keladi.\n\n### ⚙️ aylantirish:\n*Der Mann, der am Fenster steht...* -> *Der **am Fenster stehende** Mann...* (Partizip I)\n*Das Auto, das repariert wurde...* -> *Das **reparierte** Auto...* (Partizip II)",
+            "example": "1. Die **von Experten vorgeschlagene** Lösung ist gut. (Ekspertlar tomonidan taklif qilingan yechim yaxshi.)\n2. Die **im Garten spielenden** Kinder sind laut. (Bog'da o'ynayotgan bolalar shovqin solyapti.)"
+        },
+        {
+            "id": "uc1_128",
+            "title": "Unit 128: Auflösung von Partizipialstrukturen",
+            "description": "Sifatdoshlarni gapga aylantirish",
+            "content": "Kengaytirilgan sifatdoshlarni tushunish uchun ularni oddiy nisbiy gaplarga aylantira olish kerak.\n\n### 🔄 Qayta qurish:\n*Die **wegen des Regens abgesagte** Veranstaltung...*\n-> *Die Veranstaltung, **die wegen des Regens abgesagt wurde**...*",
+            "example": "1. Das **leicht zu lösende** Problem. -> Das Problem, **das leicht zu lösen ist**. (Oson hal qilsa bo'ladigan muammo.)"
+        },
+        {
+            "id": "uc1_129",
+            "title": "Unit 129: Funktionsverbgefüge 1 (A-K)",
+            "description": "Ot-fe'l birikmalari (1-qism)",
+            "content": "Oddiy fe'llar o'rniga rasmiy uslubda ot-fe'l birikmalari (FVG) ishlatiladi.\n\n### 📝 Muhim birikmalar:\n- **Abschied nehmen** (verabschieden) - xayrlashmoq.\n- **einen Antrag stellen** (beantragen) - ariza bermoq.\n- **in Anspruch nehmen** (beanspruchen) - foydalanmoq.\n- **Beachtung finden** (beachtet werden) - e'tibor qozonmoq.\n- **Einfluss nehmen auf** (beeinflussen) - ta'sir o'tkazmoq.\n- **in Kauf nehmen** (akzeptieren) - rozi bo'lmoq (noilojlikdan).",
+            "example": "1. Wir müssen diese Nachteile **in Kauf nehmen**. (Biz bu kamchiliklarga ko'z yumishga majburmiz.)\n2. Er hat einen **Antrag auf** Stipendium **gestellt**. (U stipendiya uchun ariza topshirdi.)"
+        },
+        {
+            "id": "uc1_130",
+            "title": "Unit 130: Funktionsverbgefüge 2 (L-Z)",
+            "description": "Ot-fe'l birikmalari (2-qism)",
+            "content": "Davomi...\n\n### 📝 Muhim birikmalar:\n- **ums Leben kommen** (sterben) - halok bo'lmoq.\n- **Maßnahmen ergreifen** (handeln) - chora ko'rmoq.\n- **Rücksicht nehmen auf** (berücksichtigen) - hisobga olmoq / hurmat qilmoq.\n- **zur Sprache bringen** (ansprechen) - mavzuni ko'tarmoq.\n- **zur Verfügung stehen** (da sein) - mavjud bo'lmoq.\n- **Wert legen auf** (wichtig finden) - ahamiyat bermoq.",
+            "example": "1. Ich **lege** großen **Wert auf** Pünktlichkeit. (Men vaqtida kelishga katta ahamiyat beraman.)\n2. Das Material **steht** Ihnen **zur Verfügung**. (Material sizning ixtiyoringizda.)"
+        },
+        {
+            "id": "uc1_131",
+            "title": "Unit 131: Uneingeleitete Nebensätze",
+            "description": "Bog'lovchisiz ergash gaplar",
+            "content": "Ba'zi hollarda `dass` yoki `wenn` bog'lovchilarini tushirib qoldirish mumkin. Bunda fe'lning o'rni o'zgaradi.\n\n### 1. Konditional (Wenn-siz):\nFe'l 1-o'ringa chiqadi.\n*Wenn ich Zeit hätte...* -> **Hätte ich Zeit**...\n\n### 2. Kausal/Explication (Dass-siz):\nFe'l 2-o'rinda qoladi (gap strukturasi o'zgaradi).\n*Er sagt, dass er kommt.* -> *Er sagt, **er kommt**.*",
+            "example": "1. **Wäre** er hier, könnten wir anfangen. (Agar u shu yerda bo'lganda, boshlardik.)\n2. Ich dachte, **du bist** schon weg. (Men seni allaqachon ketgansan deb o'ylabman.)"
+        },
+        {
+            "id": "uc1_132",
+            "title": "Unit 132: Subjektlose Sätze und 'es'",
+            "description": "'es' ning vazifalari va egasiz gaplar",
+            "content": "'es' olmoshi gapda turli vazifalarni bajaradi. Ba'zan u majburiy, ba'zan esa tushirib qoldirilishi mumkin.\n\n### ⚖️ Turlari:\n1. **Formales Subjekt** (Ob-havo): *Es regnet.* (Majburiy).\n2. **Platzhalter** (O'rinbosar): *Es wird hier getanzt.* (Agar boshqa so'z 1-o'ringa chiqsa, 'es' tushib qoladi: *Hier wird getanzt.*)\n3. **Korrelat**: *Ich finde **es** gut, dass du kommst.* (Ergash gap uchun ishora).",
+            "example": "1. **Es** fehlen drei Stühle. (Uchta stul yetishmayapti.) -> Drei Stühle fehlen.\n2. Mir gefällt **es** hier. (Menga bu yer yoqyapti.)"
+        },
+        {
+            "id": "uc1_133",
+            "title": "Unit 133: Reziproke Pronomen: einander",
+            "description": "O'zaro munosabat olmoshi",
+            "content": "'Sich' (o'zini) va 'einander' (bir-birini) farqlash kerak. 'Einander' ko'pincha predloglar bilan birikib ketadi.\n\n- **miteinander** (bir-biri bilan)\n- **zueinander** (bir-biriga)\n- **übereinander** (bir-biri haqida/ustida)\n\n*Sie lieben sich.* (Ular bir-birini sevadilar - yoki o'zlarini).\n*Sie lieben **einander**.* (Aniq: bir-biri).",
+            "example": "1. Wir haben lange **miteinander** telefoniert. (Biz bir-birimiz bilan uzoq telefonda gaplashdik.)\n2. Die Bücher liegen **übereinander**. (Kitoblar bir-birining ustida yotipti.)"
+        },
+        {
+            "id": "uc1_134",
+            "title": "Unit 134: Modale Partikeln (Fortgeschritten)",
+            "description": "Partikullarning nozik ma'nolari",
+            "content": "C1 darajasida partikullar ironiya, ogohlantirish yoki shubha bildirish uchun ishlatiladi.\n\n- **ja**: *Du bist **ja** schon wieder spät!* (E'tiroz/Hayron qolish).\n- **wohl**: *Er hat den Zug **wohl** verpasst.* (Taxmin).\n- **eigentlich**: *Was machst du **eigentlich** hier?* (Qiziqish/Tanbeh).\n- **bloß**: *Komm mir **bloß** nicht zu spät!* (Qat'iy ogohlantirish).",
+            "example": "1. Das ist **ja** unerhört! (Bu aqlga sig'maydi-ku!)\n2. Wo steckt er **denn bloß**? (Qayerda qolib ketdi ekan-a?)"
+        },
+        {
+            "id": "uc1_135",
+            "title": "Unit 135: Gerundivum",
+            "description": "Majhul sifatdosh (Zu + Partizip I)",
+            "content": "Passiv modal ma'noni (kerak/mumkin) sifat shaklida ifodalash.\n\n### ⚙️ Formula:\n**zu** + **Partizip I**\n\n*Das **zu lösende** Problem* \n= *Das Problem, das gelöst werden muss/kann.*",
+            "example": "1. Die **zu erledigenden** Aufgaben. (Bajarilishi kerak bo'lgan vazifalar.)\n2. Ein nicht **zu unterschätzender** Gegner. (Mensimay bo'lmaydigan raqib.)"
         },
         {
             "id": "uc1_136",

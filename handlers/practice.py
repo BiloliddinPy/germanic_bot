@@ -11,6 +11,7 @@ from database import (
     log_event
 )
 from handlers.common import send_single_ui_message
+from utils.ops_logging import log_structured
 
 router = Router()
 GRAMMAR_PATH = "data/grammar.json"
@@ -101,6 +102,14 @@ async def practice_done_writing(call: CallbackQuery):
     mark_writing_task_completed(call.from_user.id, level, topic_id, "short_paragraph")
     update_module_progress(call.from_user.id, "practice", level, completed=True)
     log_event(call.from_user.id, "practice_writing_done", section_name="practice", level=level, metadata={"topic_id": topic_id})
+    log_structured(
+        "writing_task_submitted",
+        user_id=call.from_user.id,
+        source="practice",
+        level=level,
+        topic_id=topic_id,
+        task_type="short_paragraph"
+    )
     await call.answer("Yozma topshiriq progressga yozildi ✅", show_alert=False)
 
 
