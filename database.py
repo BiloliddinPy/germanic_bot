@@ -1858,3 +1858,18 @@ def get_due_review_count(user_id):
     count = cursor.fetchone()[0]
     conn.close()
     return count
+
+def get_recent_submissions(user_id, limit=5):
+    """Retrieves recent user submissions for review (Phase 2)."""
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT * FROM user_submissions 
+        WHERE user_id = ? 
+        ORDER BY created_at DESC 
+        LIMIT ?
+    """, (user_id, limit))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]

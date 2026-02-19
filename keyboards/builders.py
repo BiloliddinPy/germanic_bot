@@ -38,3 +38,18 @@ def get_alphabet_keyboard(level: str):
     builder.adjust(5)  # 5 buttons per row
     builder.row(InlineKeyboardButton(text="🔙 Darajalar", callback_data="dict_back"))
     return builder.as_markup()
+
+def get_practice_categories_keyboard(callback_prefix: str):
+    categories = [
+        ("🏠 Kundalik hayot", "daily"),
+        ("💼 Ish va karyera", "work"),
+        ("✈️ Sayohat", "travel"),
+        ("🎓 Ta'lim", "edu"),
+        ("🎭 Bo'sh vaqt", "leisure")
+    ]
+    builder = InlineKeyboardBuilder()
+    for text, slug in categories:
+        builder.button(text=text, callback_data=f"{callback_prefix}_{slug}")
+    builder.adjust(2)
+    builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
+    return builder.as_markup()

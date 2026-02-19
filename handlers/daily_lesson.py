@@ -8,6 +8,7 @@ from database import (
     get_user_profile,
     update_user_profile,
     get_random_words,
+    get_words_by_ids,
     log_mistake,
     DB_NAME,
     record_navigation_event,
@@ -742,6 +743,29 @@ def _guard_step(call: CallbackQuery, expected_step):
     return session, state_obj, None
 
 
+def get_grammar_topics_by_ids(topic_ids):
+    """Searches grammar.json across all levels for specific topic IDs."""
+    if not os.path.exists("data/grammar.json"):
+        return []
+    try:
+        with open("data/grammar.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+        results = []
+        for level in data:
+            for topic in data[level]:
+                if topic.get("id") in topic_ids:
+                    # Avoid duplicates if ID exists in multiple levels (rare but safe)
+                    if not any(r['id'] == topic['id'] for r in results):
+                        topic['level'] = level # Inject level for building questions
+                        results.append(topic)
+        return results
+    except Exception:
+        return []
+
+def _stale_answer_text(step):
+    return f"Bu eski xabar. Hozirgi qadam: {STEP_LABELS.get(step, 'step').title()}."
+
+
 @router.message(F.text == "🚀 Kunlik dars")
 @router.message(F.text == "🚀 Tägliche Lektion")
 @router.message(F.text == "🚀 Daily Lesson")
@@ -1028,7 +1052,7 @@ async def daily_voice_message_handler(message: Message):
         metadata={"topic_id": topic_id, "file_id": message.voice.file_id if message.voice else None},
     )
     _save_session_state(message.from_user.id, STEP_PRODUCTION, session)
-    await message.answer("Voice qabul qilindi ✅\nDavom etish uchun dars oynasidagi 'Tekshirish' tugmasini bosing.")
+    await message.answer("Rahmat! Vazifa saqlandi ✅\n\nDavom etish uchun dars oynasidagi **'Tekshirish'** tugmasini bosing.")
 
 @router.message(F.text)
 async def daily_text_message_handler(message: Message):
@@ -1049,7 +1073,7 @@ async def daily_text_message_handler(message: Message):
     topic_id = (session.get("topic") or {}).get("id")
     save_user_submission(message.from_user.id, "writing", level, topic_id, message.text)
     
-    await message.answer("Matn qabul qilindi ✅\nDavom etish uchun dars oynasidagi 'Bajarildi' tugmasini bosing.")
+    await message.answer("Rahmat! Vazifa saqlandi ✅\n\nDavom etish uchun dars oynasidagi **'Bajarildi'** tugmasini bosing.")
 
 
 @router.callback_query(F.data == "daily_finish")
@@ -1074,41 +1098,53 @@ async def daily_finish_callback(call: CallbackQuery):
 @router.callback_query(F.data == "daily_review_mastery")
 async def daily_review_mastery_start(call: CallbackQuery, state: FSMContext):
     user_id = call.from_user.id
-    due_items = get_due_reviews(user_id, limit=10)
+    due_items = get_due_reviews(user_id, limit=12)
     
     if not due_items:
         # Fallback: check mistakes
         from database import get_user_mistakes_overview
         mistakes = get_user_mistakes_overview(user_id)
         if not mistakes:
-            await call.answer("Hozircha takrorlash uchun so'zlar yo'q. ✅", show_alert=True)
+            await call.answer("Hozircha takrorlash uchun vazifalar yo'q. ✅", show_alert=True)
             return
-        
-        # If mistakes exist but not in mastery yet, we can't 'review' by mastery rules easily
-        # but we can just say "Good job" for now or start a mistake review.
-        await call.answer("Barcha so'zlarni o'zlashtirgansiz! Yangi so'zlar o'rganishda davom eting.", show_alert=True)
+        await call.answer("Barcha so'zlarni o'zlashtirgansiz! Yangi mavzular o'rganishda davom eting.", show_alert=True)
         return
 
-    # Start Mastery Review Session
-    # We'll use a simplified version of the quiz logic
-    # We need to fetch the actual words for these item_ids
-    item_ids = [int(item['item_id']) for item in due_items if item['module'] == 'dictionary'] # Assuming mostly words for now
-    words = get_words_by_ids(item_ids)
+    # Separate items by module
+    dict_ids = [int(item['item_id']) for item in due_items if item['module'] == 'dictionary']
+    grammar_ids = [item['item_id'] for item in due_items if item['module'] == 'grammar']
     
-    if not words:
-        await call.answer("Xatolik: so'zlar topilmadi.", show_alert=True)
-        return
-
     questions = []
-    for word in words:
-        # Find which mastery record corresponds to this word
-        q = build_quiz_question(word, word['level'], "srs_review", "srs")
-        if q:
-            questions.append(q)
+    
+    # 1. Dictionary Review (Quizzes)
+    if dict_ids:
+        words = get_words_by_ids(dict_ids)
+        for w in words:
+            q = build_quiz_question(w, w['level'], "srs_review", "srs")
+            if q:
+                q['module'] = 'dictionary'
+                questions.append(q)
+                
+    # 2. Grammar Review (Cards)
+    if grammar_ids:
+        topics = get_grammar_topics_by_ids(grammar_ids)
+        for t in topics:
+            questions.append({
+                "id": f"srs_grammar_{t['id']}",
+                "module": "grammar",
+                "item_id": t['id'],
+                "title": t.get("title", "Grammatika"),
+                "text": (t.get("content") or "")[:250] + "...",
+                "example": t.get("example", "-"),
+                "correct": "✅ Tushunarli. Keyingisi", # Match button text
+                "options": ["✅ Tushunarli. Keyingisi"]
+            })
 
     if not questions:
-        await call.answer("Savollar tayyorlanmadi.", show_alert=True)
+        await call.answer("Vazifalar tayyorlanmadi.", show_alert=True)
         return
+
+    random.shuffle(questions)
 
     await state.update_data(
         srs_questions=questions,
@@ -1121,15 +1157,31 @@ async def daily_review_mastery_start(call: CallbackQuery, state: FSMContext):
 
 async def _render_srs_step(message: Message, question: dict, index: int, total: int):
     builder = InlineKeyboardBuilder()
-    for idx, opt in enumerate(question['options']):
-        builder.button(text=opt, callback_data=f"srs_ans_{index}_{idx}")
-    builder.adjust(1)
-    builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
     
-    text = (
-        f"🔄 **SRS Takrorlash ({index+1}/{total})**\n\n"
-        f"{question['text']}"
-    )
+    if question.get("module") == "grammar":
+        # Grammar Review Card UI
+        builder.button(text="✅ Tushunarli. Keyingisi", callback_data=f"srs_ans_{index}_0")
+        builder.adjust(1)
+        builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
+        
+        text = (
+            f"🔄 **SRS Grammatika Takrorlash ({index+1}/{total})**\n\n"
+            f"📐 **{_md_escape(question['title'])}**\n\n"
+            f"{_md_escape(question['text'])}\n\n"
+            f"📝 Misol: {_md_escape(question['example'])}"
+        )
+    else:
+        # Dictionary Quiz UI
+        for idx, opt in enumerate(question['options']):
+            builder.button(text=opt, callback_data=f"srs_ans_{index}_{idx}")
+        builder.adjust(1)
+        builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
+        
+        text = (
+            f"🔄 **SRS Lug'at Takrorlash ({index+1}/{total})**\n\n"
+            f"{_md_escape(question['text'])}"
+        )
+
     await message.edit_text(text, reply_markup=builder.as_markup(), parse_mode="Markdown")
 
 @router.callback_query(F.data.startswith("srs_ans_"))
@@ -1153,7 +1205,9 @@ async def srs_answer_handler(call: CallbackQuery, state: FSMContext):
     is_correct = selected == question['correct']
     
     # Update SRS Mastery in DB!
-    update_mastery(call.from_user.id, question['word_id'], "dictionary", is_correct)
+    module = question.get("module", "dictionary")
+    item_id = question.get("word_id") or question.get("item_id")
+    update_mastery(call.from_user.id, item_id, module, is_correct)
     
     if is_correct:
         correct_count += 1
