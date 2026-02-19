@@ -3,7 +3,7 @@ import datetime
 import logging
 from collections import deque
 
-from config import ADMIN_ID
+from core.config import settings
 
 _ENABLED = True
 _LAST_ALERT_TS_UTC = None
@@ -76,10 +76,10 @@ def _normalize_message_short(value):
 
 
 async def _safe_send(bot, text):
-    if not ADMIN_ID or not bot:
+    if not settings.admin_id or not bot:
         return False
     try:
-        await bot.send_message(chat_id=int(ADMIN_ID), text=text)
+        await bot.send_message(chat_id=int(settings.admin_id), text=text)
         return True
     except Exception as e:
         logging.warning(f"Failed to send ops alert to admin: {e}")
@@ -93,7 +93,7 @@ async def notify_ops_error(bot, payload: dict):
     """
     global _LAST_ALERT_TS_UTC, _LAST_RATE_NOTICE_TS_UTC
     try:
-        if not _ENABLED or not ADMIN_ID:
+        if not _ENABLED or not settings.admin_id:
             return
         now = _utc_now()
         _cleanup_old(now)

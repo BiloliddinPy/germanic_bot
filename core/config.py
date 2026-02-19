@@ -23,6 +23,9 @@ class Config:
     # Adaptive Logic
     daily_mistake_blend: float = float(os.getenv("DAILY_MISTAKE_BLEND", "0.5"))
     
+    # Scheduler
+    backup_time_utc: str = os.getenv("BACKUP_TIME_UTC", "03:00")
+    
     # UI Constants
     page_size: int = 15
     main_menu_state_key: str = "main_menu_msg_id"

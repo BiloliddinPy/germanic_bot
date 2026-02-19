@@ -3,10 +3,25 @@ import logging
 import os
 from core.config import settings
 
-def get_connection():
-    """Legacy wrapper for backward compatibility during transition."""
-    from database.connection import get_connection as core_conn
-    return core_conn()
+# For backward compatibility
+DB_NAME = settings.db_path
+
+def log_ops_error(severity: str, where_ctx: str, error_type: str, message_short: str, user_id: int = None, update_id: int = None):
+    """Compatibility wrapper for error logging."""
+    from database.repositories.progress_repository import log_event
+    metadata = {"severity": severity, "where": where_ctx, "error_type": error_type, "message": message_short}
+    if update_id:
+        metadata["update_id"] = update_id
+    log_event(user_id=user_id or 0, event_type="error", metadata=metadata)
+
+# Public API for the database package
+from database.repositories.user_repository import add_user, get_user_profile, get_or_create_user_profile, update_user_profile
+from database.repositories.word_repository import get_words_by_level, get_total_words_count, get_random_words
+from database.repositories.progress_repository import record_navigation_event, log_mistake, log_event, update_module_progress
+from database.repositories.session_repository import save_user_submission, get_recent_submissions
+
+# For backward compatibility
+DB_NAME = settings.db_path
 
 def create_table():
     """Initializes the database schema."""

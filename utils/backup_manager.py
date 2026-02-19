@@ -8,9 +8,8 @@ import shutil
 import sqlite3
 import subprocess
 import threading
-from pathlib import Path
-
-from database import DB_NAME, log_ops_error
+from core.config import settings
+from database import log_ops_error
 from utils.error_notifier import schedule_ops_error_notification
 
 BACKUP_THRESHOLD_COMPRESS_BYTES = 5 * 1024 * 1024
@@ -202,7 +201,7 @@ def create_backup_sync(trigger: str = "manual"):
         }
 
     try:
-        src_db = os.path.abspath(DB_NAME)
+        src_db = os.path.abspath(settings.db_path)
         if not os.path.exists(src_db):
             return {
                 "success": False,

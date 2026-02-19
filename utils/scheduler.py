@@ -2,7 +2,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiogram import Bot
 import logging
 
-from config import BACKUP_TIME_UTC
+from core.config import settings
 from handlers.daily import send_daily_word_to_all
 from utils.backup_manager import run_backup_async
 
@@ -24,7 +24,7 @@ async def start_scheduler(bot: Bot):
         id=SCHEDULER_JOB_ID_DAILY_WORD,
         replace_existing=True
     )
-    backup_hour, backup_minute = _parse_backup_time_utc(BACKUP_TIME_UTC)
+    backup_hour, backup_minute = _parse_backup_time_utc(settings.backup_time_utc)
     scheduler.add_job(
         run_backup_async,
         "cron",
