@@ -15,7 +15,7 @@ from database import (
     get_recent_submissions,# New helper
     get_words_by_level
 )
-from handlers.common import send_single_ui_message, MAIN_MENU_TEXT, _md_escape
+from utils.ui_utils import send_single_ui_message, MAIN_MENU_TEXT, _md_escape
 from keyboards.builders import get_levels_keyboard, get_practice_categories_keyboard
 from utils.ops_logging import log_structured
 
@@ -194,7 +194,7 @@ async def handle_practice_voice(message: Message, state: FSMContext):
     
     await message.answer("Sizning nutqingiz saqlandi! ✅\nAI tez orada uni tahlil qiladi (Phase 3).")
     # Show main menu or return to practice
-    from handlers.common import _send_fresh_main_menu, MAIN_MENU_TEXT
+    from utils.ui_utils import _send_fresh_main_menu, MAIN_MENU_TEXT
     await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=message.from_user.id)
     await state.clear()
 
@@ -217,7 +217,7 @@ async def handle_practice_text(message: Message, state: FSMContext):
     log_event(message.from_user.id, "practice_writing_submitted", section_name="practice", level=level, metadata={"topic_id": topic_id})
     
     await message.answer("Sizning matningiz saqlandi! ✅\nAI tez orada xatolaringizni tekshiradi (Phase 3).")
-    from handlers.common import _send_fresh_main_menu, MAIN_MENU_TEXT
+    from utils.ui_utils import _send_fresh_main_menu, MAIN_MENU_TEXT
     await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=message.from_user.id)
     await state.clear()
 

@@ -2,7 +2,7 @@ import os
 from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, FSInputFile
 from database import record_navigation_event, log_event
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 MATERIALS = [

@@ -40,7 +40,7 @@ import random
 import os
 import datetime
 import re
-from handlers.common import send_single_ui_message, _md_escape
+from utils.ui_utils import send_single_ui_message, _md_escape
 from utils.ops_logging import log_structured
 
 router = Router()
@@ -845,7 +845,7 @@ async def daily_cancel_callback(call: CallbackQuery):
 async def daily_wait_callback(call: CallbackQuery):
     await call.answer("Ertangi darsni kutamiz.", show_alert=False)
     # Redirect to home
-    from handlers.common import _send_fresh_main_menu, MAIN_MENU_TEXT
+    from utils.ui_utils import _send_fresh_main_menu, MAIN_MENU_TEXT
     await _send_fresh_main_menu(call.message, MAIN_MENU_TEXT, user_id=call.from_user.id)
 
 

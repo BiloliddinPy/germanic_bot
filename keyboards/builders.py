@@ -1,5 +1,5 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 def get_levels_keyboard(callback_prefix: str):
     levels = ["A1", "A2", "B1", "B2", "C1"]
@@ -53,3 +53,33 @@ def get_practice_categories_keyboard(callback_prefix: str):
     builder.adjust(2)
     builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
     return builder.as_markup()
+def get_main_menu_keyboard():
+    builder = ReplyKeyboardBuilder()
+    # Row 1: Primary Action
+    builder.row(KeyboardButton(text="🚀 Kunlik dars"))
+    
+    # Row 2: Core Learning
+    builder.row(
+        KeyboardButton(text="📘 Lug‘at (A1–C1)"),
+        KeyboardButton(text="📐 Grammatika")
+    )
+    
+    # Row 3: Practice & Assessment
+    builder.row(
+        KeyboardButton(text="🧠 Test va Quiz"),
+        KeyboardButton(text="🗣️ Sprechen & Schreiben")
+    )
+    
+    # Row 4: Supplement & Exam
+    builder.row(
+        KeyboardButton(text="🎥 Video va materiallar"),
+        KeyboardButton(text="🎓 Imtihon tayyorgarligi")
+    )
+    
+    # Row 5: User Specific
+    builder.row(
+        KeyboardButton(text="📊 Natijalar"),
+        KeyboardButton(text="⚙️ Profil")
+    )
+    
+    return builder.as_markup(resize_keyboard=True)

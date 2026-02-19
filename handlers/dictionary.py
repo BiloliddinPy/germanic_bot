@@ -13,7 +13,7 @@ from database import (
     record_navigation_event,
     DB_NAME
 )
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 

@@ -7,14 +7,16 @@ from database import (
     record_navigation_event,
     get_days_since_first_use
 )
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 
 GOAL_LABELS = {
-    "exam": "Imtihon",
-    "speaking": "Suhbat",
-    "general": "Umumiy"
+    "work": "💼 Ish va karyera",
+    "travel": "✈️ Sayohat va hayot",
+    "exam": "🎓 Imtihon tayyorgarligi",
+    "fun": "🌟 Shunchaki qiziqish",
+    "general": "🌍 Umumiy"
 }
 
 TIMEZONE_OPTIONS = ["UTC", "UTC+3", "UTC+5", "UTC+6", "UTC+1"]
@@ -85,9 +87,10 @@ async def profile_set_level(call: CallbackQuery):
 @router.callback_query(F.data == "profile_edit_goal")
 async def profile_edit_goal(call: CallbackQuery):
     builder = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🎯 Imtihon", callback_data="profile_set_goal_exam")],
-        [InlineKeyboardButton(text="🗣 Suhbat", callback_data="profile_set_goal_speaking")],
-        [InlineKeyboardButton(text="🌍 Umumiy", callback_data="profile_set_goal_general")],
+        [InlineKeyboardButton(text="💼 Ish va karyera", callback_data="profile_set_goal_work")],
+        [InlineKeyboardButton(text="✈️ Sayohat va hayot", callback_data="profile_set_goal_travel")],
+        [InlineKeyboardButton(text="🎓 Imtihon tayyorgarligi", callback_data="profile_set_goal_exam")],
+        [InlineKeyboardButton(text="🌟 Shunchaki qiziqish", callback_data="profile_set_goal_fun")],
         [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="profile_back")]
     ])
     await call.message.edit_text("🎯 **Maqsadni tanlang:**", reply_markup=builder, parse_mode="Markdown")

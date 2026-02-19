@@ -13,7 +13,7 @@ from database import (
     get_submission_stats,
     get_due_review_count
 )
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 

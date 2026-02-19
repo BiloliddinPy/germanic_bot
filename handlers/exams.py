@@ -11,7 +11,7 @@ from database import (
     add_quiz_result,
     log_mistake
 )
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 

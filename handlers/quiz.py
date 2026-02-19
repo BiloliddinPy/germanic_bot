@@ -14,7 +14,7 @@ from database import (
     update_module_progress,
     DB_NAME
 )
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 from utils.ops_logging import log_structured
 
 router = Router()

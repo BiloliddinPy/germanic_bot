@@ -6,7 +6,7 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 
 from config import ADMIN_ID
 from database import DB_NAME, get_admin_stats_snapshot, get_last_event_timestamp, get_recent_ops_errors
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 from utils.backup_manager import (
     run_backup_async,
     list_backups,

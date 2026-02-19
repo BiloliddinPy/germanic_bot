@@ -10,7 +10,7 @@ from database import (
     log_event,
     get_recent_topic_mistake_scores,
 )
-from handlers.common import send_single_ui_message
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 DATA_DIR = "data"

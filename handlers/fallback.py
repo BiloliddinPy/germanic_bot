@@ -1,7 +1,8 @@
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 
-from handlers.common import get_main_menu, send_single_ui_message, _send_fresh_main_menu, MAIN_MENU_TEXT
+from utils.ui_utils import send_single_ui_message, _send_fresh_main_menu, MAIN_MENU_TEXT
+from keyboards.builders import get_main_menu_keyboard
 
 router = Router()
 
@@ -17,7 +18,7 @@ async def unknown_text_fallback(message: Message):
     await send_single_ui_message(
         message,
         "Bu buyruq yoki xabar hozircha qo'llab-quvvatlanmaydi. Iltimos, menyudan bo'lim tanlang.",
-        reply_markup=get_main_menu()
+        reply_markup=get_main_menu_keyboard()
     )
 
 
