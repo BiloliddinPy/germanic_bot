@@ -7,7 +7,8 @@ from database.repositories.user_repository import add_user, get_user_profile
 from database.repositories.progress_repository import record_navigation_event
 from database.repositories.ui_repository import get_ui_state, set_ui_state
 from handlers.onboarding import start_onboarding
-from utils.ui_utils import _send_fresh_main_menu, send_single_ui_message, MAIN_MENU_TEXT
+from utils.ui_utils import _send_fresh_main_menu, send_single_ui_message
+from core.texts import MAIN_MENU_TEXT
 from core.config import settings
 
 router = Router()

@@ -1,7 +1,8 @@
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 
-from utils.ui_utils import send_single_ui_message, _send_fresh_main_menu, MAIN_MENU_TEXT
+from utils.ui_utils import send_single_ui_message, _send_fresh_main_menu
+from core.texts import MAIN_MENU_TEXT
 from keyboards.builders import get_main_menu_keyboard
 
 router = Router()

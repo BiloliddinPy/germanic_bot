@@ -52,3 +52,21 @@ def get_main_menu_keyboard():
     builder.row(KeyboardButton(text=BTN_STATS), KeyboardButton(text=BTN_PROFILE))
     
     return builder.as_markup(resize_keyboard=True)
+
+def get_main_menu():
+    """Alias for backward compatibility."""
+    return get_main_menu_keyboard()
+
+def get_practice_categories_keyboard():
+    categories = [
+        ("🏠 Kundalik hayot", "daily"),
+        ("💼 Ish va karyera", "work"),
+        ("✈️ Sayohat", "travel"),
+        ("🌍 Umumiy", "general")
+    ]
+    builder = InlineKeyboardBuilder()
+    for text, code in categories:
+        builder.button(text=text, callback_data=f"practice_cat_{code}")
+    builder.adjust(2)
+    builder.row(InlineKeyboardButton(text=BTN_BACK, callback_data="practice_back"))
+    return builder.as_markup()

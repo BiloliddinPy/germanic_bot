@@ -86,3 +86,41 @@ def get_subscribed_users():
     rows = cursor.fetchall()
     conn.close()
     return [row[0] for row in rows]
+
+def update_streak(user_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        today = datetime.date.today().isoformat()
+        cursor.execute("SELECT current_streak, last_activity FROM user_streak WHERE user_id = ?", (user_id,))
+        row = cursor.fetchone()
+        
+        if not row:
+            cursor.execute("INSERT INTO user_streak (user_id, current_streak, last_activity, highest_streak) VALUES (?, 1, ?, 1)", (user_id, today))
+        else:
+            curr, last = row
+            if last == today:
+                pass # Already updated
+            elif last == (datetime.date.today() - datetime.timedelta(days=1)).isoformat():
+                new_streak = curr + 1
+                cursor.execute("UPDATE user_streak SET current_streak = ?, last_activity = ?, highest_streak = MAX(highest_streak, ?) WHERE user_id = ?", (new_streak, today, new_streak, user_id))
+            else:
+                cursor.execute("UPDATE user_streak SET current_streak = 1, last_activity = ? WHERE user_id = ?", (today, user_id))
+        conn.commit()
+    except Exception as e:
+        logging.error(f"Error updating streak: {e}")
+    finally:
+        conn.close()
+
+def update_xp(user_id: int, amount: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("UPDATE user_profile SET xp = xp + ? WHERE user_id = ?", (amount, user_id))
+        conn.commit()
+    except Exception as e:
+        logging.error(f"Error updating XP: {e}")
+    finally:
+        conn.close()
+
+import datetime

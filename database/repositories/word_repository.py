@@ -61,3 +61,17 @@ def get_words_by_ids(word_ids: list):
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]
+
+def add_word(level, de, uz, pos, plural="", example_de="", example_uz="", category=""):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO words (level, de, uz, pos, plural, example_de, example_uz, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (level, de, uz, pos, plural, example_de, example_uz, category))
+        conn.commit()
+    except Exception as e:
+        logging.error(f"Error adding word {de}: {e}")
+    finally:
+        conn.close()

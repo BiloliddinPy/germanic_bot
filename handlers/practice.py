@@ -9,7 +9,8 @@ from database import get_or_create_user_profile
 from database.repositories.progress_repository import record_navigation_event, update_module_progress, log_event
 from database.repositories.session_repository import save_user_submission, get_recent_submissions, mark_writing_task_completed
 from database.repositories.word_repository import get_words_by_level
-from utils.ui_utils import send_single_ui_message, MAIN_MENU_TEXT, _md_escape
+from utils.ui_utils import send_single_ui_message, _md_escape, _send_fresh_main_menu
+from core.texts import MAIN_MENU_TEXT
 from keyboards.builders import get_levels_keyboard, get_practice_categories_keyboard
 
 router = Router()

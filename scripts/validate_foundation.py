@@ -4,7 +4,7 @@ import os
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from database import create_table, get_user_profile, update_user_profile, update_streak, log_mistake
+from database import create_table, get_user_profile, update_user_profile, update_streak, log_mistake, add_user
 import sqlite3
 import datetime
 
@@ -30,9 +30,10 @@ def validate_edtech_setup():
     # 2. Profile Helper Verification
     print("\nTesting profile helpers...")
     test_user_id = 999999
-    update_user_profile(test_user_id, goal='exam', daily_target=20)
+    add_user(test_user_id, "Test User")
+    update_user_profile(test_user_id, goal='exam', daily_time_minutes=20)
     profile = get_user_profile(test_user_id)
-    if profile and profile['goal'] == 'exam' and profile['daily_target'] == 20:
+    if profile and profile['goal'] == 'exam' and profile['daily_time_minutes'] == 20:
         print("✅ Profile creation/update working.")
     else:
         print(f"❌ Profile helper FAILED. Data: {profile}")

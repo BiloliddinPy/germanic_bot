@@ -67,3 +67,24 @@ def get_level_progress_stats(user_id: int, level: str):
     conn.close()
     
     return mastered, total
+
+def get_weighted_mistake_word_ids(user_id: int, limit: int = 20):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT item_id FROM user_mistakes 
+        WHERE user_id = ? AND module = 'vocab' AND mastered = 0
+        ORDER BY mistake_count DESC, last_mistake_at DESC
+        LIMIT ?
+    """, (user_id, limit))
+    rows = cursor.fetchall()
+    conn.close()
+    return [int(row[0]) for row in rows]
+
+def get_mastered_mistake_word_ids(user_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT item_id FROM user_mistakes WHERE user_id = ? AND mastered = 1", (user_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [int(row[0]) for row in rows]
