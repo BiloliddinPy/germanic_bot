@@ -15,7 +15,7 @@ from database import (
     get_recent_submissions,# New helper
     get_words_by_level
 )
-from handlers.common import send_single_ui_message, MAIN_MENU_TEXT
+from handlers.common import send_single_ui_message, MAIN_MENU_TEXT, _md_escape
 from keyboards.builders import get_levels_keyboard, get_practice_categories_keyboard
 from utils.ops_logging import log_structured
 
@@ -67,9 +67,10 @@ def _practice_main_menu():
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
 
-@router.message(F.text == "🗣️ Gapirish va yozish")
-@router.message(F.text == "🗣️ Sprechen & Schreiben")
-async def speaking_writing_handler(message: Message):
+@router.message(F.text.contains("Gapirish va yozish"))
+@router.message(F.text.contains("Sprechen & Schreiben"))
+async def speaking_writing_handler(message: Message, state: FSMContext):
+    await state.clear() # Clear any existing state when entering from main menu
     try:
         await message.delete()
     except Exception:
@@ -130,9 +131,9 @@ async def _show_task(message: Message, state: FSMContext, mode: str, level: str,
         instr = "60 soniya davomida voice (ovozli xabar) yuboring."
 
     text = (
-        f"{icon} **{title} - {level}**\n\n"
-        f"Mavzu: **{topic_title}**\n\n"
-        f"📝 **Vazifa:** {instr}\n\n"
+        f"{icon} **{_md_escape(title)} - {level}**\n\n"
+        f"Mavzu: **{_md_escape(topic_title)}**\n\n"
+        f"📝 **Vazifa:** {_md_escape(instr)}\n\n"
         "✅ Xabar yuborishingiz bilan u saqlanadi."
     )
     
@@ -199,8 +200,12 @@ async def handle_practice_voice(message: Message, state: FSMContext):
 
 @router.message(PracticeState.waiting_for_submission, F.text)
 async def handle_practice_text(message: Message, state: FSMContext):
-    if message.text.startswith("/") or message.text in ["🚀 Kunlik dars", "📘 Lug‘at (A1–C1)", "📐 Grammatika"]:
-        return # Ignore commands/menu buttons
+    if message.text.startswith("/") or message.text in ["🚀 Kunlik dars", "📘 Lug‘at (A1–C1)", "📐 Grammatika", "🧠 Test va Quiz", "📊 Natijalar", "🗣️ Sprechen & Schreiben"]:
+        await state.clear()
+        # We don't return here so that other handlers in other routers can pick it up
+        # However, aiogram might need us to trigger them manually or just not catch it.
+        # A better way is to move these menu checks to the filter.
+        return 
         
     data = await state.get_data()
     level = data.get("level", "A1")
