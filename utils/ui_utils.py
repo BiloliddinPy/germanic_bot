@@ -75,3 +75,9 @@ async def send_single_ui_message(
     )
     set_ui_state(resolved_user_id, ACTIVE_UI_STATE_KEY, sent.message_id)
     return sent
+
+def _get_progress_bar(percentage, length=10):
+    """Creates a visual progress bar using emojis."""
+    filled_length = int(length * percentage // 100)
+    bar = "🟩" * filled_length + "⬜️" * (length - filled_length)
+    return bar

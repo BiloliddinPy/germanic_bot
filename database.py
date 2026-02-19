@@ -1887,3 +1887,25 @@ def get_recent_submissions(user_id, limit=5):
     rows = cursor.fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
+def get_level_progress_stats(user_id, level):
+    """Returns (mastered_count, total_count) for a specific level."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    # Total words in level
+    cursor.execute("SELECT COUNT(*) FROM words WHERE level = ?", (level,))
+    res_total = cursor.fetchone()
+    total = res_total[0] if res_total else 0
+    
+    # Mastered words in level (Box 4 or 5)
+    cursor.execute("""
+        SELECT COUNT(*) FROM user_mastery m
+        JOIN words w ON m.item_id = w.id
+        WHERE m.user_id = ? AND w.level = ? AND m.module = 'dictionary' AND m.box >= 4
+    """, (user_id, level))
+    res_mastered = cursor.fetchone()
+    mastered = res_mastered[0] if res_mastered else 0
+    
+    conn.close()
+    return mastered, total

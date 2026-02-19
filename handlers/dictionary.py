@@ -2,22 +2,26 @@ import os
 import logging
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram.fsm.context import FSMContext
 
 DICTIONARY_PDF = "data/Nemis tili lug‘at 17.000+  .pdf"
-from keyboards.builders import get_levels_keyboard, get_pagination_keyboard
+
 from database import (
     update_dictionary_progress, 
     get_dictionary_progress, 
     get_words_by_level, 
+    get_words_by_level_and_letter,
     get_total_words_count,
+    get_total_words_count_by_letter,
     record_navigation_event,
     DB_NAME
 )
 from utils.ui_utils import send_single_ui_message
+from keyboards.builders import get_levels_keyboard, get_pagination_keyboard, get_alphabet_keyboard
 
 router = Router()
 
-PAGE_SIZE = 20
+PAGE_SIZE = 15 # Reduced for better mobile visibility
 
 @router.message(F.text == "📘 Lug‘at (A1–C1)")
 async def show_dictionary_levels(message: Message):
@@ -28,82 +32,102 @@ async def show_dictionary_levels(message: Message):
     record_navigation_event(message.from_user.id, "dictionary", entry_type="text")
     await send_single_ui_message(
         message,
-        "📘 **Lug'at bo'limi**\n\nIltimos, darajani tanlang:",
+        "📘 **Lug'at (A1–C1)**\n\nBu bo'limda siz turli darajadagi so'zlarni o'rganishingiz mumkin. Qaysi darajani o'rganmoqchisiz?",
         reply_markup=get_levels_keyboard("dict"),
         parse_mode="Markdown"
     )
 
-@router.callback_query(F.data.startswith("dict_"))
-async def dictionary_callback_handler(call: CallbackQuery):
+@router.callback_query(F.data.startswith("dict_") & ~F.data.startswith("dict_letter_") & ~F.data.startswith("dict_next_"))
+async def dictionary_level_handler(call: CallbackQuery):
     data = call.data
-    logging.info("dict_callback data=%s db=%s", data, DB_NAME)
-    
     if data == "dict_back":
         await call.message.edit_text(
-            "📘 **Lug'at bo'limi**\n\nIltimos, darajani tanlang:",
+            "📘 **Lug'at (A1–C1)**\n\nQaysi darajani o'rganmoqchisiz?",
             reply_markup=get_levels_keyboard("dict")
         )
         return
 
-    # Handle Next Page
-    if "next" in data:
-        _, _, level, offset = data.split("_")
-        offset = int(offset) + PAGE_SIZE
-    else:
-        # Handle Level Selection
-        level = data.split("_")[1]
-        record_navigation_event(call.from_user.id, "dictionary", level=level, entry_type="callback")
-        offset = get_dictionary_progress(call.from_user.id, level)
-
-    # DATABASE FETCH
-    words = get_words_by_level(level, limit=PAGE_SIZE, offset=offset)
-    total_count = get_total_words_count(level)
-    logging.info(
-        "dict_fetch user=%s level=%s offset=%s fetched=%s total=%s db=%s",
-        call.from_user.id,
-        level,
-        offset,
-        len(words),
-        total_count,
-        DB_NAME
+    level = data.split("_")[1]
+    # Show Alphabet or Start Browsing
+    await call.message.edit_text(
+        f"📚 **{level}** darajasi tanlandi.\n\nSo'zlarni alifbo bo'yicha qidirishingiz yoki shunchaki ko'rib chiqishingiz mumkin:",
+        reply_markup=get_alphabet_keyboard(level)
     )
+
+@router.callback_query(F.data.startswith("dict_letter_"))
+async def dictionary_letter_handler(call: CallbackQuery):
+    parts = call.data.split("_")
+    level = parts[2]
+    letter = parts[3]
+    offset = 0
+    
+    words = get_words_by_level_and_letter(level, letter, limit=PAGE_SIZE, offset=offset)
+    total_count = get_total_words_count_by_letter(level, letter)
     
     if not words:
-        if offset == 0:
-             await call.answer("Bu daraja uchun xozircha so'zlar yo'q.", show_alert=True)
-        else:
-             await call.answer("✅ Bu darajadagi barcha so'zlar tugadi!", show_alert=True)
-             await call.message.edit_text(
-                f"✅ **{level}** daraja so'zlari tugadi. (Jami: {total_count} ta)",
-                reply_markup=get_levels_keyboard("dict")
-             )
+        await call.answer(f"Bu harf ({letter}) uchun so'zlar topilmadi.", show_alert=True)
         return
 
-    update_dictionary_progress(call.from_user.id, level, offset)
+    await _show_word_page(call, level, words, total_count, offset, f"dict_letter_{letter}", letter=letter)
+
+@router.callback_query(F.data.startswith("dict_next_"))
+async def dictionary_pagination_handler(call: CallbackQuery):
+    # data format: dict_next_A1_20 or dict_next_letter_A_A1_20
+    parts = call.data.split("_")
     
-    text_lines = [f"📚 **Lug'at: {level}** ({offset+1}-{offset+len(words)} / {total_count})\n"]
+    if parts[2] == "letter":
+        # dict_next_letter_A_A1_offset
+        letter = parts[3]
+        level = parts[4]
+        offset = int(parts[5]) + PAGE_SIZE
+        words = get_words_by_level_and_letter(level, letter, limit=PAGE_SIZE, offset=offset)
+        total_count = get_total_words_count_by_letter(level, letter)
+        await _show_word_page(call, level, words, total_count, offset, f"dict_letter_{letter}", letter=letter)
+    else:
+        # dict_next_A1_offset (Legacy or future use for "All")
+        level = parts[2]
+        offset = int(parts[3]) + PAGE_SIZE
+        words = get_words_by_level(level, limit=PAGE_SIZE, offset=offset)
+        total_count = get_total_words_count(level)
+        await _show_word_page(call, level, words, total_count, offset, "dict")
+
+async def _show_word_page(call, level, words, total_count, offset, callback_prefix, letter=None):
+    header = f"📚 **Lug'at: {level}**"
+    if letter:
+        header += f" (Harf: {letter})"
+    
+    sub_header = f"Showing {offset+1}-{offset+len(words)} of {total_count}"
+    
+    text_lines = [f"{header}\n_{sub_header}_\n"]
+    
     for word in words:
         emoji = "🔹"
         pos = f"({word['pos']})" if word['pos'] else ""
-        
-        line = (
-            f"{emoji} **{word['de']}** {pos}\n"
-            f"   🇺🇿 {word['uz']}\n"
-        )
+        line = f"{emoji} **{word['de']}** {pos}\n   🇺🇿 {word['uz']}\n"
         if word['example_de']:
-             line += f"   📌 _{word['example_de']}_ ({word['example_uz']})\n"
+             line += f"   📌 _{word['example_de']}_\n"
              
         text_lines.append(line)
     
     response_text = "\n".join(text_lines)
-    
     has_next = (offset + PAGE_SIZE) < total_count
     
-    await call.message.edit_text(
-        response_text,
-        reply_markup=get_pagination_keyboard(level, offset, has_next, "dict"),
-        parse_mode="Markdown"
-    )
+    # Custom pagination logic for letters
+    prefix = callback_prefix
+    if letter:
+        # We need a custom way to pass 'next' for letters
+        # Let's use dict_next_letter_A_A1_20
+        next_callback = f"dict_next_letter_{letter}_{level}_{offset}"
+    else:
+        next_callback = f"dict_next_{level}_{offset}"
+
+    builder = get_pagination_keyboard(next_callback=next_callback, back_callback=f"dict_{level}", back_label="🔙 Alifbo")
+    
+    try:
+        await call.message.edit_text(response_text, reply_markup=builder, parse_mode="Markdown")
+    except Exception as e:
+        logging.error(f"Error editing dictionary message: {e}")
+        await call.answer("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.")
 
 @router.callback_query(F.data == "dict_pdf")
 async def dictionary_pdf_download_handler(call: CallbackQuery):

@@ -1050,7 +1050,11 @@ async def daily_voice_message_handler(message: Message):
 
 @router.message(F.text)
 async def daily_text_message_handler(message: Message):
-    if message.text.startswith("/") or message.text in ["🚀 Kunlik dars", "📘 Lug‘at (A1–C1)", "📐 Grammatika", "🗣️ Sprechen & Schreiben"]:
+    if message.text.startswith("/") or message.text in [
+        "🚀 Kunlik dars", "📘 Lug‘at (A1–C1)", "📐 Grammatika", "🧠 Test va Quiz", 
+        "🗣️ Sprechen & Schreiben", "🎥 Video va materiallar", "🎓 Imtihon tayyorgarligi", 
+        "📊 Natijalar", "⚙️ Profil"
+    ]:
         return
         
     session, state_obj = _load_active_session(message.from_user.id)

@@ -13,7 +13,7 @@ from database import (
     get_submission_stats,
     get_due_review_count
 )
-from utils.ui_utils import send_single_ui_message
+from utils.ui_utils import send_single_ui_message, _get_progress_bar
 
 router = Router()
 
@@ -119,26 +119,25 @@ async def stats_handler(message: Message):
         motivation = "🌱 Kichik qadamlar katta natija beradi. Bugun ham davom etamiz."
 
     text = (
-        "📊 **Natijalar**\n\n"
-        f"🔥 **Joriy streak:** {streak.get('current_streak', 0)} kun\n"
-        f"🏆 **Eng yaxshi streak:** {streak.get('best_streak', 0)} kun\n"
-        f"✅ **Kunlik dars (7 kun):** {completion_rate_7d}%\n\n"
-        "🧠 **O'zlashtirish (SRS)**\n"
-        f"▫️ O'rganilmoqda: {total_learning} ta so'z\n"
-        f"▫️ Mukammal bilasiz: {total_mastered} ta so'z\n"
-        f"🔄 **Takrorlash kerak:** {due_count} ta so'z\n\n"
-        "✍️ **Sprechen & Schreiben**\n"
-        f"▫️ Yozma matnlar: {submissions.get('writing', 0)} ta\n"
-        f"▫️ Gapirish mashqlari: {submissions.get('speaking', 0)} ta\n\n"
-        "🧭 **Oxirgi dars rejasi**\n"
-        f"▫️ Mavzu: {plan_topic_text}\n"
-        f"▫️ Sabab: {reason_text}\n\n"
-        f"🧩 **Zaif mavzular ({weak_level})**\n"
-        f"{weak_topics_text}\n\n"
-        "📚 **Modullar bo'yicha**\n"
-        f"▫️ Lug'at: {dict_comp}/{dict_attempts} ({dict_rate}%)\n"
-        f"▫️ Quiz: {quiz_comp}/{quiz_attempts} ({quiz_rate}%)\n"
-        f"▫️ Grammatika: {grammar_comp}/{grammar_attempts} ({grammar_rate}%)\n\n"
+        "📊 **NATIJALAR DASHBOARDI**\n"
+        "────────────────────\n"
+        f"🔥 **Joriy faollik:** `{streak.get('current_streak', 0)} kun`\n"
+        f"🏆 **Eng yuqori:** `{streak.get('best_streak', 0)} kun`\n"
+        f"✅ **Kunlik dars:** `{completion_rate_7d}%` (7 kun)\n\n"
+        "🧠 **O'ZLASHTIRISH (SRS)**\n"
+        f"▫️ O'rganilmoqda: `{total_learning}`\n"
+        f"▫️ Mastered: `{total_mastered}`\n"
+        f"🔄 **Takrorlash:** `{due_count}`\n\n"
+        "✍️ **AMALIY MASHQLAR**\n"
+        f"▫️ Writing: `{submissions.get('writing', 0)}` topshiriq\n"
+        f"▫️ Speaking: `{submissions.get('speaking', 0)}` topshiriq\n\n"
+        "📚 **MODULLAR PROGRESSI**\n"
+        f"🔹 Lug'at:   {_get_progress_bar(dict_rate)} `{dict_rate}%`\n"
+        f"🔸 Quiz:     {_get_progress_bar(quiz_rate)} `{quiz_rate}%`\n"
+        f"🔹 Grammar:  {_get_progress_bar(grammar_rate)} `{grammar_rate}%`\n\n"
+        f"🧩 **ZAIF MAVZULAR ({weak_level})**\n"
+        f"{weak_topics_text}\n"
+        "────────────────────\n"
         f"{motivation}"
     )
     

@@ -84,6 +84,7 @@ async def grammar_topic_list_handler(call: CallbackQuery):
         rows.append([InlineKeyboardButton(text=topic["title"], callback_data=f"grammar_topic_{topic['id']}")])
 
     rows.append([InlineKeyboardButton(text="🔙 Darajalar", callback_data="grammar_back")])
+    rows.append([InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")])
     builder = InlineKeyboardMarkup(inline_keyboard=rows)
 
     await call.message.edit_text(

@@ -5,9 +5,10 @@ from database import (
     get_user_profile,
     update_user_profile,
     record_navigation_event,
-    get_days_since_first_use
+    get_days_since_first_use,
+    get_level_progress_stats
 )
-from utils.ui_utils import send_single_ui_message
+from utils.ui_utils import send_single_ui_message, _get_progress_bar
 
 router = Router()
 
@@ -30,15 +31,26 @@ def _profile_text(full_name, profile):
     daily_minutes = profile.get("daily_time_minutes") or profile.get("daily_target") or 20
     tz = profile.get("timezone") or "UTC"
     days = get_days_since_first_use(profile.get("user_id")) if profile.get("user_id") else 0
+    
+    # Calc progress
+    mastered, total = get_level_progress_stats(profile.get("user_id"), level)
+    perc = int(mastered * 100 / total) if total > 0 else 0
+    progress_bar = _get_progress_bar(perc)
+
     return (
-        "⚙️ **Profil**\n\n"
-        f"👤 **Foydalanuvchi:** {full_name}\n"
-        f"📊 **Daraja:** {level}\n"
-        f"🎯 **Maqsad:** {_goal_label(goal)}\n"
-        f"⏱ **Kunlik vaqt:** {daily_minutes} daqiqa\n"
-        f"🌍 **Timezone:** {tz}\n"
-        f"📅 **Faollik:** {days} kun\n\n"
-        "Quyidan kerakli sozlamani tanlang."
+        "👤 **SHAXSIY PROFIL**\n"
+        "───────────────────\n"
+        f"📋 **Ism:** `{full_name}`\n"
+        f"📊 **Daraja:** `{level}`\n"
+        f"🎯 **Maqsad:** `{_goal_label(goal)}`\n"
+        f"⏱ **Target:** `{daily_minutes} daqiqa/kun`\n"
+        f"🌍 **Vaqt:** `{tz}`\n"
+        f"📅 **A'zo:** `{days} kundan beri`\n\n"
+        f"📈 **{level} o'zlashtirish darajasi:**\n"
+        f"{progress_bar} **{perc}%**\n"
+        f"({mastered}/{total} so'z)\n"
+        "───────────────────\n"
+        "⚙️ Sozlamalarni quyidan tanlang:"
     )
 
 def _profile_menu():

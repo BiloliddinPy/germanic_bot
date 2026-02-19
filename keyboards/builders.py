@@ -11,12 +11,13 @@ def get_levels_keyboard(callback_prefix: str):
     
     return builder.as_markup()
 
-def get_pagination_keyboard(level: str, current_offset: int, has_next: bool, callback_prefix: str):
+def get_pagination_keyboard(next_callback: str | None = None, back_callback: str = "home", back_label: str = "🔙 Orqaga"):
     builder = InlineKeyboardBuilder()
-    if has_next:
-        builder.button(text="▶️ Keyingi 20 ta", callback_data=f"{callback_prefix}_next_{level}_{current_offset}")
+    if next_callback:
+        builder.button(text="▶️ Keyingi", callback_data=next_callback)
+    
     builder.row(
-        InlineKeyboardButton(text="🔙 Darajalar", callback_data=f"{callback_prefix}_back"),
+        InlineKeyboardButton(text=back_label, callback_data=back_callback),
         InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")
     )
     return builder.as_markup()

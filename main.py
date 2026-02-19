@@ -11,6 +11,7 @@ from utils.runtime_state import mark_started
 from utils.update_tracking import UpdateTrackingMiddleware
 from utils.ops_logging import log_structured
 from utils.single_instance import SingleInstanceLock
+from utils.fsm_utils import StateCleanupMiddleware
 
 from handlers import common, dictionary, quiz, grammar, video, daily, materials, exams, daily_lesson, practice, onboarding, stats, profile, admin_ops, fallback
 
@@ -47,6 +48,10 @@ async def main():
     update_tracker = UpdateTrackingMiddleware()
     dp.message.middleware(update_tracker)
     dp.callback_query.middleware(update_tracker)
+    
+    state_cleanup_mw = StateCleanupMiddleware()
+    dp.message.middleware(state_cleanup_mw)
+    dp.callback_query.middleware(state_cleanup_mw)
 
     dp.include_router(common.router)
     dp.include_router(onboarding.router)
