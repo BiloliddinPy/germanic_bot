@@ -37,7 +37,7 @@ def mark_grammar_topic_seen(user_id: int, topic_id: str, level: str):
         cursor.execute("""
             INSERT INTO grammar_progress (user_id, topic_id, level, seen_count)
             VALUES (?, ?, ?, 1)
-            ON CONFLICT(user_id, topic_id, level) DO UPDATE SET
+            ON CONFLICT(user_id, topic_id) DO UPDATE SET
                 seen_count = seen_count + 1,
                 last_seen = CURRENT_TIMESTAMP
         """, (user_id, topic_id, level))
