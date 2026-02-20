@@ -15,8 +15,15 @@ def _md_escape(value):
 async def _send_fresh_main_menu(message: Message, text: str, user_id: int | None = None):
     resolved_user_id = user_id or message.chat.id
     existing_main_id = get_ui_state(resolved_user_id, settings.main_menu_state_key)
+    prev_active_id = get_ui_state(resolved_user_id, settings.active_ui_state_key)
     
     markup = get_main_menu_keyboard()
+
+    if prev_active_id and str(prev_active_id) != str(existing_main_id):
+        try:
+            await message.bot.delete_message(chat_id=resolved_user_id, message_id=int(prev_active_id))
+        except Exception:
+            pass
     
     if existing_main_id:
         try:

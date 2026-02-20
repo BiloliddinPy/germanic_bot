@@ -61,12 +61,20 @@ async def materials_handler(message: Message):
 @router.callback_query(F.data == "materials_open")
 @router.callback_query(F.data == "materials_main_menu")
 async def materials_open_callback(call: CallbackQuery):
-    record_navigation_event(call.from_user.id, "materials", entry_type="callback")
     text = (
-        "📂 **Materiallar bo'limi**\n\n"
-        "Quyidagi materiallardan birini tanlang va bot ichida yuklab oling."
+        "📂 *Materiallar*\n\n"
+        "🔧 Bu bo'lim hozirda ishlanmoqda...\n\n"
+        "Tez orada:\n"
+        "• 📚 Materiallar daraja yoki mavzu bo'yicha filtrlanadi\n"
+        "• 📩 Maqsadli faylni bossangiz — to'g'ridan-to'g'ri chatga yuboriladi\n"
+        "• 🗂️ Barcha fayllar kanaldan olinadi\n\n"
+        "_Kutubxona yaratilmoqda!_ 🚀"
     )
-    await call.message.edit_text(text, reply_markup=_materials_menu_markup(), parse_mode="Markdown")
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🔙 Orqaga", callback_data="video_materials_back")],
+        [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+    ])
+    await call.message.edit_text(text, reply_markup=kb, parse_mode="Markdown")
 
 @router.callback_query(F.data.startswith("material_send_"))
 async def material_send_callback(call: CallbackQuery):

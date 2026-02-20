@@ -5,7 +5,7 @@ from aiogram.fsm.state import State, StatesGroup
 
 from services.user_service import UserService
 from services.stats_service import StatsService
-from core.texts import ONBOARDING_WELCOME, MAIN_MENU_TEXT
+from core.texts import ONBOARDING_WELCOME, MAIN_MENU_TEXT, INTRO_TEXT
 from utils.ui_utils import send_single_ui_message, _send_fresh_main_menu
 from keyboards.builders import get_levels_keyboard, get_main_menu_keyboard
 
@@ -76,4 +76,4 @@ async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
     
     StatsService.log_activity(call.from_user.id, "onboarding_completed")
     
-    await _send_fresh_main_menu(call.message, MAIN_MENU_TEXT, user_id=call.from_user.id)
+    await _send_fresh_main_menu(call.message, INTRO_TEXT, user_id=call.from_user.id)

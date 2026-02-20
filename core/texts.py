@@ -8,6 +8,22 @@ Bu yerda siz nemis tilini noldan mukammal darajagacha o‘rganishingiz mumkin.
 🚀 **Bugun nima qilamiz?**
 """
 
+INTRO_TEXT = """
+**Germanic EdTech botiga xush kelibsiz!** 🌟
+
+🇩🇪 Nemis tilini biz bilan professional o'rganing:
+🚀 **Kunlik dars** — Shaxsiy dars rejangiz
+📘 **Lug'at** — A1-C1 darajadagi so'zlar
+📐 **Grammatika** — Mukammal qoidalar
+🧠 **Test va Quiz** — Bilimingizni sinash
+🗣️ **Sprechen & Schreiben** — Amaliy topshiriqlar
+🎥 **Video va materiallar** — Qo'shimcha resurslar
+🎓 **Imtihon tayyorgarligi** — Imtihonga tayyorgarlik
+📊 **Natijalar** — Natijalaringiz
+
+_Keling, o'rganishni boshlaymiz! Quyidagi menyulardan birini tanlang._ 👇
+"""
+
 ONBOARDING_WELCOME = "Salom! Germanic botiga xush kelibsiz. 🌟\n\nSiz bilan yaqindan tanishib olsak. Bu botni sizga moslashtirishimizga yordam beradi."
 
 # Keyboard Labels

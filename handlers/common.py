@@ -8,7 +8,7 @@ from database.repositories.progress_repository import record_navigation_event
 from database.repositories.ui_repository import get_ui_state, set_ui_state
 from handlers.onboarding import start_onboarding
 from utils.ui_utils import _send_fresh_main_menu, send_single_ui_message
-from core.texts import MAIN_MENU_TEXT
+from core.texts import MAIN_MENU_TEXT, INTRO_TEXT
 from core.config import settings
 
 router = Router()
@@ -31,23 +31,7 @@ async def cmd_start(message: Message, state: FSMContext):
         await start_onboarding(message, state)
         return
     
-    text = (
-        f"Assalomu alaykum, {message.from_user.full_name}! 👋\n\n"
-        "**Germanic EdTech botiga xush kelibsiz!**\n\n"
-        "🇩🇪 Nemis tilini biz bilan professional o'rganing:\n"
-        "🚀 **Kunlik dars** — Shaxsiy dars rejangiz\n"
-        "📘 **Lug'at** — A1-C1 darajadagi so'zlar\n"
-        "📐 **Grammatika** — Mukammal qoidalar\n"
-        "🧠 **Test va Quiz** — Bilimingizni sinash\n"
-        "🗣️ **Sprechen & Schreiben** — Amaliy topshiriqlar\n"
-        "🎥 **Video va materiallar** — Qo'shimcha resurslar\n"
-        "🎓 **Imtihon tayyorgarligi** — Imtihonga tayyorgarlik\n"
-        "📊 **Natijalar** — Natijalaringiz\n"
-        "⚙️ **Profil** — Shaxsiy sozlamalar\n\n"
-        f"🔖 {UI_TEST_MODE}\n\n"
-        "Kerakli bo'limni tanlang:"
-    )
-    await _send_fresh_main_menu(message, text, user_id=message.from_user.id)
+    await send_single_ui_message(message, INTRO_TEXT, reply_markup=get_main_menu_keyboard(), parse_mode="Markdown")
 
 @router.message(Command("menu"))
 @router.message(F.text == "🏠 Bosh menyu")
