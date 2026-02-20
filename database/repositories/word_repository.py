@@ -1,6 +1,7 @@
 from database.connection import get_connection
 import random
 import sqlite3
+import logging
 
 def get_words_by_level(level: str, limit: int = 20, offset: int = 0):
     conn = get_connection()
@@ -18,11 +19,21 @@ def get_words_by_level(level: str, limit: int = 20, offset: int = 0):
 def get_words_by_level_and_letter(level: str, letter: str, limit: int = 20, offset: int = 0):
     conn = get_connection()
     cursor = conn.cursor()
+    pattern = f"{letter.lower()}%"
+    p_der = f"der {letter.lower()}%"
+    p_die = f"die {letter.lower()}%"
+    p_das = f"das {letter.lower()}%"
     cursor.execute("""
         SELECT * FROM words 
-        WHERE level = ? AND LOWER(SUBSTR(de, 1, 1)) = LOWER(?)
+        WHERE level = ? AND (
+            LOWER(de) LIKE ? OR 
+            LOWER(de) LIKE ? OR 
+            LOWER(de) LIKE ? OR 
+            LOWER(de) LIKE ?
+        )
+        ORDER BY de COLLATE NOCASE
         LIMIT ? OFFSET ?
-    """, (level, letter, limit, offset))
+    """, (level, pattern, p_der, p_die, p_das, limit, offset))
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]
@@ -38,7 +49,19 @@ def get_total_words_count(level: str) -> int:
 def get_total_words_count_by_letter(level: str, letter: str) -> int:
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM words WHERE level = ? AND LOWER(SUBSTR(de, 1, 1)) = LOWER(?)", (level, letter))
+    pattern = f"{letter.lower()}%"
+    p_der = f"der {letter.lower()}%"
+    p_die = f"die {letter.lower()}%"
+    p_das = f"das {letter.lower()}%"
+    cursor.execute("""
+        SELECT COUNT(*) FROM words 
+        WHERE level = ? AND (
+            LOWER(de) LIKE ? OR 
+            LOWER(de) LIKE ? OR 
+            LOWER(de) LIKE ? OR 
+            LOWER(de) LIKE ?
+        )
+    """, (level, pattern, p_der, p_die, p_das))
     count = cursor.fetchone()[0]
     conn.close()
     return count

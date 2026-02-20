@@ -27,7 +27,7 @@ class Config:
     backup_time_utc: str = os.getenv("BACKUP_TIME_UTC", "03:00")
     
     # UI Constants
-    page_size: int = 15
+    page_size: int = 20
     main_menu_state_key: str = "main_menu_msg_id"
     active_ui_state_key: str = "active_ui_msg_id"
 

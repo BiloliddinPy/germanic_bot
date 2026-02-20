@@ -1,6 +1,7 @@
 import sqlite3
 import logging
 import os
+import json
 from core.config import settings
 
 # For backward compatibility
@@ -170,8 +171,48 @@ def create_table():
 def bootstrap_words_if_empty():
     """Loads initial data if the words table is empty."""
     from database.repositories.word_repository import get_total_words_count
+    
+    # Check if we already have data
     if get_total_words_count("A1") > 0:
         return 0
     
-    logging.warning("Words table is empty and needs data import.")
-    return 0
+    seed_path = os.path.join("data", "dictionary_seed.json")
+    if not os.path.exists(seed_path):
+        logging.error(f"Seed file not found: {seed_path}")
+        return 0
+        
+    logging.info("Seeding dictionary data...")
+    try:
+        with open(seed_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        # Batch insert for performance
+        batch_size = 500
+        for i in range(0, len(data), batch_size):
+            batch = data[i : i + batch_size]
+            cursor.executemany("""
+                INSERT INTO words (level, de, uz, pos, plural, example_de, example_uz, category)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, [
+                (
+                    item.get("level"),
+                    item.get("de"),
+                    item.get("uz"),
+                    item.get("pos"),
+                    item.get("plural"),
+                    item.get("example_de"),
+                    item.get("example_uz"),
+                    item.get("category")
+                ) for item in batch
+            ])
+        
+        conn.commit()
+        conn.close()
+        logging.info(f"Successfully seeded {len(data)} words.")
+        return len(data)
+    except Exception as e:
+        logging.exception(f"Error seeding database: {e}")
+        return 0

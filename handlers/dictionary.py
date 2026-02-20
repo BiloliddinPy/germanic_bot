@@ -1,7 +1,8 @@
 import os
 import logging
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram.types import Message, CallbackQuery, FSInputFile, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from services.dictionary_service import DictionaryService
 from services.stats_service import StatsService
@@ -38,10 +39,8 @@ async def dictionary_level_handler(call: CallbackQuery):
         return
 
     level = data.split("_")[1]
-    await call.message.edit_text(
-        f"📚 **{level}** darajasi tanlandi.\n\nSo'zlarni alifbo bo'yicha qidirishingiz yoki shunchaki ko'rib chiqishingiz mumkin:",
-        reply_markup=get_alphabet_keyboard(level)
-    )
+    result = DictionaryService.get_page(level, offset=0)
+    await _show_word_page(call, level, result, 0, "dict")
 
 @router.callback_query(F.data.startswith("dict_letter_"))
 async def dictionary_letter_handler(call: CallbackQuery):
@@ -103,15 +102,29 @@ async def _show_word_page(call, level, result, offset, callback_prefix, letter=N
 
     builder = get_pagination_keyboard(
         next_callback=next_callback if result["has_next"] else None, 
-        back_callback=f"dict_{level}", 
-        back_label="🔙 Alifbo"
+        back_callback="dict_back" if not letter else f"dict_alpha_{level}", 
+        back_label="🔙 Orqaga" if not letter else "🔙 Alifbo"
     )
+    
+    # Add Alphabet Search button if not searching by letter already
+    if not letter:
+        kb_builder = InlineKeyboardBuilder.from_markup(builder)
+        kb_builder.row(InlineKeyboardButton(text="🔍 Alifbo bo'yicha qidirish", callback_data=f"dict_alpha_{level}"))
+        builder = kb_builder.as_markup()
     
     try:
         await call.message.edit_text(response_text, reply_markup=builder, parse_mode="Markdown")
     except Exception as e:
         logging.error(f"Error editing dictionary message: {e}")
         await call.answer("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.")
+
+@router.callback_query(F.data.startswith("dict_alpha_"))
+async def dictionary_alphabet_view_handler(call: CallbackQuery):
+    level = call.data.split("_")[2]
+    await call.message.edit_text(
+        f"🔍 **{level}** - qidirish uchun harfni tanlang:",
+        reply_markup=get_alphabet_keyboard(level)
+    )
 
 @router.callback_query(F.data == "dict_pdf")
 async def dictionary_pdf_download_handler(call: CallbackQuery):
