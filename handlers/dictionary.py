@@ -9,10 +9,11 @@ from services.stats_service import StatsService
 from core.config import settings
 from utils.ui_utils import send_single_ui_message
 from keyboards.builders import get_levels_keyboard, get_pagination_keyboard, get_alphabet_keyboard
+from core.texts import BTN_DICTIONARY
 
 router = Router()
 
-@router.message(F.text == "📘 Lug'at (A1–C1)")
+@router.message(F.text == BTN_DICTIONARY)
 async def show_dictionary_levels(message: Message):
     try:
         await message.delete()
