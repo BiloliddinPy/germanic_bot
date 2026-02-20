@@ -165,6 +165,19 @@ def create_table():
         )
     """)
     
+    # event_logs (for grammar, daily, etc tracking)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS event_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            event_type TEXT,
+            section_name TEXT,
+            level TEXT,
+            metadata TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
     conn.close()
 

@@ -1,3 +1,4 @@
+import re
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -76,17 +77,45 @@ async def grammar_topic_detail_handler(call: CallbackQuery):
         await call.answer("Mavzu topilmadi.", show_alert=True)
         return
 
-    GrammarService.mark_completed(call.from_user.id, topic_id, level)
+    try:
+        GrammarService.mark_completed(call.from_user.id, topic_id, level)
+    except Exception:
+        pass  # Don't let tracking errors kill the view
 
-    text = (
-        f"📌 **{topic['title']}**\n\n"
-        f"{topic['content']}\n\n"
-        f"📝 **Misollar:**\n{topic['example']}"
+    # Sanitize GitHub-flavored Markdown → Telegram-safe text
+    content = topic.get("content", "")
+    content = re.sub(r"^#{1,6}\s*", "", content, flags=re.MULTILINE)  # Remove ### headers
+    content = re.sub(r"^>\s*\[!\w+\]\s*", "💡 ", content, flags=re.MULTILINE)  # [!TIP] → 💡
+    content = re.sub(r"^>\s*", "  ", content, flags=re.MULTILINE)  # > blockquote indent
+    # Remove Markdown table rows (lines starting with |)
+    content = re.sub(r"^\|.*\|\s*$", "", content, flags=re.MULTILINE)
+    content = re.sub(r"`(.*?)`", r"\1", content)  # strip backtick code (no nested in Telegram)
+    content = re.sub(r"\*\*(.*?)\*\*", r"*\1*", content)  # **bold** → *bold* (MarkdownV1)
+    content = re.sub(r"\n{3,}", "\n\n", content).strip()  # collapse blank lines
+
+    example = topic.get("example", "")
+    
+    raw_text = (
+        f"📌 *{topic['title']}*\n\n"
+        f"{content}\n\n"
+        f"📝 *Misollar:*\n{example}"
     )
+    
+    # Hard cap for Telegram's 4096 limit
+    if len(raw_text) > 3800:
+        raw_text = raw_text[:3800] + "\n\n_...davomi bor_"
 
     builder = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🔙 Mavzularga qaytish", callback_data=f"grammar_{level}")],
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
 
-    await call.message.edit_text(text, reply_markup=builder, parse_mode="Markdown")
+    try:
+        await call.message.edit_text(raw_text, reply_markup=builder, parse_mode="Markdown")
+    except Exception as e:
+        # Last resort: try without parse_mode
+        try:
+            plain = re.sub(r"[*_`]", "", raw_text)
+            await call.message.edit_text(plain, reply_markup=builder)
+        except Exception:
+            await call.answer("Mavzu kontenti juda uzun. Tez orada qisqartiriladi.", show_alert=True)
