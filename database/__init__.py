@@ -165,6 +165,18 @@ def create_table():
         )
     """)
     
+    # grammar_progress
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS grammar_progress (
+            user_id INTEGER,
+            topic_id TEXT,
+            level TEXT,
+            seen_count INTEGER DEFAULT 0,
+            last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, topic_id)
+        )
+    """)
+
     # event_logs (for grammar, daily, etc tracking)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS event_logs (

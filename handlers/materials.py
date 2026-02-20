@@ -76,22 +76,4 @@ async def materials_open_callback(call: CallbackQuery):
     ])
     await call.message.edit_text(text, reply_markup=kb, parse_mode="Markdown")
 
-@router.callback_query(F.data.startswith("material_send_"))
-async def material_send_callback(call: CallbackQuery):
-    material_id = call.data.replace("material_send_", "", 1)
-    material = _find_material(material_id)
-    if not material:
-        await call.answer("Material topilmadi.", show_alert=True)
-        return
 
-    path = material["path"]
-    if not os.path.exists(path):
-        await call.answer("Fayl topilmadi. Admin bilan bog'laning.", show_alert=True)
-        return
-
-    log_event(call.from_user.id, "material_download", section_name="materials", metadata={"material_id": material_id})
-    await call.answer("Material yuborilmoqda...")
-    await call.message.answer_document(
-        FSInputFile(path, filename=material["filename"]),
-        caption=f"📚 **{material['title']}**"
-    )
