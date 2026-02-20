@@ -44,12 +44,19 @@ async def materials_handler(message: Message):
         await message.delete()
     except Exception:
         pass
-    record_navigation_event(message.from_user.id, "materials", entry_type="text")
     text = (
-        "📂 **Materiallar bo'limi**\n\n"
-        "Quyidagi materiallardan birini tanlang va bot ichida yuklab oling."
+        "📂 *Materiallar*\n\n"
+        "🔧 Bu bo'lim hozirda ishlanmoqda...\n\n"
+        "Tez orada siz uchun:\n"
+        "• 📘 PDF va DOCX darsliklar\n"
+        "• 🎧 Audio materiallar\n"
+        "• 🗂️ Darajalar bo'yicha tartiblangan kutubxona\n\n"
+        "_Materiallar kutubxonasi yaratilmoqda. Kuting!_ 🚀"
     )
-    await send_single_ui_message(message, text, reply_markup=_materials_menu_markup(), parse_mode="Markdown")
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+    ])
+    await send_single_ui_message(message, text, reply_markup=kb, parse_mode="Markdown")
 
 @router.callback_query(F.data == "materials_open")
 @router.callback_query(F.data == "materials_main_menu")

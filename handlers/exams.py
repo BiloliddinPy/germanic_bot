@@ -63,12 +63,20 @@ async def exams_handler(message: Message, state: FSMContext):
     except Exception:
         pass
     await state.clear()
-    record_navigation_event(message.from_user.id, "exam_prep", entry_type="text")
     text = (
-        "📝 **Imtihon tayyorgarligi**\n\n"
-        "Darajani tanlang va 10 savollik mini placement testni boshlang."
+        "🎓 **Imtihon tayyorgarligi**\n\n"
+        "🔧 Bu bo'lim hozirda ishlanmoqda...\n\n"
+        "Tez orada siz uchun:\n"
+        "• 🏆 **Goethe-Zertifikat** — A1-C1\n"
+        "• 📋 **ÖSD** — Avstriya sertifikati\n"
+        "• 📝 **TELC** — Evropa til sertifikati\n\n"
+        "_Mock imtihonlar yaratilmoqda. Kuting!_ 🚀"
     )
-    await send_single_ui_message(message, text, reply_markup=_exam_levels_keyboard(), parse_mode="Markdown")
+    from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
+    ])
+    await send_single_ui_message(message, text, reply_markup=kb, parse_mode="Markdown")
 
 @router.callback_query(F.data.startswith("exam_level_"))
 async def exam_level_selected(call: CallbackQuery, state: FSMContext):
