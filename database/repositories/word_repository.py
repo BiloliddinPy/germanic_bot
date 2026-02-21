@@ -1,15 +1,27 @@
 from database.connection import get_connection
+from database.connection import is_postgres_backend
 import logging
 
 def get_words_by_level(level: str, limit: int = 20, offset: int = 0):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT * FROM words 
-        WHERE level = ? 
-        ORDER BY de COLLATE NOCASE
-        LIMIT ? OFFSET ?
-    """, (level, limit, offset))
+    if is_postgres_backend():
+        cursor.execute(
+            """
+            SELECT * FROM words
+            WHERE level = ?
+            ORDER BY LOWER(de), de
+            LIMIT ? OFFSET ?
+            """,
+            (level, limit, offset),
+        )
+    else:
+        cursor.execute("""
+            SELECT * FROM words 
+            WHERE level = ? 
+            ORDER BY de COLLATE NOCASE
+            LIMIT ? OFFSET ?
+        """, (level, limit, offset))
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]
@@ -21,17 +33,33 @@ def get_words_by_level_and_letter(level: str, letter: str, limit: int = 20, offs
     p_der = f"der {letter.lower()}%"
     p_die = f"die {letter.lower()}%"
     p_das = f"das {letter.lower()}%"
-    cursor.execute("""
-        SELECT * FROM words 
-        WHERE level = ? AND (
-            LOWER(de) LIKE ? OR 
-            LOWER(de) LIKE ? OR 
-            LOWER(de) LIKE ? OR 
-            LOWER(de) LIKE ?
+    if is_postgres_backend():
+        cursor.execute(
+            """
+            SELECT * FROM words
+            WHERE level = ? AND (
+                LOWER(de) LIKE ? OR
+                LOWER(de) LIKE ? OR
+                LOWER(de) LIKE ? OR
+                LOWER(de) LIKE ?
+            )
+            ORDER BY LOWER(de), de
+            LIMIT ? OFFSET ?
+            """,
+            (level, pattern, p_der, p_die, p_das, limit, offset),
         )
-        ORDER BY de COLLATE NOCASE
-        LIMIT ? OFFSET ?
-    """, (level, pattern, p_der, p_die, p_das, limit, offset))
+    else:
+        cursor.execute("""
+            SELECT * FROM words 
+            WHERE level = ? AND (
+                LOWER(de) LIKE ? OR 
+                LOWER(de) LIKE ? OR 
+                LOWER(de) LIKE ? OR 
+                LOWER(de) LIKE ?
+            )
+            ORDER BY de COLLATE NOCASE
+            LIMIT ? OFFSET ?
+        """, (level, pattern, p_der, p_die, p_das, limit, offset))
     rows = cursor.fetchall()
     conn.close()
     return [dict(row) for row in rows]

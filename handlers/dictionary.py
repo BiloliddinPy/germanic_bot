@@ -137,7 +137,12 @@ async def dictionary_level_handler(call: CallbackQuery):
         await call.answer("Noto'g'ri daraja so'rovi.", show_alert=True)
         return
     level = parts[1]
-    result = DictionaryService.get_page(level, offset=0)
+    try:
+        result = DictionaryService.get_page(level, offset=0)
+    except Exception as exc:
+        logging.error("Dictionary level load failed level=%s err=%s", level, exc)
+        await call.answer("Lug'atni yuklashda xatolik. Iltimos, qayta urinib ko'ring.", show_alert=True)
+        return
     await _show_word_page(call, level, result, 0)
 
 async def _show_word_page(call, level, result, offset, letter=None):
