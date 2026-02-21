@@ -290,7 +290,12 @@ async def daily_finish_callback(call: CallbackQuery):
         await message.delete()
     except Exception:
         pass
-    await _send_fresh_main_menu(message, "Ajoyib! Bugungi dars yakunlandi. Nima bilan davom etamiz?", user_id=user_id)
+    await _send_fresh_main_menu(
+        message,
+        "🏆 **Ajoyib! Bugungi dars yakunlandi.**\n\n"
+        "Natijangiz saqlandi. Xohlasangiz menyudan keyingi mashg'ulotni tanlang.",
+        user_id=user_id,
+    )
 
 @router.callback_query(F.data == "daily_cancel")
 async def daily_cancel_handler(call: CallbackQuery):

@@ -22,6 +22,8 @@ async def video_materials_menu(message: Message):
         await message.delete()
     except Exception:
         pass
+    if not message.from_user:
+        return
     record_navigation_event(message.from_user.id, "video_materials_menu", entry_type="text")
     text = (
         "🎥 **Video va materiallar**\n\n"
@@ -36,13 +38,21 @@ async def video_materials_menu(message: Message):
 
 @router.callback_query(F.data == "video_main_menu")
 async def video_level_handler(call: CallbackQuery):
-    await call.message.edit_text(
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+    await message.edit_text(
         "🎥 **Video Darslar**\n\nQaysi darajadagi darslarni ko'rmoqchisiz?",
         reply_markup=get_levels_keyboard("video")
     )
 
 @router.callback_query(F.data == "video_materials_back")
 async def video_materials_back(call: CallbackQuery):
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     text = (
         "🎥 **Video va materiallar**\n\n"
         "Kerakli bo'limni tanlang:"
@@ -52,11 +62,20 @@ async def video_materials_back(call: CallbackQuery):
         [InlineKeyboardButton(text="📂 Materiallar", callback_data="materials_open")],
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
-    await call.message.edit_text(text, reply_markup=builder, parse_mode="Markdown")
+    await message.edit_text(text, reply_markup=builder, parse_mode="Markdown")
 
 @router.callback_query(F.data.startswith("video_") & ~F.data.contains("watch") & ~F.data.contains("back"))
 async def video_list_handler(call: CallbackQuery):
-    level = call.data.split("_")[1]
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri video so'rovi.", show_alert=True)
+        return
+    level = parts[1]
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     record_navigation_event(call.from_user.id, "video_materials", level=level, entry_type="callback")
     all_videos = load_videos()
     
@@ -75,21 +94,30 @@ async def video_list_handler(call: CallbackQuery):
     rows.append([InlineKeyboardButton(text="🔙 Darajalar", callback_data="video_back")])
     builder.inline_keyboard = rows
     
-    await call.message.edit_text(
+    await message.edit_text(
         f"🎥 **{level} Video Darslari**\n\nTanlang:",
         reply_markup=builder
     )
 
 @router.callback_query(F.data == "video_back")
 async def video_back_handler(call: CallbackQuery):
-    await call.message.edit_text(
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+    await message.edit_text(
         "🎥 **Video Darslar**\n\nQaysi darajadagi darslarni ko'rmoqchisiz?",
         reply_markup=get_levels_keyboard("video")
     )
 
 @router.callback_query(F.data.startswith("video_watch_"))
 async def video_watch_handler(call: CallbackQuery):
-    video_id = call.data.replace("video_watch_", "")
+    data = call.data or ""
+    video_id = data.replace("video_watch_", "")
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     
     all_videos = load_videos()
     video = next((v for v in all_videos if v['id'] == video_id), None)
@@ -111,4 +139,4 @@ async def video_watch_handler(call: CallbackQuery):
         [InlineKeyboardButton(text="🔙 Darslar ro'yxati", callback_data=f"video_{video['level']}")]
     ])
     
-    await call.message.edit_text(text, reply_markup=builder, parse_mode="Markdown")
+    await message.edit_text(text, reply_markup=builder, parse_mode="Markdown")

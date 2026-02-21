@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from typing import Awaitable, cast
 
 from services.user_service import UserService
 from services.stats_service import StatsService
@@ -18,13 +19,24 @@ class OnboardingState(StatesGroup):
     waiting_for_time = State()
 
 async def start_onboarding(message: Message, state: FSMContext):
+    if not message.from_user:
+        return
     await state.clear()
     StatsService.log_activity(message.from_user.id, "onboarding_started")
     
-    await send_single_ui_message(
-        message,
-        ONBOARDING_WELCOME,
-        reply_markup=get_levels_keyboard("onboarding")
+    intro = (
+        "🧭 **Boshlang'ich sozlash (1/4)**\n\n"
+        f"{ONBOARDING_WELCOME}\n\n"
+        "Avval darajangizni tanlang."
+    )
+    await cast(
+        Awaitable[Message],
+        send_single_ui_message(
+            message,
+            intro,
+            reply_markup=get_levels_keyboard("onboarding"),
+            parse_mode="Markdown",
+        ),
     )
     await state.set_state(OnboardingState.waiting_for_level)
 
@@ -52,7 +64,7 @@ async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
         return
 
     await message.edit_text(
-        "Maqsadingizni tanlang:",
+        "🧭 **Sozlash (2/4)**\n\nMaqsadingizni tanlang:",
         reply_markup=builder.as_markup()
     )
     await state.set_state(OnboardingState.waiting_for_goal)
@@ -81,7 +93,7 @@ async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
         return
 
     await message.edit_text(
-        "Kunlik qancha vaqt ajratmoqchisiz?",
+        "🧭 **Sozlash (3/4)**\n\nKunlik qancha vaqt ajratmoqchisiz?",
         reply_markup=builder.as_markup()
     )
     await state.set_state(OnboardingState.waiting_for_daily_target)
@@ -112,7 +124,7 @@ async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
         return
 
     await message.edit_text(
-        "Kunlik motivatsion eslatma va yangi lug'at soat nechada kelsin?",
+        "🧭 **Sozlash (4/4)**\n\nKunlik motivatsion eslatma va yangi lug'at soat nechada kelsin?",
         reply_markup=builder.as_markup()
     )
     await state.set_state(OnboardingState.waiting_for_time)
@@ -129,7 +141,7 @@ async def onboarding_time_handler(call: CallbackQuery, state: FSMContext):
     
     UserService.complete_onboarding(call.from_user.id)
     
-    await call.answer("Muvaffaqiyatli yakunlandi! 🎉")
+    await call.answer("Sozlamalar saqlandi! 🎉")
     await state.clear()
     
     StatsService.log_activity(call.from_user.id, "onboarding_completed")

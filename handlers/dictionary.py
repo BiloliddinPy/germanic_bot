@@ -20,6 +20,8 @@ async def show_dictionary_levels(message: Message):
     except Exception:
         pass
     
+    if not message.from_user:
+        return
     StatsService.log_navigation(message.from_user.id, "dictionary", entry_type="text")
     
     await send_single_ui_message(
@@ -32,8 +34,17 @@ async def show_dictionary_levels(message: Message):
 @router.callback_query(F.data.startswith("dict_alpha_"))
 async def dictionary_alphabet_view_handler(call: CallbackQuery):
     """Shows the A-Z letter picker for a specific level."""
-    level = call.data.split("_")[2]
-    await call.message.edit_text(
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 3:
+        await call.answer("Noto'g'ri lug'at so'rovi.", show_alert=True)
+        return
+    level = parts[2]
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+    await message.edit_text(
         f"🔍 *{level}* - qidirish uchun harfni tanlang:",
         reply_markup=get_alphabet_keyboard(level),
         parse_mode="Markdown"
@@ -42,7 +53,11 @@ async def dictionary_alphabet_view_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_letter_"))
 async def dictionary_letter_handler(call: CallbackQuery):
     """Handles letter selection from alphabet keyboard."""
-    parts = call.data.split("_")
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 4:
+        await call.answer("Noto'g'ri harf so'rovi.", show_alert=True)
+        return
     level = parts[2]
     letter = parts[3]
     offset = 0
@@ -58,7 +73,11 @@ async def dictionary_letter_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_next_"))
 async def dictionary_pagination_handler(call: CallbackQuery):
     """Handles Next page pagination."""
-    parts = call.data.split("_")
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 4:
+        await call.answer("Noto'g'ri sahifa so'rovi.", show_alert=True)
+        return
     
     if parts[2] == "letter":
         letter = parts[3]
@@ -75,16 +94,24 @@ async def dictionary_pagination_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_") & ~F.data.startswith("dict_letter_") & ~F.data.startswith("dict_next_") & ~F.data.startswith("dict_alpha_") & ~F.data.contains("pdf"))
 async def dictionary_level_handler(call: CallbackQuery):
     """Handles level selection (dict_A1, etc.) and dict_back."""
-    data = call.data
+    data = call.data or ""
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     if data == "dict_back":
-        await call.message.edit_text(
+        await message.edit_text(
             "📘 **Lug'at (A1–C1)**\n\nQaysi darajani o'rganmoqchisiz?",
             reply_markup=get_levels_keyboard("dict"),
             parse_mode="Markdown"
         )
         return
 
-    level = data.split("_")[1]
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri daraja so'rovi.", show_alert=True)
+        return
+    level = parts[1]
     result = DictionaryService.get_page(level, offset=0)
     await _show_word_page(call, level, result, 0)
 
@@ -136,8 +163,12 @@ async def _show_word_page(call, level, result, offset, letter=None):
         ))
         builder = kb.as_markup()
     
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     try:
-        await call.message.edit_text(response_text, reply_markup=builder, parse_mode="Markdown")
+        await message.edit_text(response_text, reply_markup=builder, parse_mode="Markdown")
     except Exception as e:
         logging.error(f"Dictionary edit error: {e}")
         await call.answer("Xatolik yuz berdi. Qaytadan urinib ko'ring.", show_alert=True)
@@ -149,9 +180,13 @@ async def dictionary_pdf_download_handler(call: CallbackQuery):
         await call.answer("Kechirasiz, PDF fayl topilmadi.", show_alert=True)
         return
         
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     await call.answer("Lug'at yuborilmoqda...")
     document = FSInputFile(pdf_path, filename="Nemis-Uzbek-Lugat-17k.pdf")
-    await call.message.answer_document(
+    await message.answer_document(
         document,
         caption="📘 **Nemis tili lug'ati (17,000+ so'z)**\n\nTo'liq lug'at kitobi."
     )

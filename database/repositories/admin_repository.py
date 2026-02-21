@@ -9,6 +9,8 @@ def get_admin_stats_snapshot():
     try:
         cursor.execute("SELECT COUNT(*) FROM user_profile")
         stats['total_users'] = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM user_profile WHERE date(created_at) = date('now', 'localtime')")
+        stats['new_users_today'] = cursor.fetchone()[0]
         
         today = datetime.date.today().isoformat()
         cursor.execute("SELECT COUNT(DISTINCT user_id) FROM navigation_logs WHERE date(created_at) = ?", (today,))
@@ -38,6 +40,19 @@ def get_admin_stats_snapshot():
     finally:
         conn.close()
     return stats
+
+def get_users_count() -> int:
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT COUNT(*) FROM user_profile")
+        row = cursor.fetchone()
+        return int(row[0]) if row else 0
+    except Exception as e:
+        logging.error(f"Error getting users count: {e}")
+        return 0
+    finally:
+        conn.close()
 
 def get_last_event_timestamp(user_id: int | None = None):
     conn = get_connection()

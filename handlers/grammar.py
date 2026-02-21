@@ -16,6 +16,8 @@ async def show_grammar_levels(message: Message):
     except Exception:
         pass
     
+    if not message.from_user:
+        return
     StatsService.log_navigation(message.from_user.id, "grammar", entry_type="text")
     
     await send_single_ui_message(
@@ -27,7 +29,16 @@ async def show_grammar_levels(message: Message):
 
 @router.callback_query(F.data.startswith("grammar_") & ~F.data.contains("topic") & ~F.data.contains("back"))
 async def grammar_topic_list_handler(call: CallbackQuery):
-    level = call.data.split("_")[1]
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri grammatika so'rovi.", show_alert=True)
+        return
+    level = parts[1]
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     StatsService.log_navigation(call.from_user.id, "grammar", level=level, entry_type="callback")
     StatsService.mark_progress(call.from_user.id, "grammar", level)
 
@@ -54,7 +65,7 @@ async def grammar_topic_list_handler(call: CallbackQuery):
     rows.append([InlineKeyboardButton(text="🔙 Darajalar", callback_data="grammar_back")])
     rows.append([InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")])
     
-    await call.message.edit_text(
+    await message.edit_text(
         f"📚 **{level} Grammatika Mavzulari**\n\nTanlang:",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=rows),
         parse_mode="Markdown"
@@ -62,7 +73,11 @@ async def grammar_topic_list_handler(call: CallbackQuery):
 
 @router.callback_query(F.data == "grammar_back")
 async def grammar_back_handler(call: CallbackQuery):
-    await call.message.edit_text(
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+    await message.edit_text(
         "📚 **Grammatika**\n\nQaysi darajadagi mavzularni o'rganmoqchisiz?",
         reply_markup=get_levels_keyboard("grammar"),
         parse_mode="Markdown"
@@ -70,7 +85,12 @@ async def grammar_back_handler(call: CallbackQuery):
 
 @router.callback_query(F.data.startswith("grammar_topic_"))
 async def grammar_topic_detail_handler(call: CallbackQuery):
-    topic_id = call.data.replace("grammar_topic_", "")
+    data = call.data or ""
+    topic_id = data.replace("grammar_topic_", "")
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     topic, level = GrammarService.get_topic_by_id(topic_id)
 
     if not topic:
@@ -111,11 +131,11 @@ async def grammar_topic_detail_handler(call: CallbackQuery):
     ])
 
     try:
-        await call.message.edit_text(raw_text, reply_markup=builder, parse_mode="Markdown")
+        await message.edit_text(raw_text, reply_markup=builder, parse_mode="Markdown")
     except Exception:
         # Last resort: try without parse_mode
         try:
             plain = re.sub(r"[*_`]", "", raw_text)
-            await call.message.edit_text(plain, reply_markup=builder)
+            await message.edit_text(plain, reply_markup=builder)
         except Exception:
             await call.answer("Mavzu kontenti juda uzun. Tez orada qisqartiriladi.", show_alert=True)

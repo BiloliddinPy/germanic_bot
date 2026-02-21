@@ -11,6 +11,8 @@ async def show_stats_dashboard(message: Message):
         await message.delete()
     except Exception:
         pass
+    if not message.from_user:
+        return
 
     text = (
         "📊 *Natijalar*\n\n"

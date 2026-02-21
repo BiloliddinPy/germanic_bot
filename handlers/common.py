@@ -84,7 +84,8 @@ async def cmd_start(message: Message, state: FSMContext):
     welcome_text = (
         "🎉 **Darsga qaytganingiz bilan tabriklaymiz!**\n\n"
         f"📍 Sizning joriy darajangiz: **{current_level}**\n\n"
-        f"{INTRO_TEXT}"
+        f"{INTRO_TEXT}\n"
+        "💡 Tavsiya: bugun `🚀 Kunlik dars`dan boshlang."
     )
     await cast(
         Awaitable[None], _send_fresh_main_menu(message, welcome_text, user_id=user_id)
@@ -95,6 +96,8 @@ async def cmd_start(message: Message, state: FSMContext):
 @router.message(F.text == "🏠 Bosh menyu")
 async def cmd_menu(message: Message):
     await _safe_delete_message(message)
+    if not message.from_user:
+        return
     record_navigation_event(message.from_user.id, "main_menu", entry_type="text")
     await cast(
         Awaitable[None],

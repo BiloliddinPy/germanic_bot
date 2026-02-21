@@ -5,7 +5,12 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 
 from core.config import settings
-from database.repositories.admin_repository import get_admin_stats_snapshot, get_last_event_timestamp, get_recent_ops_errors
+from database.repositories.admin_repository import (
+    get_admin_stats_snapshot,
+    get_last_event_timestamp,
+    get_recent_ops_errors,
+    get_users_count,
+)
 from utils.ui_utils import send_single_ui_message
 from utils.backup_manager import (
     run_backup_async,
@@ -27,6 +32,9 @@ def _is_admin(user_id: int) -> bool:
         return False
     return str(user_id) == str(admin_id)
 
+def _is_admin_message(message: Message) -> bool:
+    return bool(message.from_user and _is_admin(message.from_user.id))
+
 def _format_dt_local(epoch_ts: float | None) -> str:
     if not epoch_ts:
         return "-"
@@ -38,7 +46,7 @@ def _format_dt_local(epoch_ts: float | None) -> str:
 
 @router.message(Command("health"))
 async def health_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
 
     me = await message.bot.get_me()
@@ -78,7 +86,7 @@ async def health_cmd(message: Message):
 
 @router.message(Command("admin_stats"))
 async def admin_stats_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
 
     stats = get_admin_stats_snapshot()
@@ -93,6 +101,7 @@ async def admin_stats_cmd(message: Message):
     text = (
         "📈 **Admin Stats**\n\n"
         f"• Total users: `{stats.get('total_users', 0)}`\n"
+        f"• New users today: `{stats.get('new_users_today', 0)}`\n"
         f"• Active users today: `{stats.get('active_users_today', 0)}`\n"
         f"• Daily lesson completions today: `{stats.get('daily_completions_today', 0)}`\n"
         f"• Daily lesson completions (last 7 days): `{stats.get('daily_completions_last_7_days', 0)}`\n"
@@ -101,9 +110,20 @@ async def admin_stats_cmd(message: Message):
     )
     await send_single_ui_message(message, text, parse_mode="Markdown")
 
+@router.message(Command("users_count"))
+async def users_count_cmd(message: Message):
+    if not _is_admin_message(message):
+        return
+    total_users = get_users_count()
+    text = (
+        "👥 **Foydalanuvchilar soni**\n\n"
+        f"• Jami users: `{total_users}`"
+    )
+    await send_single_ui_message(message, text, parse_mode="Markdown")
+
 @router.message(Command("ops_last_errors"))
 async def ops_last_errors_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
 
     rows = get_recent_ops_errors(limit=10)
@@ -138,7 +158,7 @@ def _ops_alerts_text():
 
 @router.message(Command("ops_alerts"))
 async def ops_alerts_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
     text = _ops_alerts_text()
     status = get_ops_alerts_status()
@@ -154,9 +174,13 @@ async def ops_alerts_toggle_cb(call: CallbackQuery):
     if not _is_admin(call.from_user.id):
         await call.answer("Admin only.", show_alert=True)
         return
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     enabled = toggle_ops_alerts_enabled()
     await call.answer(f"Ops alerts {'ON' if enabled else 'OFF'}", show_alert=False)
-    await call.message.edit_text(
+    await message.edit_text(
         _ops_alerts_text(),
         reply_markup=_ops_alerts_keyboard(enabled),
         parse_mode="Markdown"
@@ -164,13 +188,13 @@ async def ops_alerts_toggle_cb(call: CallbackQuery):
 
 @router.message(Command("ops_throw_test"))
 async def ops_throw_test_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
     raise RuntimeError("ops_throw_test triggered by admin")
 
 @router.message(Command("backup_now"))
 async def backup_now_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
     result = await run_backup_async(bot=message.bot, trigger="admin_command")
     if not result.get("success"):
@@ -182,7 +206,7 @@ async def backup_now_cmd(message: Message):
 
 @router.message(Command("backup_list"))
 async def backup_list_cmd(message: Message):
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
     backups = list_backups(limit=10)
     if not backups:
@@ -196,7 +220,7 @@ async def backup_list_cmd(message: Message):
 @router.message(Command("backup_send_latest"))
 async def backup_send_latest_cmd(message: Message):
     admin_id = settings.admin_id
-    if not _is_admin(message.from_user.id):
+    if not _is_admin_message(message):
         return
     latest = get_latest_backup()
     if not latest:

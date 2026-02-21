@@ -59,6 +59,10 @@ async def materials_handler(message: Message):
 @router.callback_query(F.data == "materials_open")
 @router.callback_query(F.data == "materials_main_menu")
 async def materials_open_callback(call: CallbackQuery):
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     text = (
         "📂 *Materiallar*\n\n"
         "🔧 Bu bo'lim hozirda ishlanmoqda...\n\n"
@@ -72,6 +76,5 @@ async def materials_open_callback(call: CallbackQuery):
         [InlineKeyboardButton(text="🔙 Orqaga", callback_data="video_materials_back")],
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
-    await call.message.edit_text(text, reply_markup=kb, parse_mode="Markdown")
-
+    await message.edit_text(text, reply_markup=kb, parse_mode="Markdown")
 

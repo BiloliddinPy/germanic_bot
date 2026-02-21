@@ -6,6 +6,9 @@ MAIN_MENU_TEXT = """
 Bu yerda siz nemis tilini noldan mukammal darajagacha o‘rganishingiz mumkin.
 
 🚀 **Bugun nima qilamiz?**
+• Kunlik darsni davom ettiramiz
+• Yangi so'z va grammatikani mustahkamlaymiz
+• Natijangizni birga o'stiramiz
 """
 
 INTRO_TEXT = """
@@ -20,6 +23,8 @@ INTRO_TEXT = """
 🎥 **Video va materiallar** — Qo'shimcha resurslar
 🎓 **Imtihon tayyorgarligi** — Imtihonga tayyorgarlik
 📊 **Natijalar** — Natijalaringiz
+
+🛠️ _Bot hozirda test rejimida ishlamoqda._
 
 _Keling, o'rganishni boshlaymiz! Quyidagi menyulardan birini tanlang._ 👇
 """

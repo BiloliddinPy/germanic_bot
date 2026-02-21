@@ -13,7 +13,9 @@ async def speaking_writing_handler(message: Message, state: FSMContext):
         await message.delete()
     except Exception:
         pass
-        
+    if not message.from_user:
+        return
+
     record_navigation_event(message.from_user.id, "practice_main", entry_type="text")
     
     text = (
@@ -31,4 +33,3 @@ async def speaking_writing_handler(message: Message, state: FSMContext):
     ])
     
     await send_single_ui_message(message, text, reply_markup=kb, parse_mode="Markdown")
-
