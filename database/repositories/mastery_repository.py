@@ -2,6 +2,17 @@ from database.connection import get_connection
 import datetime
 import logging
 
+
+def _coerce_int_list(rows):
+    ids = []
+    for row in rows:
+        try:
+            ids.append(int(row[0]))
+        except Exception:
+            continue
+    return ids
+
+
 def get_due_reviews(user_id: int, level: str | None = None, limit: int = 20):
     conn = get_connection()
     cursor = conn.cursor()
@@ -82,7 +93,7 @@ def get_weighted_mistake_word_ids(user_id: int, level: str | None = None, limit:
     if level:
         cursor.execute("""
             SELECT m.item_id FROM user_mistakes m
-            JOIN words w ON m.item_id = w.id
+            JOIN words w ON CAST(w.id AS TEXT) = m.item_id
             WHERE m.user_id = ? AND w.level = ? AND m.module = 'vocab' AND m.mastered = 0
             ORDER BY m.mistake_count DESC, m.last_mistake_at DESC
             LIMIT ?
@@ -96,7 +107,7 @@ def get_weighted_mistake_word_ids(user_id: int, level: str | None = None, limit:
         """, (user_id, limit))
     rows = cursor.fetchall()
     conn.close()
-    return [int(row[0]) for row in rows]
+    return _coerce_int_list(rows)
 
 def get_mastered_mistake_word_ids(user_id: int):
     conn = get_connection()
@@ -104,4 +115,4 @@ def get_mastered_mistake_word_ids(user_id: int):
     cursor.execute("SELECT item_id FROM user_mistakes WHERE user_id = ? AND mastered = 1", (user_id,))
     rows = cursor.fetchall()
     conn.close()
-    return [int(row[0]) for row in rows]
+    return _coerce_int_list(rows)
