@@ -1,6 +1,7 @@
 import os
 import datetime
 import asyncio
+import json
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
@@ -271,10 +272,26 @@ async def ops_last_errors_cmd(message: Message):
 
     lines = ["🧯 Ops Errors (last 10)\n"]
     for row in rows:
+        metadata_raw = row.get("metadata")
+        details = str(metadata_raw) if metadata_raw else "-"
+        if metadata_raw:
+            try:
+                metadata_obj = json.loads(metadata_raw)
+                if isinstance(metadata_obj, dict):
+                    severity = metadata_obj.get("severity") or "-"
+                    where_ctx = metadata_obj.get("where") or "-"
+                    error_type = metadata_obj.get("error_type") or "-"
+                    err_msg = metadata_obj.get("message") or "-"
+                    details = (
+                        f"severity={severity}, where={where_ctx}, "
+                        f"error_type={error_type}, message={err_msg}"
+                    )
+            except Exception:
+                pass
         lines.append(
             f"#{row.get('id')} | {row.get('created_at')} | {row.get('event_type')} | "
             f"user={row.get('user_id') or '-'}\n"
-            f"{row.get('metadata') or '-'}"
+            f"{details}"
         )
     await send_single_ui_message(message, "\n\n".join(lines))
 

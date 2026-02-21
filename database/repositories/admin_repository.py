@@ -92,7 +92,15 @@ def get_last_event_timestamp(user_id: int | None = None):
 def get_recent_ops_errors(limit: int = 10):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM event_logs WHERE event_type LIKE '%error%' ORDER BY created_at DESC LIMIT ?", (limit,))
-    rows = cursor.fetchall()
-    conn.close()
-    return [dict(row) for row in rows]
+    try:
+        cursor.execute(
+            "SELECT * FROM event_logs WHERE LOWER(event_type) LIKE ? ORDER BY created_at DESC LIMIT ?",
+            ("%error%", limit),
+        )
+        rows = cursor.fetchall()
+        return [dict(row) for row in rows]
+    except Exception as e:
+        logging.error(f"Error getting recent ops errors: {e}")
+        return []
+    finally:
+        conn.close()
