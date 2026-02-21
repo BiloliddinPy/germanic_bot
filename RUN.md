@@ -50,3 +50,7 @@ Users will be able to click "Aloqa" to contact you directly via Telegram link.
 ## 5. Notes
 - Database: `germanic.db` (auto-created)
 - Content: Edit files in `data/`
+
+## 6. Docker Persistence (important)
+- In Docker, DB is pinned to `/app/data/germanic.db` (mounted from `./data`).
+- This prevents onboarding reset after container restart/redeploy.
