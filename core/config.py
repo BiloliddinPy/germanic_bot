@@ -18,6 +18,10 @@ def _resolve_db_path(raw_path: str) -> str:
 class Config:
     bot_token: str = os.getenv("BOT_TOKEN", "")
     admin_id: int = int(os.getenv("ADMIN_ID", "0"))
+    db_backend: str = os.getenv("DB_BACKEND", "sqlite").strip().lower()
+    database_url: str = os.getenv("DATABASE_URL", "").strip()
+    db_pool_min_size: int = int(os.getenv("DB_POOL_MIN_SIZE", "1"))
+    db_pool_max_size: int = int(os.getenv("DB_POOL_MAX_SIZE", "20"))
     db_path: str = _resolve_db_path(os.getenv("DB_PATH", "./germanic.db"))
     
     # Feature Flags

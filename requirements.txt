@@ -2,3 +2,5 @@ aiogram>=3.0.0
 python-dotenv
 apscheduler==3.10.4
 pypdf
+psycopg[binary]==3.2.6
+psycopg-pool==3.2.6

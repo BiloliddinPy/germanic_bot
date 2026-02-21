@@ -51,6 +51,14 @@ Users will be able to click "Aloqa" to contact you directly via Telegram link.
 - Database: `germanic.db` (auto-created)
 - Content: Edit files in `data/`
 
+### Railway / Postgres (staged rollout)
+- Default backend is SQLite (`DB_BACKEND=sqlite`).
+- To prepare Postgres env in Railway, set:
+  - `DATABASE_URL=<Railway Postgres URL>`
+  - `DB_BACKEND=postgres` (enable only after full SQL migration step)
+  - `DB_POOL_MIN_SIZE=1`
+  - `DB_POOL_MAX_SIZE=20`
+
 ## 6. Docker Persistence (important)
 - In Docker, DB is pinned to `/app/data/germanic.db` (mounted from `./data`).
 - This prevents onboarding reset after container restart/redeploy.
