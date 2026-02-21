@@ -95,9 +95,18 @@ def get_days_since_first_use(user_id: int):
         return 0
         
     try:
-        from datetime import datetime
-        created_at = datetime.strptime(row[0].split(".")[0], "%Y-%m-%d %H:%M:%S")
-        delta = datetime.now() - created_at
+        from datetime import datetime, date
+
+        raw = row[0]
+        if isinstance(raw, datetime):
+            created_at = raw
+        elif isinstance(raw, date):
+            created_at = datetime.combine(raw, datetime.min.time())
+        else:
+            text = str(raw).strip()
+            created_at = datetime.fromisoformat(text.replace("Z", "+00:00"))
+
+        delta = datetime.now(created_at.tzinfo) - created_at if created_at.tzinfo else datetime.now() - created_at
         return delta.days + 1
     except Exception:
         return 0

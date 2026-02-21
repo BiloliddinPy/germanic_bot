@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Any
 
-from database.connection import get_connection
+from database.connection import get_connection, is_postgres_backend
 
 
 def _utc_now_iso() -> str:
@@ -51,43 +51,117 @@ def claim_pending_jobs(limit: int = 1000) -> list[dict[str, Any]]:
     cursor = conn.cursor()
     claimed: list[dict[str, Any]] = []
     try:
-        cursor.execute(
-            """
-            SELECT id, user_id, kind, payload, attempts
-            FROM broadcast_jobs
-            WHERE status = 'pending' AND available_at <= CURRENT_TIMESTAMP
-            ORDER BY id ASC
-            LIMIT ?
-            """,
-            (max(1, limit),),
-        )
-        rows = cursor.fetchall()
-        for row in rows:
-            job_id = int(row["id"])
+        batch_limit = max(1, limit)
+        if is_postgres_backend():
             cursor.execute(
                 """
-                UPDATE broadcast_jobs
+                WITH to_claim AS (
+                    SELECT id
+                    FROM broadcast_jobs
+                    WHERE status = 'pending' AND available_at <= CURRENT_TIMESTAMP
+                    ORDER BY id ASC
+                    LIMIT ?
+                    FOR UPDATE SKIP LOCKED
+                )
+                UPDATE broadcast_jobs bj
                 SET status = 'processing', locked_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
-                WHERE id = ? AND status = 'pending'
+                FROM to_claim tc
+                WHERE bj.id = tc.id
+                RETURNING bj.id, bj.user_id, bj.kind, bj.payload, bj.attempts
                 """,
-                (job_id,),
+                (batch_limit,),
             )
-            if int(getattr(cursor, "rowcount", 0) or 0) > 0:
+            for row in cursor.fetchall():
                 claimed.append(
                     {
-                        "id": job_id,
+                        "id": int(row["id"]),
                         "user_id": int(row["user_id"]),
                         "kind": str(row["kind"]),
                         "payload": str(row["payload"]),
                         "attempts": int(row["attempts"] or 0),
                     }
                 )
+        else:
+            cursor.execute(
+                """
+                SELECT id, user_id, kind, payload, attempts
+                FROM broadcast_jobs
+                WHERE status = 'pending' AND available_at <= CURRENT_TIMESTAMP
+                ORDER BY id ASC
+                LIMIT ?
+                """,
+                (batch_limit,),
+            )
+            rows = cursor.fetchall()
+            for row in rows:
+                job_id = int(row["id"])
+                cursor.execute(
+                    """
+                    UPDATE broadcast_jobs
+                    SET status = 'processing', locked_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+                    WHERE id = ? AND status = 'pending'
+                    """,
+                    (job_id,),
+                )
+                if int(getattr(cursor, "rowcount", 0) or 0) > 0:
+                    claimed.append(
+                        {
+                            "id": job_id,
+                            "user_id": int(row["user_id"]),
+                            "kind": str(row["kind"]),
+                            "payload": str(row["payload"]),
+                            "attempts": int(row["attempts"] or 0),
+                        }
+                    )
         conn.commit()
     except Exception as exc:
         logging.error("claim_pending_jobs failed: %s", exc)
     finally:
         conn.close()
     return claimed
+
+
+def recover_stale_processing_jobs(stale_seconds: int = 900) -> int:
+    conn = get_connection()
+    cursor = conn.cursor()
+    recovered = 0
+    safe_stale_seconds = max(30, stale_seconds)
+    try:
+        if is_postgres_backend():
+            cursor.execute(
+                """
+                UPDATE broadcast_jobs
+                SET status = 'pending',
+                    locked_at = NULL,
+                    available_at = CURRENT_TIMESTAMP,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE status = 'processing'
+                  AND locked_at IS NOT NULL
+                  AND locked_at < (CURRENT_TIMESTAMP - (? * INTERVAL '1 second'))
+                """,
+                (safe_stale_seconds,),
+            )
+        else:
+            cursor.execute(
+                """
+                UPDATE broadcast_jobs
+                SET status = 'pending',
+                    locked_at = NULL,
+                    available_at = CURRENT_TIMESTAMP,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE status = 'processing'
+                  AND locked_at IS NOT NULL
+                  AND locked_at < datetime('now', ?)
+                """,
+                (f"-{safe_stale_seconds} seconds",),
+            )
+        recovered = int(getattr(cursor, "rowcount", 0) or 0)
+        conn.commit()
+    except Exception as exc:
+        logging.error("recover_stale_processing_jobs failed: %s", exc)
+    finally:
+        conn.close()
+    return recovered
 
 
 def mark_job_sent(job_id: int):

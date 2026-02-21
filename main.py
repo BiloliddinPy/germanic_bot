@@ -3,11 +3,11 @@ import logging
 import sys
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
 from core.config import settings
 from database import create_table, bootstrap_words_if_empty
+from utils.db_fsm_storage import DBFSMStorage
 from utils.scheduler import start_scheduler, stop_scheduler
 from utils.runtime_state import mark_started
 from utils.update_tracking import UpdateTrackingMiddleware
@@ -58,7 +58,7 @@ async def main():
 
     # Bot & Dispatcher
     bot = Bot(token=settings.bot_token)
-    dp = Dispatcher(storage=MemoryStorage())
+    dp = Dispatcher(storage=DBFSMStorage())
     
     # Middlewares
     dp.update.outer_middleware(UpdateTrackingMiddleware())

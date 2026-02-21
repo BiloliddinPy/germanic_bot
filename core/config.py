@@ -52,6 +52,7 @@ class Config:
     broadcast_claim_batch_size: int = int(os.getenv("BROADCAST_CLAIM_BATCH_SIZE", "1000"))
     broadcast_send_concurrency: int = int(os.getenv("BROADCAST_SEND_CONCURRENCY", "30"))
     broadcast_max_attempts: int = int(os.getenv("BROADCAST_MAX_ATTEMPTS", "6"))
+    broadcast_processing_stale_seconds: int = int(os.getenv("BROADCAST_PROCESSING_STALE_SECONDS", "900"))
     delivery_mode: str = os.getenv("DELIVERY_MODE", "polling").strip().lower()
     webhook_host: str = os.getenv("WEBHOOK_HOST", "0.0.0.0").strip()
     webhook_port: int = int(os.getenv("PORT", os.getenv("WEBHOOK_PORT", "8080")))

@@ -17,7 +17,9 @@ from utils.error_notifier import schedule_ops_error_notification
 BACKUP_THRESHOLD_COMPRESS_BYTES = 5 * 1024 * 1024
 BACKUP_SEND_MAX_BYTES = 45 * 1024 * 1024
 BACKUP_RETENTION_DAYS = 14
-BACKUP_FILE_RE = re.compile(r"^backup_(\d{4}-\d{2}-\d{2}_\d{4}_UTC)\.sqlite(?:\.gz|\.zip)?$")
+BACKUP_FILE_RE = re.compile(
+    r"^backup_(\d{4}-\d{2}-\d{2}_\d{4}_UTC)\.(sqlite|postgres\.sql)(?:\.gz|\.zip)?$"
+)
 
 _backup_lock = threading.Lock()
 
@@ -42,8 +44,11 @@ def _pick_backup_dir() -> Path:
     return fallback
 
 
-def _backup_filename(now_utc: datetime.datetime) -> str:
-    return f"backup_{now_utc.strftime('%Y-%m-%d_%H%M')}_UTC.sqlite"
+def _backup_filename(now_utc: datetime.datetime, backend: str) -> str:
+    stamp = now_utc.strftime("%Y-%m-%d_%H%M")
+    if backend == "postgres":
+        return f"backup_{stamp}_UTC.postgres.sql"
+    return f"backup_{stamp}_UTC.sqlite"
 
 
 def _backup_with_cli(src_db: str, dst_path: str):
@@ -84,6 +89,36 @@ def _backup_with_python_api(src_db: str, dst_path: str):
                 dst_conn.close()
         except Exception:
             pass
+
+
+def _backup_postgres_with_pg_dump(pg_url: str, dst_path: str):
+    cli = shutil.which("pg_dump")
+    if not cli:
+        return False, "pg_dump cli not available"
+    try:
+        proc = subprocess.run(
+            [
+                cli,
+                "--dbname",
+                pg_url,
+                "--file",
+                dst_path,
+                "--format=plain",
+                "--no-owner",
+                "--no-privileges",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=180,
+        )
+        if proc.returncode != 0:
+            msg = (proc.stderr or proc.stdout or "pg_dump failed").strip()
+            return False, msg[:280]
+        if not os.path.exists(dst_path):
+            return False, "pg_dump produced no file"
+        return True, None
+    except Exception as e:
+        return False, str(e)[:280]
         try:
             if src_conn:
                 src_conn.close()
@@ -204,14 +239,43 @@ def create_backup_sync(trigger: str = "manual"):
 
     try:
         if is_postgres_backend():
+            if not settings.database_url:
+                return {
+                    "success": False,
+                    "error": "DATABASE_URL is empty for postgres backup",
+                    "trigger": trigger,
+                    "backup_dir": str(_pick_backup_dir()),
+                    "method": "pg_dump",
+                }
+            backup_dir = _pick_backup_dir()
+            now = _utc_now()
+            file_name = _backup_filename(now, backend="postgres")
+            sql_path = backup_dir / file_name
+            ok, err = _backup_postgres_with_pg_dump(settings.database_url, str(sql_path))
+            if not ok:
+                return {
+                    "success": False,
+                    "error": err or "unknown pg_dump failure",
+                    "trigger": trigger,
+                    "backup_dir": str(backup_dir),
+                    "method": "pg_dump",
+                }
+
+            compressed_path = _maybe_compress(sql_path)
+            primary_path = compressed_path or sql_path
+            primary_size = primary_path.stat().st_size if primary_path.exists() else None
+            removed = _apply_retention(backup_dir, BACKUP_RETENTION_DAYS)
             return {
-                "success": False,
-                "non_critical": True,
+                "success": True,
                 "trigger": trigger,
-                "method": "skipped_postgres_not_implemented",
-                "backup_dir": str(_pick_backup_dir()),
-                "error": "postgres backup not implemented (pg_dump step pending)",
-                "note": "Postgres backup is not configured yet (pg_dump step pending).",
+                "method": "pg_dump",
+                "backup_dir": str(backup_dir),
+                "sql_path": str(sql_path),
+                "compressed_path": str(compressed_path) if compressed_path else None,
+                "primary_path": str(primary_path),
+                "primary_size": primary_size,
+                "created_utc": now.isoformat(timespec="seconds") + "Z",
+                "retention_removed": removed,
             }
 
         src_db = os.path.abspath(settings.db_path)
@@ -225,7 +289,7 @@ def create_backup_sync(trigger: str = "manual"):
 
         backup_dir = _pick_backup_dir()
         now = _utc_now()
-        file_name = _backup_filename(now)
+        file_name = _backup_filename(now, backend="sqlite")
         sqlite_path = backup_dir / file_name
 
         ok, err = _backup_with_cli(src_db, str(sqlite_path))

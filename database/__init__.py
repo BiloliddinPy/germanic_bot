@@ -248,6 +248,20 @@ def create_table():
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
             """,
+            """
+            CREATE TABLE IF NOT EXISTS fsm_state (
+                bot_id BIGINT NOT NULL,
+                chat_id BIGINT NOT NULL,
+                user_id BIGINT NOT NULL,
+                thread_id BIGINT NOT NULL DEFAULT 0,
+                business_connection_id TEXT NOT NULL DEFAULT '',
+                destiny TEXT NOT NULL DEFAULT 'default',
+                state TEXT,
+                data TEXT NOT NULL DEFAULT '{}',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (bot_id, chat_id, user_id, thread_id, business_connection_id, destiny)
+            )
+            """,
             "CREATE INDEX IF NOT EXISTS idx_user_profile_notification_time ON user_profile(notification_time)",
             "CREATE INDEX IF NOT EXISTS idx_navigation_logs_created_at ON navigation_logs(created_at)",
             "CREATE INDEX IF NOT EXISTS idx_navigation_logs_user_created ON navigation_logs(user_id, created_at)",
@@ -257,6 +271,7 @@ def create_table():
             "CREATE INDEX IF NOT EXISTS idx_user_mistakes_active ON user_mistakes(user_id, module, mastered, mistake_count)",
             "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_pending ON broadcast_jobs(status, available_at, id)",
             "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_user ON broadcast_jobs(user_id, created_at)",
+            "CREATE INDEX IF NOT EXISTS idx_fsm_state_updated_at ON fsm_state(updated_at)",
         ]
     else:
         statements = [
@@ -420,8 +435,23 @@ def create_table():
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
             """,
+            """
+            CREATE TABLE IF NOT EXISTS fsm_state (
+                bot_id INTEGER NOT NULL,
+                chat_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                thread_id INTEGER NOT NULL DEFAULT 0,
+                business_connection_id TEXT NOT NULL DEFAULT '',
+                destiny TEXT NOT NULL DEFAULT 'default',
+                state TEXT,
+                data TEXT NOT NULL DEFAULT '{}',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (bot_id, chat_id, user_id, thread_id, business_connection_id, destiny)
+            )
+            """,
             "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_pending ON broadcast_jobs(status, available_at, id)",
             "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_user ON broadcast_jobs(user_id, created_at)",
+            "CREATE INDEX IF NOT EXISTS idx_fsm_state_updated_at ON fsm_state(updated_at)",
         ]
 
     for stmt in statements:

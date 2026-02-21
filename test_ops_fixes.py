@@ -17,9 +17,9 @@ def test_normalize_date_handles_date_object():
     assert _normalize_date(d) == d
 
 
-def test_backup_postgres_skip_is_non_critical_failure(monkeypatch):
+def test_backup_postgres_requires_database_url(monkeypatch):
     monkeypatch.setattr(backup_manager, "is_postgres_backend", lambda: True)
     result = backup_manager.create_backup_sync("test")
     assert result.get("success") is False
-    assert result.get("non_critical") is True
-    assert "postgres backup not implemented" in (result.get("error") or "")
+    assert result.get("method") == "pg_dump"
+    assert "DATABASE_URL is empty" in (result.get("error") or "")

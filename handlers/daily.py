@@ -13,6 +13,7 @@ from database.repositories.broadcast_repository import (
     claim_pending_jobs,
     enqueue_broadcast_jobs,
     mark_job_sent,
+    recover_stale_processing_jobs,
     reschedule_job,
 )
 from utils.ui_utils import send_single_ui_message
@@ -176,6 +177,11 @@ def _render_daily_payload(payload: dict) -> tuple[str, InlineKeyboardMarkup]:
 
 
 async def process_broadcast_queue(bot: Bot):
+    recovered = recover_stale_processing_jobs(
+        stale_seconds=settings.broadcast_processing_stale_seconds
+    )
+    if recovered > 0:
+        logging.warning("Recovered stale broadcast jobs: %d", recovered)
     jobs = claim_pending_jobs(limit=settings.broadcast_claim_batch_size)
     if not jobs:
         return
