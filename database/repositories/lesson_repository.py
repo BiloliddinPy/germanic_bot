@@ -5,7 +5,10 @@ import logging
 def get_last_daily_plan(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT plan_data FROM daily_plans WHERE user_id = ? ORDER BY created_at DESC LIMIT 1", (user_id,))
+    cursor.execute(
+        "SELECT plan_data FROM daily_plans WHERE user_id = ? ORDER BY id DESC LIMIT 1",
+        (user_id,),
+    )
     row = cursor.fetchone()
     conn.close()
     return json.loads(row[0]) if row else None

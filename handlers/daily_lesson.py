@@ -10,7 +10,7 @@ from services.user_service import UserService
 from services.stats_service import StatsService
 from services.grammar_service import GrammarService
 from database.repositories.session_repository import get_daily_lesson_state, save_daily_lesson_state, delete_daily_lesson_state
-from database.repositories.lesson_repository import save_daily_plan
+from database.repositories.lesson_repository import save_daily_plan, mark_grammar_topic_seen
 from utils.ui_utils import send_single_ui_message
 
 router = Router()
@@ -48,6 +48,10 @@ async def daily_begin_handler(call: CallbackQuery):
     profile = UserService.get_profile(user_id) or {}
     session_plan = LearningService.create_daily_plan(user_id, profile)
     save_daily_plan(user_id, session_plan)
+    topic_id = session_plan.get("grammar_topic_id")
+    level = str(session_plan.get("level") or profile.get("current_level") or "A1")
+    if topic_id:
+        mark_grammar_topic_seen(user_id, str(topic_id), level)
 
     # Initialize session state
     state = {
