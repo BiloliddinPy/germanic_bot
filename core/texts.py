@@ -1,4 +1,17 @@
 # Global UI Strings and Constants
+APP_VERSION = "v1.5.0"
+RELEASE_DATE = "2026-02-21"
+
+UPDATE_ANNOUNCEMENT_TEXT = (
+    "✅ **Yangilanish e'loni**\n\n"
+    "Germanic botning yangi barqaror versiyasi ishga tushdi.\n\n"
+    "Nimalar yaxshilandi:\n"
+    "• Onboarding va /start oqimida takror xabarlar kamaytirildi\n"
+    "• Kunlik darsda double-click va race holatlari tuzatildi\n"
+    "• Lug'at (A1-C1) bo'limida Postgresga mos barqarorlik yaxshilandi\n"
+    "• Broadcast va queue qayta tiklash mexanizmlari mustahkamlandi\n\n"
+    "Agar kutilmagan holat bo'lsa, /start ni bosing yoki adminga yozing."
+)
 
 MAIN_MENU_TEXT = """
 🌟 **Germanic: Nemis tilini o‘rganish botiga xush kelibsiz!**

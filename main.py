@@ -96,6 +96,7 @@ async def main():
         types.BotCommand(command="menu", description="Bosh menyu"),
         types.BotCommand(command="stats", description="Mening natijalarim"),
         types.BotCommand(command="profile", description="Profil sozlamalari"),
+        types.BotCommand(command="version", description="Bot versiyasi"),
     ]
     await bot.set_my_commands(
         user_commands,
@@ -113,6 +114,7 @@ async def main():
             types.BotCommand(command="webhook_info", description="Webhook holati"),
             types.BotCommand(command="backup_now", description="Backup yaratish"),
             types.BotCommand(command="diag_db", description="DB diagnostika"),
+            types.BotCommand(command="announce_update", description="Update e'lonini yuborish"),
         ]
         await bot.set_my_commands(
             admin_commands,

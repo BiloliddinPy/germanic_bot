@@ -15,7 +15,7 @@ from database.repositories.progress_repository import record_navigation_event
 from database.repositories.session_repository import get_daily_lesson_state
 from handlers.onboarding import start_onboarding
 from utils.ui_utils import _send_fresh_main_menu, send_single_ui_message
-from core.texts import MAIN_MENU_TEXT, INTRO_TEXT
+from core.texts import MAIN_MENU_TEXT, INTRO_TEXT, APP_VERSION, RELEASE_DATE
 from core.config import settings
 
 router = Router()
@@ -186,6 +186,21 @@ async def cmd_about(message: Message):
         send_single_ui_message(
             message, text, reply_markup=get_main_menu(), parse_mode="Markdown"
         ),
+    )
+
+
+@router.message(Command("version"))
+async def cmd_version(message: Message):
+    await _safe_delete_message(message)
+    text = (
+        "🧾 **Versiya**\n\n"
+        f"• Version: `{APP_VERSION}`\n"
+        f"• Release date: `{RELEASE_DATE}`\n\n"
+        "Oxirgi o'zgarishlar: `RELEASE_NOTES.md`"
+    )
+    await cast(
+        Awaitable[Message],
+        send_single_ui_message(message, text, parse_mode="Markdown"),
     )
 
 

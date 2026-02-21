@@ -1,5 +1,6 @@
 import os
 import datetime
+import asyncio
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
@@ -11,7 +12,7 @@ from database.repositories.admin_repository import (
     get_recent_ops_errors,
     get_users_count,
 )
-from database.repositories.user_repository import add_user, get_or_create_user_profile
+from database.repositories.user_repository import add_user, get_or_create_user_profile, get_subscribed_users
 from database.repositories.broadcast_repository import get_broadcast_queue_counts
 from database.connection import get_connection, is_postgres_backend
 from utils.ui_utils import send_single_ui_message
@@ -26,6 +27,7 @@ from utils.error_notifier import (
     get_ops_alerts_status,
     toggle_ops_alerts_enabled
 )
+from core.texts import UPDATE_ANNOUNCEMENT_TEXT
 
 router = Router()
 
@@ -323,6 +325,43 @@ async def ops_throw_test_cmd(message: Message):
         return
     raise RuntimeError("ops_throw_test triggered by admin")
 
+
+@router.message(Command("announce_update"))
+async def announce_update_cmd(message: Message):
+    if not await _ensure_admin(message):
+        return
+    users = get_subscribed_users()
+    if not users:
+        await send_single_ui_message(message, "📢 Update e'loni uchun foydalanuvchilar topilmadi.")
+        return
+
+    sent = 0
+    failed = 0
+    sem = asyncio.Semaphore(30)
+
+    async def _send_one(user_id: int):
+        nonlocal sent, failed
+        async with sem:
+            try:
+                await message.bot.send_message(
+                    chat_id=int(user_id),
+                    text=UPDATE_ANNOUNCEMENT_TEXT,
+                    parse_mode="Markdown",
+                )
+                sent += 1
+            except Exception:
+                failed += 1
+
+    await asyncio.gather(*[_send_one(int(uid)) for uid in users], return_exceptions=True)
+
+    text = (
+        "📢 Update e'loni yuborildi\n\n"
+        f"• Jami users: {len(users)}\n"
+        f"• Yuborildi: {sent}\n"
+        f"• Xatolik: {failed}"
+    )
+    await send_single_ui_message(message, text)
+
 @router.message(Command("backup_now"))
 async def backup_now_cmd(message: Message):
     if not await _ensure_admin(message):
@@ -383,6 +422,7 @@ async def admin_help_cmd(message: Message):
         "• /backup_now - darhol backup\n"
         "• /backup_list - backup ro'yxati\n"
         "• /backup_send_latest - oxirgi backupni yuborish\n"
+        "• /announce_update - update e'lonini hamma userga yuborish\n"
         "• /ops_alerts - ops alertlar holati\n"
         "• /ops_last_errors - oxirgi xatoliklar\n"
         "• /diag_db - ishlayotgan DB diagnostikasi"
