@@ -1,4 +1,5 @@
 from database.connection import get_connection
+from database.connection import is_postgres_backend
 import datetime
 import logging
 
@@ -34,7 +35,11 @@ def get_or_create_user_profile(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT OR IGNORE INTO user_profile (user_id) VALUES (?)", (user_id,))
+        cursor.execute(
+            "INSERT INTO user_profile (user_id) VALUES (?) "
+            "ON CONFLICT(user_id) DO NOTHING",
+            (user_id,),
+        )
         conn.commit()
     except Exception as e:
         logging.error(f"Error creating user profile: {e}")
@@ -112,7 +117,18 @@ def update_streak(user_id: int):
                 pass # Already updated
             elif last == (datetime.date.today() - datetime.timedelta(days=1)).isoformat():
                 new_streak = curr + 1
-                cursor.execute("UPDATE user_streak SET current_streak = ?, last_activity = ?, highest_streak = MAX(highest_streak, ?) WHERE user_id = ?", (new_streak, today, new_streak, user_id))
+                if is_postgres_backend():
+                    cursor.execute(
+                        "UPDATE user_streak SET current_streak = ?, last_activity = ?, "
+                        "highest_streak = GREATEST(highest_streak, ?) WHERE user_id = ?",
+                        (new_streak, today, new_streak, user_id),
+                    )
+                else:
+                    cursor.execute(
+                        "UPDATE user_streak SET current_streak = ?, last_activity = ?, "
+                        "highest_streak = MAX(highest_streak, ?) WHERE user_id = ?",
+                        (new_streak, today, new_streak, user_id),
+                    )
             else:
                 cursor.execute("UPDATE user_streak SET current_streak = 1, last_activity = ? WHERE user_id = ?", (today, user_id))
         conn.commit()

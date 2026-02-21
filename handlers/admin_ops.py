@@ -1,6 +1,5 @@
 import os
 import datetime
-import sqlite3
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
@@ -13,6 +12,7 @@ from database.repositories.admin_repository import (
     get_users_count,
 )
 from database.repositories.user_repository import add_user, get_or_create_user_profile
+from database.connection import get_connection
 from utils.ui_utils import send_single_ui_message
 from utils.backup_manager import (
     run_backup_async,
@@ -155,8 +155,9 @@ async def diag_db_cmd(message: Message):
 
     total_users = 0
     row = None
+    conn = None
     try:
-        conn = sqlite3.connect(db_path)
+        conn = get_connection()
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) FROM user_profile")
         total_users = int(cur.fetchone()[0] or 0)

@@ -76,8 +76,9 @@ class CompatCursor:
 
 
 class CompatConnection:
-    def __init__(self, raw_conn):
+    def __init__(self, raw_conn, release_ctx=None):
         self._conn = raw_conn
+        self._release_ctx = release_ctx
 
     def cursor(self) -> Any:
         return CompatCursor(self._conn.cursor())
@@ -86,6 +87,8 @@ class CompatConnection:
         return self._conn.commit()
 
     def close(self) -> Any:
+        if self._release_ctx is not None:
+            return self._release_ctx.__exit__(None, None, None)
         return self._conn.close()
 
     def __getattr__(self, name: str) -> Any:
@@ -132,7 +135,13 @@ def _get_sqlite_connection() -> Any:
 
 def _get_postgres_connection() -> Any:
     pool = _get_or_create_postgres_pool()
-    return CompatConnection(pool.connection())
+    ctx = pool.connection()
+    raw_conn = ctx.__enter__()
+    return CompatConnection(raw_conn, release_ctx=ctx)
+
+
+def is_postgres_backend() -> bool:
+    return settings.db_backend == "postgres"
 
 
 def get_connection() -> Any:

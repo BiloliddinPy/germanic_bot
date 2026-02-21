@@ -3,6 +3,7 @@ import os
 import json
 from typing import Any
 from core.config import settings
+from database.connection import is_postgres_backend
 
 # Public API for the database package
 from database.repositories.user_repository import (
@@ -85,170 +86,315 @@ def create_table():
     """Initializes the database schema."""
     conn = get_connection()
     cursor = conn.cursor()
-    
-    # user_profile
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS user_profile (
-            user_id INTEGER PRIMARY KEY,
-            current_level TEXT DEFAULT 'A1',
-            goal TEXT DEFAULT 'general',
-            daily_time_minutes INTEGER DEFAULT 15,
-            notification_time TEXT DEFAULT '09:00',
-            onboarding_completed INTEGER DEFAULT 0,
-            xp INTEGER DEFAULT 0,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    
-    # Safely push the notification_time to existing databases
-    try:
-        cursor.execute("ALTER TABLE user_profile ADD COLUMN notification_time TEXT DEFAULT '09:00'")
-    except Exception:
-        pass # Column already exists
+    if is_postgres_backend():
+        statements = [
+            """
+            CREATE TABLE IF NOT EXISTS user_profile (
+                user_id BIGINT PRIMARY KEY,
+                current_level TEXT DEFAULT 'A1',
+                goal TEXT DEFAULT 'general',
+                daily_time_minutes INTEGER DEFAULT 15,
+                notification_time TEXT DEFAULT '09:00',
+                onboarding_completed INTEGER DEFAULT 0,
+                xp INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            "ALTER TABLE user_profile ADD COLUMN IF NOT EXISTS notification_time TEXT DEFAULT '09:00'",
+            """
+            CREATE TABLE IF NOT EXISTS words (
+                id BIGSERIAL PRIMARY KEY,
+                de TEXT,
+                uz TEXT,
+                level TEXT,
+                pos TEXT,
+                example_de TEXT,
+                example_uz TEXT,
+                category TEXT,
+                plural TEXT
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_streak (
+                user_id BIGINT PRIMARY KEY,
+                current_streak INTEGER DEFAULT 0,
+                last_activity DATE,
+                highest_streak INTEGER DEFAULT 0
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_mastery (
+                user_id BIGINT,
+                item_id BIGINT,
+                box INTEGER DEFAULT 0,
+                next_review TIMESTAMP,
+                last_reviewed TIMESTAMP,
+                PRIMARY KEY (user_id, item_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS daily_plans (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT,
+                plan_data TEXT,
+                created_at DATE DEFAULT CURRENT_DATE
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS daily_lesson_sessions (
+                user_id BIGINT PRIMARY KEY,
+                session_data TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS ui_state (
+                user_id BIGINT,
+                key TEXT,
+                val TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, key)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS navigation_logs (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT,
+                section_name TEXT,
+                level TEXT,
+                entry_type TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_progress (
+                user_id BIGINT,
+                module_name TEXT,
+                level TEXT,
+                completion_status INTEGER DEFAULT 0,
+                last_active TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, module_name, level)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_mistakes (
+                user_id BIGINT,
+                item_id TEXT,
+                module TEXT,
+                mistake_type TEXT,
+                mistake_count INTEGER DEFAULT 0,
+                last_mistake_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                mastered INTEGER DEFAULT 0,
+                PRIMARY KEY (user_id, item_id, module)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS quiz_results (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT,
+                level TEXT,
+                score INTEGER,
+                total INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS grammar_progress (
+                user_id BIGINT,
+                topic_id TEXT,
+                level TEXT,
+                seen_count INTEGER DEFAULT 0,
+                last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, topic_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS event_logs (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT,
+                event_type TEXT,
+                section_name TEXT,
+                level TEXT,
+                metadata TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_submissions (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT,
+                module TEXT,
+                content TEXT,
+                level TEXT,
+                metadata TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            "CREATE INDEX IF NOT EXISTS idx_user_profile_notification_time ON user_profile(notification_time)",
+            "CREATE INDEX IF NOT EXISTS idx_navigation_logs_created_at ON navigation_logs(created_at)",
+            "CREATE INDEX IF NOT EXISTS idx_navigation_logs_user_created ON navigation_logs(user_id, created_at)",
+            "CREATE INDEX IF NOT EXISTS idx_event_logs_created_type ON event_logs(created_at, event_type)",
+            "CREATE INDEX IF NOT EXISTS idx_user_progress_daily ON user_progress(module_name, completion_status, last_active)",
+            "CREATE INDEX IF NOT EXISTS idx_user_mastery_due ON user_mastery(user_id, next_review)",
+            "CREATE INDEX IF NOT EXISTS idx_user_mistakes_active ON user_mistakes(user_id, module, mastered, mistake_count)",
+        ]
+    else:
+        statements = [
+            """
+            CREATE TABLE IF NOT EXISTS user_profile (
+                user_id INTEGER PRIMARY KEY,
+                current_level TEXT DEFAULT 'A1',
+                goal TEXT DEFAULT 'general',
+                daily_time_minutes INTEGER DEFAULT 15,
+                notification_time TEXT DEFAULT '09:00',
+                onboarding_completed INTEGER DEFAULT 0,
+                xp INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            "ALTER TABLE user_profile ADD COLUMN notification_time TEXT DEFAULT '09:00'",
+            """
+            CREATE TABLE IF NOT EXISTS words (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                de TEXT,
+                uz TEXT,
+                level TEXT,
+                pos TEXT,
+                example_de TEXT,
+                example_uz TEXT,
+                category TEXT,
+                plural TEXT
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_streak (
+                user_id INTEGER PRIMARY KEY,
+                current_streak INTEGER DEFAULT 0,
+                last_activity DATE,
+                highest_streak INTEGER DEFAULT 0
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_mastery (
+                user_id INTEGER,
+                item_id INTEGER,
+                box INTEGER DEFAULT 0,
+                next_review TIMESTAMP,
+                last_reviewed TIMESTAMP,
+                PRIMARY KEY (user_id, item_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS daily_plans (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                plan_data TEXT,
+                created_at DATE DEFAULT CURRENT_DATE
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS daily_lesson_sessions (
+                user_id INTEGER PRIMARY KEY,
+                session_data TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS ui_state (
+                user_id INTEGER,
+                key TEXT,
+                val TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, key)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS navigation_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                section_name TEXT,
+                level TEXT,
+                entry_type TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_progress (
+                user_id INTEGER,
+                module_name TEXT,
+                level TEXT,
+                completion_status INTEGER DEFAULT 0,
+                last_active TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, module_name, level)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_mistakes (
+                user_id INTEGER,
+                item_id TEXT,
+                module TEXT,
+                mistake_type TEXT,
+                mistake_count INTEGER DEFAULT 0,
+                last_mistake_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                mastered INTEGER DEFAULT 0,
+                PRIMARY KEY (user_id, item_id, module)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS quiz_results (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                level TEXT,
+                score INTEGER,
+                total INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS grammar_progress (
+                user_id INTEGER,
+                topic_id TEXT,
+                level TEXT,
+                seen_count INTEGER DEFAULT 0,
+                last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, topic_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS event_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                event_type TEXT,
+                section_name TEXT,
+                level TEXT,
+                metadata TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user_submissions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                module TEXT,
+                content TEXT,
+                level TEXT,
+                metadata TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+        ]
 
-    
-    # words (Dictionary)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS words (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            de TEXT,
-            uz TEXT,
-            level TEXT,
-            pos TEXT,
-            example_de TEXT,
-            example_uz TEXT,
-            category TEXT,
-            plural TEXT
-        )
-    """)
-    
-    # user_streak
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS user_streak (
-            user_id INTEGER PRIMARY KEY,
-            current_streak INTEGER DEFAULT 0,
-            last_activity DATE,
-            highest_streak INTEGER DEFAULT 0
-        )
-    """)
-    
-    # user_mastery (SRS)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS user_mastery (
-            user_id INTEGER,
-            item_id INTEGER,
-            box INTEGER DEFAULT 0,
-            next_review TIMESTAMP,
-            last_reviewed TIMESTAMP,
-            PRIMARY KEY (user_id, item_id)
-        )
-    """)
-    
-    # daily_plans
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS daily_plans (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            plan_data TEXT,
-            created_at DATE DEFAULT CURRENT_DATE
-        )
-    """)
-    
-    # daily_lesson_sessions
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS daily_lesson_sessions (
-            user_id INTEGER PRIMARY KEY,
-            session_data TEXT,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    
-    # ui_state
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS ui_state (
-            user_id INTEGER,
-            key TEXT,
-            val TEXT,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (user_id, key)
-        )
-    """)
-    
-    # navigation_logs
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS navigation_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            section_name TEXT,
-            level TEXT,
-            entry_type TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-
-    # user_progress
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS user_progress (
-            user_id INTEGER,
-            module_name TEXT,
-            level TEXT,
-            completion_status INTEGER DEFAULT 0,
-            last_active TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (user_id, module_name, level)
-        )
-    """)
-
-    # user_mistakes
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS user_mistakes (
-            user_id INTEGER,
-            item_id TEXT,
-            module TEXT,
-            mistake_type TEXT,
-            mistake_count INTEGER DEFAULT 0,
-            last_mistake_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            mastered INTEGER DEFAULT 0,
-            PRIMARY KEY (user_id, item_id, module)
-        )
-    """)
-
-    # quiz_results
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS quiz_results (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            level TEXT,
-            score INTEGER,
-            total INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    
-    # grammar_progress
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS grammar_progress (
-            user_id INTEGER,
-            topic_id TEXT,
-            level TEXT,
-            seen_count INTEGER DEFAULT 0,
-            last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (user_id, topic_id)
-        )
-    """)
-
-    # event_logs (for grammar, daily, etc tracking)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS event_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            event_type TEXT,
-            section_name TEXT,
-            level TEXT,
-            metadata TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+    for stmt in statements:
+        try:
+            cursor.execute(stmt)
+        except Exception as exc:
+            is_safe_migration_stmt = "ALTER TABLE user_profile ADD COLUMN" in stmt
+            if is_safe_migration_stmt:
+                continue
+            logging.exception("Schema apply failed: %s", exc)
+            raise
 
     conn.commit()
     conn.close()
