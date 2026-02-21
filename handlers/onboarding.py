@@ -9,6 +9,7 @@ from services.stats_service import StatsService
 from core.texts import ONBOARDING_WELCOME, INTRO_TEXT
 from utils.ui_utils import send_single_ui_message, _send_fresh_main_menu
 from keyboards.builders import get_levels_keyboard
+from database import update_user_profile
 
 router = Router()
 
@@ -18,11 +19,54 @@ class OnboardingState(StatesGroup):
     waiting_for_daily_target = State()
     waiting_for_time = State()
 
+
+def _to_int(value, default: int = 0) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _profile_is_default(profile: dict) -> bool:
+    return (
+        str(profile.get("current_level") or "A1") == "A1"
+        and str(profile.get("goal") or "general") == "general"
+        and _to_int(profile.get("daily_time_minutes"), 15) == 15
+        and str(profile.get("notification_time") or "09:00") == "09:00"
+        and _to_int(profile.get("xp"), 0) == 0
+    )
+
+
+def _profile_is_fresh(profile: dict) -> bool:
+    created_at = str(profile.get("created_at") or "").strip()
+    updated_at = str(profile.get("updated_at") or "").strip()
+    return bool(created_at and updated_at and created_at == updated_at)
+
+
+def _should_skip_onboarding(profile: dict) -> bool:
+    if _to_int(profile.get("onboarding_completed"), 0) == 1:
+        return True
+    # If profile has any sign of prior setup/activity, do not show onboarding again.
+    return not (_profile_is_default(profile) and _profile_is_fresh(profile))
+
+
 async def start_onboarding(message: Message, state: FSMContext):
     if not message.from_user:
         return
+    user_id = message.from_user.id
+
+    # Defensive guard: even if onboarding is called from a wrong path,
+    # do not show it again for already-configured users.
+    profile = UserService.get_profile(user_id) or {}
+    if _should_skip_onboarding(profile):
+        if _to_int(profile.get("onboarding_completed"), 0) != 1:
+            update_user_profile(user_id, onboarding_completed=1)
+        await state.clear()
+        await _send_fresh_main_menu(message, INTRO_TEXT, user_id=user_id)
+        return
+
     await state.clear()
-    StatsService.log_activity(message.from_user.id, "onboarding_started")
+    StatsService.log_activity(user_id, "onboarding_started")
     
     intro = (
         "🧭 **Boshlang'ich sozlash (1/4)**\n\n"

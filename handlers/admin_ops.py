@@ -1,5 +1,6 @@
 import os
 import datetime
+import sqlite3
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
@@ -11,6 +12,7 @@ from database.repositories.admin_repository import (
     get_recent_ops_errors,
     get_users_count,
 )
+from database.repositories.user_repository import add_user, get_or_create_user_profile
 from utils.ui_utils import send_single_ui_message
 from utils.backup_manager import (
     run_backup_async,
@@ -38,6 +40,13 @@ def _is_admin_message(message: Message) -> bool:
 
 async def _ensure_admin(message: Message) -> bool:
     if _is_admin_message(message):
+        if message.from_user:
+            add_user(
+                message.from_user.id,
+                message.from_user.full_name,
+                message.from_user.username,
+            )
+            get_or_create_user_profile(message.from_user.id)
         return True
     await send_single_ui_message(
         message,
@@ -128,6 +137,59 @@ async def users_count_cmd(message: Message):
     text = (
         "👥 Foydalanuvchilar soni\n\n"
         f"• Jami users: {total_users}"
+    )
+    await send_single_ui_message(message, text)
+
+
+@router.message(Command("diag_db"))
+async def diag_db_cmd(message: Message):
+    if not await _ensure_admin(message):
+        return
+    if not message.from_user:
+        return
+
+    user_id = int(message.from_user.id)
+    db_path = settings.db_path
+    exists = os.path.exists(db_path)
+    size = os.path.getsize(db_path) if exists else 0
+
+    total_users = 0
+    row = None
+    try:
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM user_profile")
+        total_users = int(cur.fetchone()[0] or 0)
+        cur.execute(
+            "SELECT user_id,current_level,goal,daily_time_minutes,notification_time,onboarding_completed,created_at,updated_at "
+            "FROM user_profile WHERE user_id = ?",
+            (user_id,),
+        )
+        row = cur.fetchone()
+    except Exception as e:
+        await send_single_ui_message(message, f"DB diag xatolik: {e}")
+        return
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+    if row:
+        me_line = (
+            f"user_id={row[0]}, level={row[1]}, goal={row[2]}, minutes={row[3]}, "
+            f"time={row[4]}, onboarding_completed={row[5]}, created_at={row[6]}, updated_at={row[7]}"
+        )
+    else:
+        me_line = "user_profile row topilmadi"
+
+    text = (
+        "🧪 DB Diagnostics\n\n"
+        f"db_path: {db_path}\n"
+        f"db_exists: {exists}\n"
+        f"db_size: {size}\n"
+        f"total_users: {total_users}\n"
+        f"me: {me_line}"
     )
     await send_single_ui_message(message, text)
 
@@ -257,6 +319,7 @@ async def admin_help_cmd(message: Message):
         "• /backup_list - backup ro'yxati\n"
         "• /backup_send_latest - oxirgi backupni yuborish\n"
         "• /ops_alerts - ops alertlar holati\n"
-        "• /ops_last_errors - oxirgi xatoliklar"
+        "• /ops_last_errors - oxirgi xatoliklar\n"
+        "• /diag_db - ishlayotgan DB diagnostikasi"
     )
     await send_single_ui_message(message, text)

@@ -104,6 +104,7 @@ async def main():
             types.BotCommand(command="admin_stats", description="Admin statistika"),
             types.BotCommand(command="health", description="Bot health"),
             types.BotCommand(command="backup_now", description="Backup yaratish"),
+            types.BotCommand(command="diag_db", description="DB diagnostika"),
         ]
         await bot.set_my_commands(
             admin_commands,
