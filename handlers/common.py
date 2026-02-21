@@ -38,10 +38,17 @@ def _profile_is_default(profile: dict) -> bool:
     )
 
 
+def _profile_is_fresh(profile: dict) -> bool:
+    created_at = str(profile.get("created_at") or "").strip()
+    updated_at = str(profile.get("updated_at") or "").strip()
+    return bool(created_at and updated_at and created_at == updated_at)
+
+
 def _needs_onboarding(profile: dict) -> bool:
     if _to_int(profile.get("onboarding_completed"), 0) == 1:
         return False
-    return _profile_is_default(profile)
+    # Show onboarding only for truly new untouched profiles.
+    return _profile_is_default(profile) and _profile_is_fresh(profile)
 
 
 async def _safe_delete_message(message: Message):
