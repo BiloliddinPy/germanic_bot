@@ -44,6 +44,7 @@ async def daily_lesson_start(message: Message):
 
 @router.callback_query(F.data == "daily_begin")
 async def daily_begin_handler(call: CallbackQuery):
+    await call.answer()
     user_id = call.from_user.id
     profile = UserService.get_profile(user_id) or {}
     session_plan = LearningService.create_daily_plan(user_id, profile)
@@ -70,6 +71,7 @@ async def daily_begin_handler(call: CallbackQuery):
 
 @router.callback_query(F.data == "daily_resume")
 async def daily_resume_handler(call: CallbackQuery):
+    await call.answer()
     user_id = call.from_user.id
     state = get_daily_lesson_state(user_id)
     message = call.message if isinstance(call.message, Message) else None
@@ -186,7 +188,14 @@ async def _render_step(message: Message, user_id: int, state: dict):
             for opt in options:
                 # Limit text length just in case
                 opt_text = opt["text"][:30] + ("..." if len(opt["text"]) > 30 else "")
-                markup.inline_keyboard.append([InlineKeyboardButton(text=opt_text, callback_data=f"dquiz_{opt['correct']}")])
+                markup.inline_keyboard.append(
+                    [
+                        InlineKeyboardButton(
+                            text=opt_text,
+                            callback_data=f"dquiz_{quiz_index}_{opt['correct']}",
+                        )
+                    ]
+                )
 
     elif step == 5: # Production
         topic_id = plan.get("grammar_topic_id")
@@ -237,7 +246,9 @@ async def daily_step_callback(call: CallbackQuery):
 async def daily_quiz_answer(call: CallbackQuery):
     data = call.data or ""
     try:
-        is_correct = int(data.split("_")[1])
+        _, raw_index, raw_correct = data.split("_", 2)
+        answer_quiz_index = int(raw_index)
+        is_correct = int(raw_correct)
     except (ValueError, IndexError):
         await call.answer("Noto'g'ri javob formati.", show_alert=True)
         return
@@ -250,6 +261,21 @@ async def daily_quiz_answer(call: CallbackQuery):
     if not state:
         await call.answer("Sessiya topilmadi.", show_alert=True)
         return
+    if int(state.get("step", 0)) != 4:
+        await call.answer("Savol muddati tugagan.", show_alert=True)
+        return
+
+    current_quiz_index = int(state.get("quiz_index", 0))
+    if answer_quiz_index != current_quiz_index:
+        await call.answer("Bu savol allaqachon yakunlangan.")
+        return
+    if int(state.get("last_answered_quiz_index", -1)) == current_quiz_index:
+        await call.answer("Javob qabul qilingan.")
+        return
+
+    # Write idempotency marker before awaits to avoid double-click races.
+    state["last_answered_quiz_index"] = current_quiz_index
+    save_daily_lesson_state(user_id, state)
         
     if is_correct:
         if "results" not in state:
@@ -272,6 +298,7 @@ async def daily_quiz_answer(call: CallbackQuery):
 
 @router.callback_query(F.data == "daily_finish")
 async def daily_finish_callback(call: CallbackQuery):
+    await call.answer("Dars yakunlandi! 🏆", show_alert=True)
     user_id = call.from_user.id
     message = call.message if isinstance(call.message, Message) else None
     if not message:
@@ -288,7 +315,6 @@ async def daily_finish_callback(call: CallbackQuery):
         log_event(user_id, "daily_lesson_completed", level=level)
         StatsService.log_navigation(user_id, "daily_lesson_finish", entry_type="callback")
     
-    await call.answer("Dars yakunlandi! 🏆", show_alert=True)
     from utils.ui_utils import _send_fresh_main_menu
     try:
         await message.delete()

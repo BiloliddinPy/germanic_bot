@@ -26,6 +26,11 @@ async def _send_fresh_main_menu(message: Message, text: str, user_id: int | None
             await bot.delete_message(chat_id=resolved_user_id, message_id=int(prev_active_id))
         except Exception:
             pass
+    if existing_main_id:
+        try:
+            await bot.delete_message(chat_id=resolved_user_id, message_id=int(existing_main_id))
+        except Exception:
+            pass
             
     sent = await bot.send_message(
         chat_id=resolved_user_id,
