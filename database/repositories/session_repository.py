@@ -1,4 +1,5 @@
 from database.connection import get_connection
+from database.connection import is_postgres_backend
 import json
 import logging
 
@@ -47,7 +48,20 @@ def save_user_submission(
     meta_json = json.dumps(metadata) if metadata else None
     try:
         # Check if table exists, if not create it (safe fallback for legacy schema)
-        cursor.execute("CREATE TABLE IF NOT EXISTS user_submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, module TEXT, content TEXT, level TEXT, metadata TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+        if is_postgres_backend():
+            cursor.execute(
+                "CREATE TABLE IF NOT EXISTS user_submissions ("
+                "id BIGSERIAL PRIMARY KEY, "
+                "user_id BIGINT, module TEXT, content TEXT, level TEXT, "
+                "metadata TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+            )
+        else:
+            cursor.execute(
+                "CREATE TABLE IF NOT EXISTS user_submissions ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "user_id INTEGER, module TEXT, content TEXT, level TEXT, "
+                "metadata TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+            )
         cursor.execute("""
             INSERT INTO user_submissions (user_id, module, content, level, metadata)
             VALUES (?, ?, ?, ?, ?)

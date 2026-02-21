@@ -10,6 +10,7 @@ from aiogram.fsm.context import FSMContext
 from typing import Awaitable, cast
 from database import get_or_create_user_profile, update_user_profile  # From package init
 from database.repositories.user_repository import add_user
+from database.repositories.user_repository import get_user_profile
 from database.repositories.progress_repository import record_navigation_event
 from database.repositories.session_repository import get_daily_lesson_state
 from handlers.onboarding import start_onboarding
@@ -66,10 +67,17 @@ async def cmd_start(message: Message, state: FSMContext):
         return
 
     user_id = message.from_user.id
+    existing_profile = get_user_profile(user_id) or {}
+    was_existing_user = bool(existing_profile)
     add_user(user_id, message.from_user.full_name, message.from_user.username)
     profile = get_or_create_user_profile(user_id) or {}
     record_navigation_event(user_id, "start", entry_type="command")
-    if _needs_onboarding(profile):
+    # Existing DB users should not be forced through onboarding again.
+    if was_existing_user and _to_int(profile.get("onboarding_completed"), 0) != 1:
+        update_user_profile(user_id, onboarding_completed=1)
+        profile["onboarding_completed"] = 1
+
+    if (not was_existing_user) and _needs_onboarding(profile):
         await cast(Awaitable[None], start_onboarding(message, state))
         return
     if _to_int(profile.get("onboarding_completed"), 0) != 1:

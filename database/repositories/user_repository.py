@@ -1,6 +1,24 @@
 from database.connection import get_connection
+from database.connection import is_postgres_backend
 import datetime
 import logging
+
+
+def _normalize_date(value) -> datetime.date | None:
+    if value is None:
+        return None
+    if isinstance(value, datetime.date) and not isinstance(value, datetime.datetime):
+        return value
+    if isinstance(value, datetime.datetime):
+        return value.date()
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return datetime.date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
 
 def add_user(user_id: int, full_name: str, username: str | None = None):
     conn = get_connection()
@@ -34,7 +52,11 @@ def get_or_create_user_profile(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT OR IGNORE INTO user_profile (user_id) VALUES (?)", (user_id,))
+        cursor.execute(
+            "INSERT INTO user_profile (user_id) VALUES (?) "
+            "ON CONFLICT(user_id) DO NOTHING",
+            (user_id,),
+        )
         conn.commit()
     except Exception as e:
         logging.error(f"Error creating user profile: {e}")
@@ -73,9 +95,18 @@ def get_days_since_first_use(user_id: int):
         return 0
         
     try:
-        from datetime import datetime
-        created_at = datetime.strptime(row[0].split(".")[0], "%Y-%m-%d %H:%M:%S")
-        delta = datetime.now() - created_at
+        from datetime import datetime, date
+
+        raw = row[0]
+        if isinstance(raw, datetime):
+            created_at = raw
+        elif isinstance(raw, date):
+            created_at = datetime.combine(raw, datetime.min.time())
+        else:
+            text = str(raw).strip()
+            created_at = datetime.fromisoformat(text.replace("Z", "+00:00"))
+
+        delta = datetime.now(created_at.tzinfo) - created_at if created_at.tzinfo else datetime.now() - created_at
         return delta.days + 1
     except Exception:
         return 0
@@ -100,7 +131,8 @@ def update_streak(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        today = datetime.date.today().isoformat()
+        today_date = datetime.date.today()
+        today = today_date.isoformat()
         cursor.execute("SELECT current_streak, last_activity FROM user_streak WHERE user_id = ?", (user_id,))
         row = cursor.fetchone()
         
@@ -108,11 +140,23 @@ def update_streak(user_id: int):
             cursor.execute("INSERT INTO user_streak (user_id, current_streak, last_activity, highest_streak) VALUES (?, 1, ?, 1)", (user_id, today))
         else:
             curr, last = row
-            if last == today:
+            last_date = _normalize_date(last)
+            if last_date == today_date:
                 pass # Already updated
-            elif last == (datetime.date.today() - datetime.timedelta(days=1)).isoformat():
+            elif last_date == (today_date - datetime.timedelta(days=1)):
                 new_streak = curr + 1
-                cursor.execute("UPDATE user_streak SET current_streak = ?, last_activity = ?, highest_streak = MAX(highest_streak, ?) WHERE user_id = ?", (new_streak, today, new_streak, user_id))
+                if is_postgres_backend():
+                    cursor.execute(
+                        "UPDATE user_streak SET current_streak = ?, last_activity = ?, "
+                        "highest_streak = GREATEST(highest_streak, ?) WHERE user_id = ?",
+                        (new_streak, today, new_streak, user_id),
+                    )
+                else:
+                    cursor.execute(
+                        "UPDATE user_streak SET current_streak = ?, last_activity = ?, "
+                        "highest_streak = MAX(highest_streak, ?) WHERE user_id = ?",
+                        (new_streak, today, new_streak, user_id),
+                    )
             else:
                 cursor.execute("UPDATE user_streak SET current_streak = 1, last_activity = ? WHERE user_id = ?", (today, user_id))
         conn.commit()
