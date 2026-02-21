@@ -84,8 +84,24 @@ async def start_onboarding(message: Message, state: FSMContext):
     )
     await state.set_state(OnboardingState.waiting_for_level)
 
-@router.callback_query(OnboardingState.waiting_for_level, F.data.startswith("onboarding_"))
+
+async def _guard_onboarding_callback(call: CallbackQuery, state: FSMContext) -> bool:
+    profile = UserService.get_profile(call.from_user.id) or {}
+    if _should_skip_onboarding(profile):
+        if _to_int(profile.get("onboarding_completed"), 0) != 1:
+            update_user_profile(call.from_user.id, onboarding_completed=1)
+        await state.clear()
+        message = call.message if isinstance(call.message, Message) else None
+        if message:
+            await _send_fresh_main_menu(message, INTRO_TEXT, user_id=call.from_user.id)
+        return False
+    return True
+
+
+@router.callback_query(F.data.startswith("onboarding_"))
 async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
+    if not await _guard_onboarding_callback(call, state):
+        return
     data = call.data or ""
     parts = data.split("_")
     if len(parts) < 2:
@@ -113,8 +129,11 @@ async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
     )
     await state.set_state(OnboardingState.waiting_for_goal)
 
-@router.callback_query(OnboardingState.waiting_for_goal, F.data.startswith("goal_"))
+
+@router.callback_query(F.data.startswith("goal_"))
 async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
+    if not await _guard_onboarding_callback(call, state):
+        return
     data = call.data or ""
     parts = data.split("_")
     if len(parts) < 2:
@@ -142,8 +161,11 @@ async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
     )
     await state.set_state(OnboardingState.waiting_for_daily_target)
 
-@router.callback_query(OnboardingState.waiting_for_daily_target, F.data.startswith("target_"))
+
+@router.callback_query(F.data.startswith("target_"))
 async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
+    if not await _guard_onboarding_callback(call, state):
+        return
     data = call.data or ""
     parts = data.split("_")
     if len(parts) < 2:
@@ -173,8 +195,11 @@ async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
     )
     await state.set_state(OnboardingState.waiting_for_time)
 
-@router.callback_query(OnboardingState.waiting_for_time, F.data.startswith("time_"))
+
+@router.callback_query(F.data.startswith("time_"))
 async def onboarding_time_handler(call: CallbackQuery, state: FSMContext):
+    if not await _guard_onboarding_callback(call, state):
+        return
     data = call.data or ""
     parts = data.split("_")
     if len(parts) < 2:
