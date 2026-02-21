@@ -94,7 +94,12 @@ async def dictionary_letter_handler(call: CallbackQuery):
     letter = parts[3]
     offset = 0
     
-    result = DictionaryService.get_page(level, offset=offset, letter=letter)
+    try:
+        result = DictionaryService.get_page(level, offset=offset, letter=letter)
+    except Exception as exc:
+        logging.error("Dictionary letter load failed level=%s letter=%s err=%s", level, letter, exc)
+        await call.answer("Lug'atni yuklashda xatolik. Iltimos, qayta urinib ko'ring.", show_alert=True)
+        return
     
     if not result["words"]:
         await call.answer(f"Bu harf ({letter}) uchun so'zlar topilmadi.", show_alert=True)
@@ -112,12 +117,16 @@ async def dictionary_pagination_handler(call: CallbackQuery):
         return
 
     level, offset, letter = parsed
-    if letter:
-        result = DictionaryService.get_page(level, offset=offset, letter=letter)
-        await _show_word_page(call, level, result, offset, letter=letter)
-    else:
-        result = DictionaryService.get_page(level, offset=offset)
-        await _show_word_page(call, level, result, offset)
+    try:
+        if letter:
+            result = DictionaryService.get_page(level, offset=offset, letter=letter)
+            await _show_word_page(call, level, result, offset, letter=letter)
+        else:
+            result = DictionaryService.get_page(level, offset=offset)
+            await _show_word_page(call, level, result, offset)
+    except Exception as exc:
+        logging.error("Dictionary pagination failed level=%s offset=%s letter=%s err=%s", level, offset, letter, exc)
+        await call.answer("Sahifalashda xatolik. Iltimos, qayta urinib ko'ring.", show_alert=True)
 
 @router.callback_query(F.data.startswith("dict_") & ~F.data.startswith("dict_letter_") & ~F.data.startswith("dict_next_") & ~F.data.startswith("dict_alpha_") & ~F.data.contains("pdf"))
 async def dictionary_level_handler(call: CallbackQuery):
@@ -208,6 +217,17 @@ async def _show_word_page(call, level, result, offset, letter=None):
             await call.answer()
             return
         logging.error(f"Dictionary edit error: {e}")
+        try:
+            await send_single_ui_message(
+                message,
+                response_text,
+                reply_markup=builder,
+                user_id=call.from_user.id,
+            )
+            await call.answer()
+            return
+        except Exception as inner_exc:
+            logging.error("Dictionary fallback send error: %s", inner_exc)
         await call.answer("Xatolik yuz berdi. Qaytadan urinib ko'ring.", show_alert=True)
 
 @router.callback_query(F.data == "dict_pdf")
