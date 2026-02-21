@@ -6,7 +6,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from core.config import settings
 from database import create_table, bootstrap_words_if_empty
-from utils.scheduler import start_scheduler
+from utils.scheduler import start_scheduler, stop_scheduler
 from utils.runtime_state import mark_started
 from utils.update_tracking import UpdateTrackingMiddleware
 from utils.single_instance import SingleInstanceLock
@@ -118,6 +118,7 @@ async def main():
     try:
         await dp.start_polling(bot)
     finally:
+        stop_scheduler()
         instance_lock.release()
 
 if __name__ == "__main__":

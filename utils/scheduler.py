@@ -3,16 +3,59 @@ from aiogram import Bot
 import logging
 
 from core.config import settings
+from database.connection import get_connection, is_postgres_backend
 from utils.backup_manager import run_backup_async
 
 SCHEDULER_JOB_ID_DAILY_WORD = "send_daily_word_to_all"
 SCHEDULER_JOB_ID_DAILY_BACKUP = "daily_sqlite_backup"
 _scheduler: AsyncIOScheduler | None = None
+_scheduler_leader_conn = None
+SCHEDULER_ADVISORY_LOCK_KEY = 99170031
+
+
+def _acquire_scheduler_leader_lock() -> bool:
+    global _scheduler_leader_conn
+    if not is_postgres_backend():
+        return True
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT pg_try_advisory_lock(?)", (SCHEDULER_ADVISORY_LOCK_KEY,))
+        row = cur.fetchone()
+        is_leader = bool(row and row[0])
+        if is_leader:
+            _scheduler_leader_conn = conn
+            return True
+        conn.close()
+        return False
+    except Exception as exc:
+        logging.exception("Scheduler leader lock check failed: %s", exc)
+        return False
+
+
+def _release_scheduler_leader_lock():
+    global _scheduler_leader_conn
+    if _scheduler_leader_conn is None:
+        return
+    try:
+        cur = _scheduler_leader_conn.cursor()
+        cur.execute("SELECT pg_advisory_unlock(?)", (SCHEDULER_ADVISORY_LOCK_KEY,))
+    except Exception:
+        pass
+    try:
+        _scheduler_leader_conn.close()
+    except Exception:
+        pass
+    _scheduler_leader_conn = None
 
 
 async def start_scheduler(bot: Bot):
     from handlers.daily import send_daily_word_to_all, DAILY_TIMEZONE
     global _scheduler
+    if not _acquire_scheduler_leader_lock():
+        logging.warning("Scheduler not started on this replica (leader lock not acquired).")
+        _scheduler = None
+        return
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
         send_daily_word_to_all,
@@ -45,11 +88,27 @@ async def start_scheduler(bot: Bot):
     )
 
 
+def stop_scheduler():
+    global _scheduler
+    if _scheduler is not None:
+        try:
+            _scheduler.shutdown(wait=False)
+        except Exception:
+            pass
+        _scheduler = None
+    _release_scheduler_leader_lock()
+
+
 def get_scheduler_health():
     """
     Returns best-effort scheduler status for ops checks.
     """
-    info = {"started": False, "next_run_time": None, "backup_next_run_time": None}
+    info = {
+        "started": False,
+        "next_run_time": None,
+        "backup_next_run_time": None,
+        "leader": (not is_postgres_backend()) or (_scheduler_leader_conn is not None),
+    }
     if _scheduler is None:
         return info
     info["started"] = bool(_scheduler.running)

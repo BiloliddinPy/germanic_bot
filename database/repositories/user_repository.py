@@ -3,6 +3,23 @@ from database.connection import is_postgres_backend
 import datetime
 import logging
 
+
+def _normalize_date(value) -> datetime.date | None:
+    if value is None:
+        return None
+    if isinstance(value, datetime.date) and not isinstance(value, datetime.datetime):
+        return value
+    if isinstance(value, datetime.datetime):
+        return value.date()
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return datetime.date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
+
 def add_user(user_id: int, full_name: str, username: str | None = None):
     conn = get_connection()
     cursor = conn.cursor()
@@ -105,7 +122,8 @@ def update_streak(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        today = datetime.date.today().isoformat()
+        today_date = datetime.date.today()
+        today = today_date.isoformat()
         cursor.execute("SELECT current_streak, last_activity FROM user_streak WHERE user_id = ?", (user_id,))
         row = cursor.fetchone()
         
@@ -113,9 +131,10 @@ def update_streak(user_id: int):
             cursor.execute("INSERT INTO user_streak (user_id, current_streak, last_activity, highest_streak) VALUES (?, 1, ?, 1)", (user_id, today))
         else:
             curr, last = row
-            if last == today:
+            last_date = _normalize_date(last)
+            if last_date == today_date:
                 pass # Already updated
-            elif last == (datetime.date.today() - datetime.timedelta(days=1)).isoformat():
+            elif last_date == (today_date - datetime.timedelta(days=1)):
                 new_streak = curr + 1
                 if is_postgres_backend():
                     cursor.execute(

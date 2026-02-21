@@ -205,10 +205,12 @@ def create_backup_sync(trigger: str = "manual"):
     try:
         if is_postgres_backend():
             return {
-                "success": True,
+                "success": False,
+                "non_critical": True,
                 "trigger": trigger,
                 "method": "skipped_postgres_not_implemented",
                 "backup_dir": str(_pick_backup_dir()),
+                "error": "postgres backup not implemented (pg_dump step pending)",
                 "note": "Postgres backup is not configured yet (pg_dump step pending).",
             }
 
@@ -271,6 +273,15 @@ async def run_backup_async(bot=None, trigger: str = "manual"):
             result.get("method"),
             result.get("primary_path"),
             result.get("primary_size")
+        )
+        return result
+
+    if result.get("non_critical"):
+        logging.warning(
+            "Backup skipped trigger=%s method=%s reason=%s",
+            trigger,
+            result.get("method"),
+            result.get("error"),
         )
         return result
 
