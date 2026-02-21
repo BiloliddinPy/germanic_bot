@@ -30,7 +30,12 @@ async def start_onboarding(message: Message, state: FSMContext):
 
 @router.callback_query(OnboardingState.waiting_for_level, F.data.startswith("onboarding_"))
 async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
-    level = call.data.split("_")[1]
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri tanlov.", show_alert=True)
+        return
+    level = parts[1]
     UserService.update_level(call.from_user.id, level)
     
     from core.texts import GOAL_LABELS
@@ -41,7 +46,12 @@ async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
     for slug, label in GOAL_LABELS.items():
         builder.row(InlineKeyboardButton(text=label, callback_data=f"goal_{slug}"))
     
-    await call.message.edit_text(
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+
+    await message.edit_text(
         "Maqsadingizni tanlang:",
         reply_markup=builder.as_markup()
     )
@@ -49,7 +59,12 @@ async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(OnboardingState.waiting_for_goal, F.data.startswith("goal_"))
 async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
-    goal = call.data.split("_")[1]
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri tanlov.", show_alert=True)
+        return
+    goal = parts[1]
     UserService.set_goal(call.from_user.id, goal)
     
     from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -60,7 +75,12 @@ async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
     builder.row(InlineKeyboardButton(text="30 daqiqa", callback_data="target_30"))
     builder.row(InlineKeyboardButton(text="60 daqiqa", callback_data="target_60"))
     
-    await call.message.edit_text(
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+
+    await message.edit_text(
         "Kunlik qancha vaqt ajratmoqchisiz?",
         reply_markup=builder.as_markup()
     )
@@ -68,7 +88,12 @@ async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(OnboardingState.waiting_for_daily_target, F.data.startswith("target_"))
 async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
-    minutes = int(call.data.split("_")[1])
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri tanlov.", show_alert=True)
+        return
+    minutes = int(parts[1])
     UserService.update_daily_target(call.from_user.id, minutes)
     
     from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -81,7 +106,12 @@ async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
     builder.row(InlineKeyboardButton(text="Kechqurun 18:00", callback_data="time_18:00"))
     builder.row(InlineKeyboardButton(text="Kechqurun 20:00", callback_data="time_20:00"))
     
-    await call.message.edit_text(
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+
+    await message.edit_text(
         "Kunlik motivatsion eslatma va yangi lug'at soat nechada kelsin?",
         reply_markup=builder.as_markup()
     )
@@ -89,7 +119,12 @@ async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(OnboardingState.waiting_for_time, F.data.startswith("time_"))
 async def onboarding_time_handler(call: CallbackQuery, state: FSMContext):
-    time_str = call.data.split("_")[1]
+    data = call.data or ""
+    parts = data.split("_")
+    if len(parts) < 2:
+        await call.answer("Noto'g'ri tanlov.", show_alert=True)
+        return
+    time_str = parts[1]
     UserService.update_notification_time(call.from_user.id, time_str)
     
     UserService.complete_onboarding(call.from_user.id)

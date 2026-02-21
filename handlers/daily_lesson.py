@@ -286,7 +286,10 @@ async def daily_finish_callback(call: CallbackQuery):
     
     await call.answer("Dars yakunlandi! 🏆", show_alert=True)
     from utils.ui_utils import _send_fresh_main_menu
-    await message.delete()
+    try:
+        await message.delete()
+    except Exception:
+        pass
     await _send_fresh_main_menu(message, "Ajoyib! Bugungi dars yakunlandi. Nima bilan davom etamiz?", user_id=user_id)
 
 @router.callback_query(F.data == "daily_cancel")
