@@ -58,6 +58,9 @@ Users will be able to click "Aloqa" to contact you directly via Telegram link.
   - `DB_BACKEND=postgres` (enable only after full SQL migration step)
   - `DB_POOL_MIN_SIZE=1`
   - `DB_POOL_MAX_SIZE=20`
+- Data migration:
+  - Dry run: `python3 scripts/migrate_sqlite_to_postgres.py --sqlite-path germanic.db --dry-run`
+  - Execute: `python3 scripts/migrate_sqlite_to_postgres.py --sqlite-path germanic.db --truncate --pg-url "$DATABASE_URL"`
 
 ## 6. Docker Persistence (important)
 - In Docker, DB is pinned to `/app/data/germanic.db` (mounted from `./data`).
