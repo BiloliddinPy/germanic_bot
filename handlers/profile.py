@@ -4,9 +4,8 @@ from aiogram.fsm.context import FSMContext
 from typing import Awaitable, cast
 
 from services.user_service import UserService
-from services.learning_service import LearningService
 from services.stats_service import StatsService
-from utils.ui_utils import send_single_ui_message, _get_progress_bar
+from utils.ui_utils import send_single_ui_message
 from handlers.onboarding import start_onboarding
 
 router = Router()
@@ -22,29 +21,29 @@ async def show_profile(message: Message):
         return
     user_id = message.from_user.id
     profile = UserService.get_profile(user_id)
-    level = profile.get("current_level", "A1")
-    
-    mastery = LearningService.get_mastery_level(user_id, level)
-    progress_bar = _get_progress_bar(mastery["percentage"])
-    
-    status_emoji = "🟢" if mastery["percentage"] >= 60 else "🟡" if mastery["percentage"] >= 30 else "🔴"
+    level = str(profile.get("current_level") or "A1")
+    goal_label = str(profile.get("goal_label") or "Noma'lum")
+    daily_time = int(profile.get("daily_time_minutes") or 15)
+    notification_time = str(profile.get("notification_time") or "09:00")
+    onboarding_completed = int(profile.get("onboarding_completed") or 0)
+    onboarding_status = "✅ Tugallangan" if onboarding_completed == 1 else "⏳ Jarayonda"
+
     text = (
         f"👤 **SHAXSIY PROFIL**\n\n"
         f"🆔 ID: `{user_id}`\n"
-        f"📊 Daraja: **{level}**\n"
-        f"🎯 Maqsad: **{profile['goal_label']}**\n"
-        f"⏱ Kunlik: **{profile.get('daily_time_minutes', 15)} min**\n\n"
-        f"{status_emoji} **Level Progress ({level}):**\n"
-        f"{progress_bar} {mastery['percentage']}%\n"
-        f"_{mastery['mastered']} / {mastery['total']} so'z o'zlashtirildi_\n\n"
-        "🚀 Bugun darsni davom ettirishga tayyormisiz?"
+        "📝 **Onboarding ma'lumotlari**\n"
+        f"📚 Boshlang'ich daraja: **{level}**\n"
+        f"🎯 Maqsad: **{goal_label}**\n"
+        f"⏱ Kunlik vaqt: **{daily_time} min**\n"
+        f"🔔 Eslatma vaqti: **{notification_time}**\n"
+        f"📌 Holat: **{onboarding_status}**\n\n"
+        "Progress ko'rsatkichlari `📊 Natijalar` bo'limida."
     )
     
     from aiogram.utils.keyboard import InlineKeyboardBuilder
     from aiogram.types import InlineKeyboardButton
-    
+
     builder = InlineKeyboardBuilder()
-    builder.row(InlineKeyboardButton(text="🚀 Kunlik darsni boshlash", callback_data="daily_begin"))
     builder.row(InlineKeyboardButton(text="✏️ Ma'lumotlarni o'zgartirish", callback_data="onboarding_start"))
     builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
     
