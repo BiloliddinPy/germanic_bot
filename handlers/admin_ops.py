@@ -35,6 +35,17 @@ def _is_admin(user_id: int) -> bool:
 def _is_admin_message(message: Message) -> bool:
     return bool(message.from_user and _is_admin(message.from_user.id))
 
+
+async def _ensure_admin(message: Message) -> bool:
+    if _is_admin_message(message):
+        return True
+    await send_single_ui_message(
+        message,
+        "⛔ Bu buyruq faqat admin uchun.",
+        parse_mode="Markdown",
+    )
+    return False
+
 def _format_dt_local(epoch_ts: float | None) -> str:
     if not epoch_ts:
         return "-"
@@ -46,7 +57,7 @@ def _format_dt_local(epoch_ts: float | None) -> str:
 
 @router.message(Command("health"))
 async def health_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
 
     me = await message.bot.get_me()
@@ -86,7 +97,7 @@ async def health_cmd(message: Message):
 
 @router.message(Command("admin_stats"))
 async def admin_stats_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
 
     stats = get_admin_stats_snapshot()
@@ -110,9 +121,9 @@ async def admin_stats_cmd(message: Message):
     )
     await send_single_ui_message(message, text, parse_mode="Markdown")
 
-@router.message(Command("users_count"))
+@router.message(Command(commands=["users_count", "user_count", "users", "ucount"]))
 async def users_count_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
     total_users = get_users_count()
     text = (
@@ -123,7 +134,7 @@ async def users_count_cmd(message: Message):
 
 @router.message(Command("ops_last_errors"))
 async def ops_last_errors_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
 
     rows = get_recent_ops_errors(limit=10)
@@ -158,7 +169,7 @@ def _ops_alerts_text():
 
 @router.message(Command("ops_alerts"))
 async def ops_alerts_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
     text = _ops_alerts_text()
     status = get_ops_alerts_status()
@@ -188,13 +199,13 @@ async def ops_alerts_toggle_cb(call: CallbackQuery):
 
 @router.message(Command("ops_throw_test"))
 async def ops_throw_test_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
     raise RuntimeError("ops_throw_test triggered by admin")
 
 @router.message(Command("backup_now"))
 async def backup_now_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
     result = await run_backup_async(bot=message.bot, trigger="admin_command")
     if not result.get("success"):
@@ -206,7 +217,7 @@ async def backup_now_cmd(message: Message):
 
 @router.message(Command("backup_list"))
 async def backup_list_cmd(message: Message):
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
     backups = list_backups(limit=10)
     if not backups:
@@ -220,7 +231,7 @@ async def backup_list_cmd(message: Message):
 @router.message(Command("backup_send_latest"))
 async def backup_send_latest_cmd(message: Message):
     admin_id = settings.admin_id
-    if not _is_admin_message(message):
+    if not await _ensure_admin(message):
         return
     latest = get_latest_backup()
     if not latest:
@@ -236,3 +247,22 @@ async def backup_send_latest_cmd(message: Message):
         await send_single_ui_message(message, "✅ Latest backup yuborildi.", parse_mode="Markdown")
     except Exception as e:
         await send_single_ui_message(message, f"❌ Backup yuborilmadi: `{str(e)}`", parse_mode="Markdown")
+
+
+@router.message(Command("admin"))
+async def admin_help_cmd(message: Message):
+    if not await _ensure_admin(message):
+        return
+    total_users = get_users_count()
+    text = (
+        "🛠️ **Admin Buyruqlar**\n\n"
+        f"• `/users_count` (`/user_count`) — userlar soni (`{total_users}`)\n"
+        "• `/admin_stats` — umumiy admin statistika\n"
+        "• `/health` — bot va DB holati\n"
+        "• `/backup_now` — darhol backup\n"
+        "• `/backup_list` — backup ro'yxati\n"
+        "• `/backup_send_latest` — oxirgi backupni yuborish\n"
+        "• `/ops_alerts` — ops alertlar holati\n"
+        "• `/ops_last_errors` — oxirgi xatoliklar"
+    )
+    await send_single_ui_message(message, text, parse_mode="Markdown")

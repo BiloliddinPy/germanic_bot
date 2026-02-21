@@ -8,7 +8,7 @@ from aiogram.types import (
 )
 from aiogram.fsm.context import FSMContext
 from typing import Awaitable, cast
-from database import get_or_create_user_profile  # From package init
+from database import get_or_create_user_profile, update_user_profile  # From package init
 from database.repositories.user_repository import add_user
 from database.repositories.progress_repository import record_navigation_event
 from database.repositories.session_repository import get_daily_lesson_state
@@ -21,13 +21,27 @@ router = Router()
 UI_TEST_MODE = "🛠️ Bot hozirda test rejimida ishlayapti"
 
 
-def _is_onboarding_completed(profile: dict | None) -> bool:
-    if not profile:
-        return False
+def _to_int(value, default: int = 0) -> int:
     try:
-        return bool(int(profile.get("onboarding_completed") or 0))
+        return int(value)
     except (TypeError, ValueError):
+        return default
+
+
+def _profile_is_default(profile: dict) -> bool:
+    return (
+        str(profile.get("current_level") or "A1") == "A1"
+        and str(profile.get("goal") or "general") == "general"
+        and _to_int(profile.get("daily_time_minutes"), 15) == 15
+        and str(profile.get("notification_time") or "09:00") == "09:00"
+        and _to_int(profile.get("xp"), 0) == 0
+    )
+
+
+def _needs_onboarding(profile: dict) -> bool:
+    if _to_int(profile.get("onboarding_completed"), 0) == 1:
         return False
+    return _profile_is_default(profile)
 
 
 async def _safe_delete_message(message: Message):
@@ -46,12 +60,14 @@ async def cmd_start(message: Message, state: FSMContext):
 
     user_id = message.from_user.id
     add_user(user_id, message.from_user.full_name, message.from_user.username)
-    profile = get_or_create_user_profile(user_id)
+    profile = get_or_create_user_profile(user_id) or {}
     record_navigation_event(user_id, "start", entry_type="command")
-
-    if not _is_onboarding_completed(profile):
+    if _needs_onboarding(profile):
         await cast(Awaitable[None], start_onboarding(message, state))
         return
+    if _to_int(profile.get("onboarding_completed"), 0) != 1:
+        # Backfill legacy users so they are not prompted again.
+        update_user_profile(user_id, onboarding_completed=1)
 
     current_level = str(profile.get("current_level") or "A1")
     lesson_state = get_daily_lesson_state(user_id) or {}

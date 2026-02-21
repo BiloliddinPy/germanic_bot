@@ -4,11 +4,21 @@ from dataclasses import dataclass
 
 load_dotenv()
 
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+
+def _resolve_db_path(raw_path: str) -> str:
+    candidate = (raw_path or "").strip() or "./germanic.db"
+    candidate = os.path.expanduser(candidate)
+    if os.path.isabs(candidate):
+        return os.path.abspath(candidate)
+    return os.path.abspath(os.path.join(_PROJECT_ROOT, candidate))
+
 @dataclass(frozen=True)
 class Config:
     bot_token: str = os.getenv("BOT_TOKEN", "")
     admin_id: int = int(os.getenv("ADMIN_ID", "0"))
-    db_path: str = os.getenv("DB_PATH", "./germanic.db")
+    db_path: str = _resolve_db_path(os.getenv("DB_PATH", "./germanic.db"))
     
     # Feature Flags
     daily_lesson_enabled: bool = os.getenv("DAILY_LESSON_ENABLED", "True").lower() == "true"

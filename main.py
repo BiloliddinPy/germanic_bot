@@ -39,6 +39,7 @@ async def main():
     # Initialize Database
     create_table()
     bootstrap_words_if_empty()
+    logging.info("DB path: %s", settings.db_path)
     
     if not settings.bot_token:
         logging.error("BOT_TOKEN is not set!")
@@ -84,13 +85,30 @@ async def main():
             )
         return True
 
-    # Bot Commands
-    await bot.set_my_commands([
+    # Bot Commands (scoped): default users do not see admin commands.
+    user_commands = [
         types.BotCommand(command="start", description="Botni ishga tushirish"),
         types.BotCommand(command="menu", description="Bosh menyu"),
         types.BotCommand(command="stats", description="Mening natijalarim"),
-        types.BotCommand(command="profile", description="Profil sozlamalari")
-    ])
+        types.BotCommand(command="profile", description="Profil sozlamalari"),
+    ]
+    await bot.set_my_commands(
+        user_commands,
+        scope=types.BotCommandScopeDefault(),
+    )
+
+    if settings.admin_id:
+        admin_commands = user_commands + [
+            types.BotCommand(command="admin", description="Admin buyruqlari"),
+            types.BotCommand(command="users_count", description="Userlar soni"),
+            types.BotCommand(command="admin_stats", description="Admin statistika"),
+            types.BotCommand(command="health", description="Bot health"),
+            types.BotCommand(command="backup_now", description="Backup yaratish"),
+        ]
+        await bot.set_my_commands(
+            admin_commands,
+            scope=types.BotCommandScopeChat(chat_id=int(settings.admin_id)),
+        )
 
     await bot.delete_webhook(drop_pending_updates=True)
     await start_scheduler(bot)
