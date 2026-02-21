@@ -19,7 +19,7 @@ def get_due_reviews(user_id: int, level: str | None = None, limit: int = 20):
     if level:
         cursor.execute("""
             SELECT m.item_id FROM user_mastery m
-            JOIN words w ON m.item_id = w.id
+            JOIN words w ON CAST(w.id AS TEXT) = CAST(m.item_id AS TEXT)
             WHERE m.user_id = ? AND w.level = ? AND m.next_review <= CURRENT_TIMESTAMP
             ORDER BY m.next_review ASC
             LIMIT ?
@@ -79,7 +79,7 @@ def get_level_progress_stats(user_id: int, level: str):
     # Mastery defined as box >= 4 (arbitrary senior standard)
     cursor.execute("""
         SELECT COUNT(*) FROM user_mastery m
-        JOIN words w ON m.item_id = w.id
+        JOIN words w ON CAST(w.id AS TEXT) = CAST(m.item_id AS TEXT)
         WHERE m.user_id = ? AND w.level = ? AND m.box >= 4
     """, (user_id, level))
     mastered = cursor.fetchone()[0]
