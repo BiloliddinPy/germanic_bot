@@ -40,7 +40,7 @@ async def show_profile(message: Message):
     from aiogram.types import InlineKeyboardButton
 
     builder = InlineKeyboardBuilder()
-    builder.row(InlineKeyboardButton(text="✏️ Ma'lumotlarni o'zgartirish", callback_data="onboarding_start"))
+    builder.row(InlineKeyboardButton(text="✏️ Ma'lumotlarni o'zgartirish", callback_data="profile_onboarding_start"))
     builder.row(InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home"))
     
     StatsService.log_navigation(user_id, "profile")
@@ -55,7 +55,7 @@ async def show_profile(message: Message):
         ),
     )
 
-@router.callback_query(F.data == "onboarding_start")
+@router.callback_query(F.data == "profile_onboarding_start")
 async def profile_edit_info_callback(call: CallbackQuery, state: FSMContext):
     message = call.message if isinstance(call.message, Message) else None
     if not message:

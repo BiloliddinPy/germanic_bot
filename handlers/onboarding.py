@@ -102,7 +102,7 @@ async def _guard_onboarding_callback(call: CallbackQuery, state: FSMContext) -> 
     return True
 
 
-@router.callback_query(F.data.startswith("onboarding_"))
+@router.callback_query(F.data.regexp(r"^onboarding_(A1|A2|B1|B2|C1)$"))
 async def onboarding_level_handler(call: CallbackQuery, state: FSMContext):
     if not await _guard_onboarding_callback(call, state):
         return
