@@ -231,6 +231,23 @@ def create_table():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """,
+            """
+            CREATE TABLE IF NOT EXISTS broadcast_jobs (
+                id BIGSERIAL PRIMARY KEY,
+                user_id BIGINT NOT NULL,
+                kind TEXT NOT NULL,
+                payload TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pending',
+                attempts INTEGER NOT NULL DEFAULT 0,
+                available_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                locked_at TIMESTAMP,
+                last_error TEXT,
+                last_error_at TIMESTAMP,
+                dedupe_key TEXT UNIQUE,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
             "CREATE INDEX IF NOT EXISTS idx_user_profile_notification_time ON user_profile(notification_time)",
             "CREATE INDEX IF NOT EXISTS idx_navigation_logs_created_at ON navigation_logs(created_at)",
             "CREATE INDEX IF NOT EXISTS idx_navigation_logs_user_created ON navigation_logs(user_id, created_at)",
@@ -238,6 +255,8 @@ def create_table():
             "CREATE INDEX IF NOT EXISTS idx_user_progress_daily ON user_progress(module_name, completion_status, last_active)",
             "CREATE INDEX IF NOT EXISTS idx_user_mastery_due ON user_mastery(user_id, next_review)",
             "CREATE INDEX IF NOT EXISTS idx_user_mistakes_active ON user_mistakes(user_id, module, mastered, mistake_count)",
+            "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_pending ON broadcast_jobs(status, available_at, id)",
+            "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_user ON broadcast_jobs(user_id, created_at)",
         ]
     else:
         statements = [
@@ -384,6 +403,25 @@ def create_table():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """,
+            """
+            CREATE TABLE IF NOT EXISTS broadcast_jobs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                kind TEXT NOT NULL,
+                payload TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pending',
+                attempts INTEGER NOT NULL DEFAULT 0,
+                available_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                locked_at TIMESTAMP,
+                last_error TEXT,
+                last_error_at TIMESTAMP,
+                dedupe_key TEXT UNIQUE,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """,
+            "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_pending ON broadcast_jobs(status, available_at, id)",
+            "CREATE INDEX IF NOT EXISTS idx_broadcast_jobs_user ON broadcast_jobs(user_id, created_at)",
         ]
 
     for stmt in statements:

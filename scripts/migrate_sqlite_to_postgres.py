@@ -34,6 +34,7 @@ TABLES = [
     "grammar_progress",
     "event_logs",
     "user_submissions",
+    "broadcast_jobs",
 ]
 
 SEQUENCE_TABLES = [
@@ -43,6 +44,7 @@ SEQUENCE_TABLES = [
     ("quiz_results", "id"),
     ("event_logs", "id"),
     ("user_submissions", "id"),
+    ("broadcast_jobs", "id"),
 ]
 
 

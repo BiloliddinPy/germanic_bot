@@ -38,6 +38,10 @@ class Config:
     
     # Scheduler
     backup_time_utc: str = os.getenv("BACKUP_TIME_UTC", "03:00")
+    broadcast_window_minutes: int = int(os.getenv("BROADCAST_WINDOW_MINUTES", "10"))
+    broadcast_claim_batch_size: int = int(os.getenv("BROADCAST_CLAIM_BATCH_SIZE", "1000"))
+    broadcast_send_concurrency: int = int(os.getenv("BROADCAST_SEND_CONCURRENCY", "30"))
+    broadcast_max_attempts: int = int(os.getenv("BROADCAST_MAX_ATTEMPTS", "6"))
     
     # UI Constants
     page_size: int = 20

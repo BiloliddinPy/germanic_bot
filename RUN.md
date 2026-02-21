@@ -58,6 +58,10 @@ Users will be able to click "Aloqa" to contact you directly via Telegram link.
   - `DB_BACKEND=postgres` (enable only after full SQL migration step)
   - `DB_POOL_MIN_SIZE=1`
   - `DB_POOL_MAX_SIZE=20`
+  - `BROADCAST_WINDOW_MINUTES=10`
+  - `BROADCAST_CLAIM_BATCH_SIZE=1000`
+  - `BROADCAST_SEND_CONCURRENCY=30`
+  - `BROADCAST_MAX_ATTEMPTS=6`
 - Data migration:
   - Dry run: `python3 scripts/migrate_sqlite_to_postgres.py --sqlite-path germanic.db --dry-run`
   - Execute: `python3 scripts/migrate_sqlite_to_postgres.py --sqlite-path germanic.db --truncate --pg-url "$DATABASE_URL"`
