@@ -50,7 +50,7 @@ def _should_skip_onboarding(profile: dict) -> bool:
     return not (_profile_is_default(profile) and _profile_is_fresh(profile))
 
 
-async def start_onboarding(message: Message, state: FSMContext):
+async def start_onboarding(message: Message, state: FSMContext, force: bool = False):
     if not message.from_user:
         return
     user_id = message.from_user.id
@@ -58,7 +58,7 @@ async def start_onboarding(message: Message, state: FSMContext):
     # Defensive guard: even if onboarding is called from a wrong path,
     # do not show it again for already-configured users.
     profile = UserService.get_profile(user_id) or {}
-    if _should_skip_onboarding(profile):
+    if (not force) and _should_skip_onboarding(profile):
         if _to_int(profile.get("onboarding_completed"), 0) != 1:
             update_user_profile(user_id, onboarding_completed=1)
         await state.clear()
@@ -66,6 +66,7 @@ async def start_onboarding(message: Message, state: FSMContext):
         return
 
     await state.clear()
+    await state.update_data(onboarding_force_edit=bool(force))
     StatsService.log_activity(user_id, "onboarding_started")
     
     intro = (
@@ -86,6 +87,9 @@ async def start_onboarding(message: Message, state: FSMContext):
 
 
 async def _guard_onboarding_callback(call: CallbackQuery, state: FSMContext) -> bool:
+    data = await state.get_data()
+    if bool(data.get("onboarding_force_edit")):
+        return True
     profile = UserService.get_profile(call.from_user.id) or {}
     if _should_skip_onboarding(profile):
         if _to_int(profile.get("onboarding_completed"), 0) != 1:

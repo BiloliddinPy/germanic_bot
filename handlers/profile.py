@@ -25,18 +25,14 @@ async def show_profile(message: Message):
     goal_label = str(profile.get("goal_label") or "Noma'lum")
     daily_time = int(profile.get("daily_time_minutes") or 15)
     notification_time = str(profile.get("notification_time") or "09:00")
-    onboarding_completed = int(profile.get("onboarding_completed") or 0)
-    onboarding_status = "✅ Tugallangan" if onboarding_completed == 1 else "⏳ Jarayonda"
 
     text = (
         f"👤 **SHAXSIY PROFIL**\n\n"
         f"🆔 ID: `{user_id}`\n"
-        "📝 **Onboarding ma'lumotlari**\n"
         f"📚 Boshlang'ich daraja: **{level}**\n"
         f"🎯 Maqsad: **{goal_label}**\n"
         f"⏱ Kunlik vaqt: **{daily_time} min**\n"
-        f"🔔 Eslatma vaqti: **{notification_time}**\n"
-        f"📌 Holat: **{onboarding_status}**\n\n"
+        f"🔔 Eslatma vaqti: **{notification_time}**\n\n"
         "Progress ko'rsatkichlari `📊 Natijalar` bo'limida."
     )
     
@@ -67,4 +63,4 @@ async def profile_edit_info_callback(call: CallbackQuery, state: FSMContext):
         return
     await call.answer()
     StatsService.log_navigation(call.from_user.id, "profile_edit", entry_type="callback")
-    await cast(Awaitable[None], start_onboarding(message, state))
+    await cast(Awaitable[None], start_onboarding(message, state, force=True))
