@@ -12,6 +12,7 @@ from database.repositories.admin_repository import (
     get_users_count,
 )
 from database.repositories.user_repository import add_user, get_or_create_user_profile
+from database.repositories.broadcast_repository import get_broadcast_queue_counts
 from database.connection import get_connection
 from utils.ui_utils import send_single_ui_message
 from utils.backup_manager import (
@@ -76,6 +77,9 @@ async def health_cmd(message: Message):
     scheduler = get_scheduler_health()
     scheduler_started = "yes" if scheduler.get("started") else "no"
     scheduler_next_run = scheduler.get("next_run_time") or "-"
+    scheduler_processor_next = scheduler.get("processor_next_run_time") or "-"
+    scheduler_leader = "yes" if scheduler.get("leader") else "no"
+    queue_counts = get_broadcast_queue_counts()
 
     db_path = settings.db_path
     db_abs_path = os.path.abspath(db_path)
@@ -92,14 +96,41 @@ async def health_cmd(message: Message):
         "🩺 Health (Admin)\n\n"
         f"• Bot: @{me.username or '-'} (id: {me.id})\n"
         f"• Uptime: {uptime_seconds} sec\n"
+        f"• Delivery mode: {settings.delivery_mode}\n"
         f"• Last update handled: {last_update}\n\n"
         "Scheduler\n"
         f"• Started: {scheduler_started}\n"
+        f"• Leader: {scheduler_leader}\n"
         f"• Next run: {scheduler_next_run}\n\n"
-        "Database (SQLite)\n"
+        f"• Queue next run: {scheduler_processor_next}\n\n"
+        "Broadcast Queue\n"
+        f"• pending={queue_counts.get('pending', 0)}\n"
+        f"• processing={queue_counts.get('processing', 0)}\n"
+        f"• sent={queue_counts.get('sent', 0)}\n"
+        f"• failed={queue_counts.get('failed', 0)}\n\n"
+        "Database\n"
         f"• Path: {db_path}\n"
         f"• Size: {db_size} bytes\n"
         f"• Last write: {db_mtime}"
+    )
+    await send_single_ui_message(message, text)
+
+
+@router.message(Command("webhook_info"))
+async def webhook_info_cmd(message: Message):
+    if not await _ensure_admin(message):
+        return
+    info = await message.bot.get_webhook_info()
+    text = (
+        "🌐 Webhook Info\n\n"
+        f"• Delivery mode: {settings.delivery_mode}\n"
+        f"• Configured URL: {settings.webhook_url or '-'}\n"
+        f"• Telegram URL: {info.url or '-'}\n"
+        f"• Pending updates: {info.pending_update_count}\n"
+        f"• Last error date: {info.last_error_date or '-'}\n"
+        f"• Last error message: {info.last_error_message or '-'}\n"
+        f"• Max connections: {info.max_connections or '-'}\n"
+        f"• Has custom cert: {info.has_custom_certificate}"
     )
     await send_single_ui_message(message, text)
 
@@ -316,6 +347,7 @@ async def admin_help_cmd(message: Message):
         f"• /users_count (/user_count) - userlar soni ({total_users})\n"
         "• /admin_stats - umumiy admin statistika\n"
         "• /health - bot va DB holati\n"
+        "• /webhook_info - webhook holati\n"
         "• /backup_now - darhol backup\n"
         "• /backup_list - backup ro'yxati\n"
         "• /backup_send_latest - oxirgi backupni yuborish\n"

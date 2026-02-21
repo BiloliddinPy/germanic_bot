@@ -108,6 +108,7 @@ async def main():
             types.BotCommand(command="users_count", description="Userlar soni"),
             types.BotCommand(command="admin_stats", description="Admin statistika"),
             types.BotCommand(command="health", description="Bot health"),
+            types.BotCommand(command="webhook_info", description="Webhook holati"),
             types.BotCommand(command="backup_now", description="Backup yaratish"),
             types.BotCommand(command="diag_db", description="DB diagnostika"),
         ]
