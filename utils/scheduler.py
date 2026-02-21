@@ -17,7 +17,7 @@ async def start_scheduler(bot: Bot):
     scheduler.add_job(
         send_daily_word_to_all,
         "cron",
-        hour=9,
+        hour="*",
         minute=0,
         timezone="Asia/Tashkent",
         args=[bot],
@@ -38,7 +38,7 @@ async def start_scheduler(bot: Bot):
     scheduler.start()
     _scheduler = scheduler
     logging.info(
-        "Scheduler started. daily_word=09:00 Asia/Tashkent, daily_backup=%02d:%02d UTC",
+        "Scheduler started. hourly_reminder=**:00 Asia/Tashkent, daily_backup=%02d:%02d UTC",
         backup_hour,
         backup_minute
     )

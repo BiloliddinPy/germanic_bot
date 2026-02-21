@@ -41,12 +41,20 @@ def create_table():
             current_level TEXT DEFAULT 'A1',
             goal TEXT DEFAULT 'general',
             daily_time_minutes INTEGER DEFAULT 15,
+            notification_time TEXT DEFAULT '09:00',
             onboarding_completed INTEGER DEFAULT 0,
             xp INTEGER DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    
+    # Safely push the notification_time to existing databases
+    try:
+        cursor.execute("ALTER TABLE user_profile ADD COLUMN notification_time TEXT DEFAULT '09:00'")
+    except Exception:
+        pass # Column already exists
+
     
     # words (Dictionary)
     cursor.execute("""

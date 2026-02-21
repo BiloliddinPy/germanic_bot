@@ -15,6 +15,7 @@ class OnboardingState(StatesGroup):
     waiting_for_level = State()
     waiting_for_goal = State()
     waiting_for_daily_target = State()
+    waiting_for_time = State()
 
 async def start_onboarding(message: Message, state: FSMContext):
     await state.clear()
@@ -69,6 +70,28 @@ async def onboarding_goal_handler(call: CallbackQuery, state: FSMContext):
 async def onboarding_target_handler(call: CallbackQuery, state: FSMContext):
     minutes = int(call.data.split("_")[1])
     UserService.update_daily_target(call.from_user.id, minutes)
+    
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+    from aiogram.types import InlineKeyboardButton
+    
+    builder = InlineKeyboardBuilder()
+    builder.row(InlineKeyboardButton(text="Ertalab 08:00", callback_data="time_08:00"))
+    builder.row(InlineKeyboardButton(text="Ertalab 10:00", callback_data="time_10:00"))
+    builder.row(InlineKeyboardButton(text="Tushlik 12:00", callback_data="time_12:00"))
+    builder.row(InlineKeyboardButton(text="Kechqurun 18:00", callback_data="time_18:00"))
+    builder.row(InlineKeyboardButton(text="Kechqurun 20:00", callback_data="time_20:00"))
+    
+    await call.message.edit_text(
+        "Kunlik motivatsion eslatma va yangi lug'at soat nechada kelsin?",
+        reply_markup=builder.as_markup()
+    )
+    await state.set_state(OnboardingState.waiting_for_time)
+
+@router.callback_query(OnboardingState.waiting_for_time, F.data.startswith("time_"))
+async def onboarding_time_handler(call: CallbackQuery, state: FSMContext):
+    time_str = call.data.split("_")[1]
+    UserService.update_notification_time(call.from_user.id, time_str)
+    
     UserService.complete_onboarding(call.from_user.id)
     
     await call.answer("Muvaffaqiyatli yakunlandi! 🎉")

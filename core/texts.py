@@ -47,3 +47,41 @@ GOAL_LABELS = {
     "fun": "🌟 Shunchaki qiziqish",
     "general": "🌍 Umumiy"
 }
+
+DAILY_QUOTES = [
+    {
+        "de": "Wer fremde Sprachen nicht kennt, weiß nichts von seiner eigenen.",
+        "uz": "Kim chet tillarini bilmasa, o'zining tili haqida ham hech narsa bilmaydi.",
+        "author": "Johann Wolfgang von Goethe"
+    },
+    {
+        "de": "Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt.",
+        "uz": "Tilimning chegaralari dunyomning chegaralarini anglatadi.",
+        "author": "Ludwig Wittgenstein"
+    },
+    {
+        "de": "Man lernt nicht für die Schule, sondern für das Leben.",
+        "uz": "Biz maktab uchun emas, hayot uchun o'rganamiz.",
+        "author": "Seneca (nemischa maqol)"
+    },
+    {
+        "de": "Übung macht den Meister.",
+        "uz": "Mashq ustani yetishtiradi (Amaliyot mukammallikka olib boradi).",
+        "author": "Nemis maqoli"
+    },
+    {
+        "de": "Jeder Weg beginnt mit dem ersten Schritt.",
+        "uz": "Har qanday yo'l birinchi qadamdan boshlanadi.",
+        "author": "Maqol"
+    },
+    {
+        "de": "Es ist noch kein Meister vom Himmel gefallen.",
+        "uz": "Hali osmondan hech qanday usta tushmagan (Hamma o'rganishi kerak).",
+        "author": "Nemis maqoli"
+    },
+    {
+        "de": "Der Glaube versetzt Berge.",
+        "uz": "Ishonch tog'larni siljitadi.",
+        "author": "Nemis maqoli"
+    },
+]

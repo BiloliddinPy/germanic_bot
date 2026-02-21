@@ -24,3 +24,7 @@ class UserService:
     @staticmethod
     def update_daily_target(user_id: int, minutes: int):
         update_user_profile(user_id, daily_time_minutes=minutes)
+
+    @staticmethod
+    def update_notification_time(user_id: int, time_str: str):
+        update_user_profile(user_id, notification_time=time_str)

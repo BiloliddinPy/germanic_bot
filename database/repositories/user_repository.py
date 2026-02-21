@@ -87,6 +87,13 @@ def get_subscribed_users():
     conn.close()
     return [row[0] for row in rows]
 
+def get_subscribed_users_for_time(time_str: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT user_id FROM user_profile WHERE notification_time = ?", (time_str,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [row[0] for row in rows]
 def update_streak(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()

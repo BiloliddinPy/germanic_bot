@@ -80,28 +80,43 @@ async def daily_random_handler(call: CallbackQuery):
 
 async def send_daily_word_to_all(bot: Bot):
     try:
-        users = get_subscribed_users()
+        from database.repositories.user_repository import get_subscribed_users_for_time
+        from core.texts import DAILY_QUOTES
+        
+        # Get the current hour in HH:00 format
+        current_time_str = datetime.datetime.now().strftime("%H:00")
+        users = get_subscribed_users_for_time(current_time_str)
+        
         word = get_todays_word()
         
         if not word or not users:
             return
 
+        quote = random.choice(DAILY_QUOTES)
+
         text = (
-            f"🌟 **Kun so‘zi**\n\n"
-            f"🇩🇪 **{word['de']}** ({word['pos']})\n"
-            f"🇺🇿 {word['uz']}\n\n"
-            f"📌 Misol:\n"
-            f"🇩🇪 _{word['example_de']}_\n"
-            f"🇺🇿 _{word['example_uz']}_"
+            f"📜 **Kunlik Hikmat**\n"
+            f"_{quote['de']}_\n"
+            f"— *{quote['author']}*\n\n"
+            f"🇺🇿 *{quote['uz']}*\n\n"
+            f"📚 **Bugungi yangi so'z:**\n"
+            f"🔹 **{word['de']}** ({word['pos']}) — {word['uz']}\n\n"
+            f"⏳ *Sizning shaxsiy darsingiz tayyor! Boshlaymizmi?*"
         )
+        
+        builder = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🚀 Darsni boshlash", callback_data="daily_step_1")],
+            [InlineKeyboardButton(text="🏠 Asosiy Menyuga", callback_data="home")]
+        ])
         
         import asyncio
         for user_id in users:
             try:
-                await bot.send_message(user_id, text, parse_mode="Markdown")
+                await bot.send_message(user_id, text, reply_markup=builder, parse_mode="Markdown")
                 await asyncio.sleep(0.05) 
             except Exception as e:
                 pass
                 
     except Exception as e:
-        print(f"Daily broadcast error: {e}")
+        import logging
+        logging.error(f"Daily broadcast error: {e}")
