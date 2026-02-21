@@ -1,12 +1,10 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
-from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
 from services.user_service import UserService
 from services.learning_service import LearningService
 from services.stats_service import StatsService
 from utils.ui_utils import send_single_ui_message, _get_progress_bar
-from keyboards.builders import get_main_menu_keyboard
 
 router = Router()
 

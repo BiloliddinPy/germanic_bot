@@ -11,13 +11,11 @@ from utils.backup_manager import (
     run_backup_async,
     list_backups,
     get_latest_backup,
-    format_bytes,
-    BACKUP_SEND_MAX_BYTES
+    format_bytes
 )
 from utils.runtime_state import get_uptime_seconds, get_last_update_handled_iso
 from utils.error_notifier import (
     get_ops_alerts_status,
-    set_ops_alerts_enabled,
     toggle_ops_alerts_enabled
 )
 

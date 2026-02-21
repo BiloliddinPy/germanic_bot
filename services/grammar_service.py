@@ -29,7 +29,7 @@ class GrammarService:
 
     @staticmethod
     def mark_completed(user_id: int, topic_id: str, level: str):
-        mark_grammar_topic_seen(user_id, topic_id, level)
+        mark_grammar_topic_seen(user_id, topic_id)
         update_module_progress(user_id, "grammar", level, completed=True)
         log_event(user_id, "grammar_topic_opened", section_name="grammar", level=level, metadata={"topic_id": topic_id})
 

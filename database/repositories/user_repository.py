@@ -1,7 +1,8 @@
 from database.connection import get_connection
+import datetime
 import logging
 
-def add_user(user_id: int, full_name: str, username: str = None):
+def add_user(user_id: int, full_name: str, username: str | None = None):
     conn = get_connection()
     cursor = conn.cursor()
     try:
@@ -94,6 +95,7 @@ def get_subscribed_users_for_time(time_str: str):
     rows = cursor.fetchall()
     conn.close()
     return [row[0] for row in rows]
+
 def update_streak(user_id: int):
     conn = get_connection()
     cursor = conn.cursor()
@@ -129,5 +131,3 @@ def update_xp(user_id: int, amount: int):
         logging.error(f"Error updating XP: {e}")
     finally:
         conn.close()
-
-import datetime

@@ -1,8 +1,5 @@
-import json
-import os
-import random
 from aiogram import Router, F
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from database.repositories.progress_repository import record_navigation_event
 from utils.ui_utils import send_single_ui_message

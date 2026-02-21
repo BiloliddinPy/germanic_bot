@@ -1,0 +1,10 @@
+{
+  "typeCheckingMode": "basic",
+  "exclude": [
+    "**/__pycache__",
+    ".venv",
+    "scripts"
+  ],
+  "reportOptionalMemberAccess": "none",
+  "reportAttributeAccessIssue": "none"
+}

@@ -26,7 +26,9 @@ class StateCleanupMiddleware(BaseMiddleware):
     specialized states (like mid-quiz) when they want to navigate away.
     """
     async def __call__(self, handler, event, data):
-        state: FSMContext = data.get("state")
+        state = data.get("state")
+        if not isinstance(state, FSMContext):
+            return await handler(event, data)
         
         if isinstance(event, Message) and event.text:
             # Clear state on commands

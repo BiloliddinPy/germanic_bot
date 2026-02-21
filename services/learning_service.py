@@ -1,7 +1,5 @@
-import random
 import datetime
-import logging
-from database.repositories.mastery_repository import get_due_reviews, update_mastery, get_level_progress_stats, get_weighted_mistake_word_ids, get_mastered_mistake_word_ids
+from database.repositories.mastery_repository import get_due_reviews, update_mastery, get_level_progress_stats, get_weighted_mistake_word_ids
 from database.repositories.word_repository import get_words_by_ids, get_random_words
 from database.repositories.lesson_repository import get_last_daily_plan, get_grammar_coverage_map
 from services.grammar_service import GrammarService
@@ -72,7 +70,8 @@ class LearningService:
     @staticmethod
     def pick_grammar_topic(user_id, level, avoid_topic_id=None):
         topics = GrammarService.get_topics_by_level(level)
-        if not topics: return {"id": None, "title": "Grammatika", "content": "", "example": "-"}
+        if not topics:
+            return {"id": None, "title": "Grammatika", "content": "", "example": "-"}
         
         coverage = get_grammar_coverage_map(user_id, level)
         least_seen = sorted(topics, key=lambda t: coverage.get(t.get("id"), 0))

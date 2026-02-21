@@ -2,9 +2,9 @@ import json
 import random
 import os
 import datetime
+from typing import Awaitable, cast
 from aiogram import Router, F, Bot
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from database.repositories.user_repository import get_subscribed_users
 from utils.ui_utils import send_single_ui_message
 
 router = Router()
@@ -34,7 +34,10 @@ async def daily_word_manual_handler(message: Message):
     word = get_todays_word()
     
     if not word:
-        await send_single_ui_message(message, "Bugungi kun so'zi hali belgilanmagan.")
+        await cast(
+            Awaitable[Message],
+            send_single_ui_message(message, "Bugungi kun so'zi hali belgilanmagan.")
+        )
         return
 
     text = (
@@ -51,7 +54,10 @@ async def daily_word_manual_handler(message: Message):
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
     
-    await send_single_ui_message(message, text, reply_markup=builder, parse_mode="Markdown")
+    await cast(
+        Awaitable[Message],
+        send_single_ui_message(message, text, reply_markup=builder, parse_mode="Markdown")
+    )
 
 @router.callback_query(F.data == "daily_random")
 async def daily_random_handler(call: CallbackQuery):
@@ -59,6 +65,10 @@ async def daily_random_handler(call: CallbackQuery):
     if not words:
          await call.answer("So'zlar yo'q.", show_alert=True)
          return
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
          
     word = random.choice(words)
     
@@ -76,7 +86,7 @@ async def daily_random_handler(call: CallbackQuery):
         [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
     ])
     
-    await call.message.edit_text(text, reply_markup=builder, parse_mode="Markdown")
+    await message.edit_text(text, reply_markup=builder, parse_mode="Markdown")
 
 async def send_daily_word_to_all(bot: Bot):
     try:
@@ -114,7 +124,7 @@ async def send_daily_word_to_all(bot: Bot):
             try:
                 await bot.send_message(user_id, text, reply_markup=builder, parse_mode="Markdown")
                 await asyncio.sleep(0.05) 
-            except Exception as e:
+            except Exception:
                 pass
                 
     except Exception as e:

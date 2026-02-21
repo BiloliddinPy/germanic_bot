@@ -1,9 +1,8 @@
 from database.connection import get_connection
-import sqlite3
 import datetime
 import logging
 
-def get_due_reviews(user_id: int, level: str = None, limit: int = 20):
+def get_due_reviews(user_id: int, level: str | None = None, limit: int = 20):
     conn = get_connection()
     cursor = conn.cursor()
     if level:
@@ -77,7 +76,7 @@ def get_level_progress_stats(user_id: int, level: str):
     
     return mastered, total
 
-def get_weighted_mistake_word_ids(user_id: int, level: str = None, limit: int = 20):
+def get_weighted_mistake_word_ids(user_id: int, level: str | None = None, limit: int = 20):
     conn = get_connection()
     cursor = conn.cursor()
     if level:

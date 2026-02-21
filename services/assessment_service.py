@@ -1,5 +1,5 @@
 import random
-from database.repositories.word_repository import get_random_words, get_total_words_count
+from database.repositories.word_repository import get_random_words
 
 class AssessmentService:
     @staticmethod

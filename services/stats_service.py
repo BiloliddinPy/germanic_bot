@@ -1,13 +1,13 @@
-from database.repositories.progress_repository import record_navigation_event, log_event, log_mistake, update_module_progress
+from database.repositories.progress_repository import record_navigation_event, log_event, update_module_progress
 from database.repositories.mastery_repository import get_level_progress_stats
 
 class StatsService:
     @staticmethod
-    def log_navigation(user_id: int, section: str, level: str = None, **kwargs):
+    def log_navigation(user_id: int, section: str, level: str | None = None, **kwargs):
         record_navigation_event(user_id, section, level=level, **kwargs)
 
     @staticmethod
-    def log_activity(user_id: int, event: str, metadata: dict = None, **kwargs):
+    def log_activity(user_id: int, event: str, metadata: dict | None = None, **kwargs):
         log_event(user_id, event, metadata=metadata, **kwargs)
 
     @staticmethod

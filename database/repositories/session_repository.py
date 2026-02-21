@@ -35,7 +35,13 @@ def delete_daily_lesson_state(user_id: int):
     conn.commit()
     conn.close()
 
-def save_user_submission(user_id: int, module: str, content: str, level: str = None, metadata: dict = None):
+def save_user_submission(
+    user_id: int,
+    module: str,
+    content: str,
+    level: str | None = None,
+    metadata: dict | None = None,
+):
     conn = get_connection()
     cursor = conn.cursor()
     meta_json = json.dumps(metadata) if metadata else None

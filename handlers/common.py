@@ -3,13 +3,13 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from database import get_or_create_user_profile # From package init
-from database.repositories.user_repository import add_user, get_user_profile
+from database.repositories.user_repository import add_user
 from database.repositories.progress_repository import record_navigation_event
-from database.repositories.ui_repository import get_ui_state, set_ui_state
 from handlers.onboarding import start_onboarding
 from utils.ui_utils import _send_fresh_main_menu, send_single_ui_message
 from core.texts import MAIN_MENU_TEXT, INTRO_TEXT
 from core.config import settings
+from keyboards.builders import get_main_menu_keyboard
 
 router = Router()
 UI_TEST_MODE = "🛠️ Bot hozirda test rejimida ishlayapti"
@@ -44,11 +44,14 @@ async def cmd_menu(message: Message):
 async def go_to_home(call: CallbackQuery):
     record_navigation_event(call.from_user.id, "main_menu", entry_type="callback")
     await call.answer()
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        return
     try:
-        await call.message.delete()
+        await message.delete()
     except Exception:
         pass
-    await _send_fresh_main_menu(call.message, MAIN_MENU_TEXT, user_id=call.from_user.id)
+    await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=call.from_user.id)
 
 @router.message(Command("help"))
 async def cmd_help(message: Message):

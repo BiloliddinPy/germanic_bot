@@ -1,28 +1,80 @@
-import sqlite3
 import logging
 import os
 import json
+from typing import Any
 from core.config import settings
+
+# Public API for the database package
+from database.repositories.user_repository import (
+    add_user as add_user,
+    get_or_create_user_profile as get_or_create_user_profile,
+    get_user_profile as get_user_profile,
+    update_streak as update_streak,
+    update_user_profile as update_user_profile,
+    update_xp as update_xp,
+)
+from database.repositories.word_repository import (
+    add_word as add_word,
+    get_random_words as get_random_words,
+    get_total_words_count as get_total_words_count,
+    get_words_by_level as get_words_by_level,
+)
+from database.repositories.progress_repository import (
+    log_event as log_event,
+    log_mistake as log_mistake,
+    record_navigation_event as record_navigation_event,
+    update_module_progress as update_module_progress,
+)
+from database.repositories.session_repository import (
+    get_recent_submissions as get_recent_submissions,
+    save_user_submission as save_user_submission,
+)
+
+__all__ = [
+    "DB_NAME",
+    "get_connection",
+    "create_table",
+    "bootstrap_words_if_empty",
+    "log_ops_error",
+    "add_user",
+    "get_or_create_user_profile",
+    "get_user_profile",
+    "update_streak",
+    "update_user_profile",
+    "update_xp",
+    "add_word",
+    "get_random_words",
+    "get_total_words_count",
+    "get_words_by_level",
+    "log_event",
+    "log_mistake",
+    "record_navigation_event",
+    "update_module_progress",
+    "get_recent_submissions",
+    "save_user_submission",
+]
 
 # For backward compatibility
 DB_NAME = settings.db_path
 
-def log_ops_error(severity: str, where_ctx: str, error_type: str, message_short: str, user_id: int = None, update_id: int = None):
+def log_ops_error(
+    severity: str,
+    where_ctx: str,
+    error_type: str,
+    message_short: str,
+    user_id: int | None = None,
+    update_id: int | None = None,
+):
     """Compatibility wrapper for error logging."""
-    from database.repositories.progress_repository import log_event
-    metadata = {"severity": severity, "where": where_ctx, "error_type": error_type, "message": message_short}
+    metadata: dict[str, Any] = {
+        "severity": severity,
+        "where": where_ctx,
+        "error_type": error_type,
+        "message": message_short,
+    }
     if update_id:
         metadata["update_id"] = update_id
     log_event(user_id=user_id or 0, event_type="error", metadata=metadata)
-
-# Public API for the database package
-from database.repositories.user_repository import add_user, get_user_profile, get_or_create_user_profile, update_user_profile, update_streak, update_xp
-from database.repositories.word_repository import get_words_by_level, get_total_words_count, get_random_words, add_word
-from database.repositories.progress_repository import record_navigation_event, log_mistake, log_event, update_module_progress
-from database.repositories.session_repository import save_user_submission, get_recent_submissions
-
-# For backward compatibility
-DB_NAME = settings.db_path
 
 def get_connection():
     """Legacy wrapper for backward compatibility."""
@@ -203,7 +255,6 @@ def create_table():
 
 def bootstrap_words_if_empty():
     """Loads initial data if the words table is empty."""
-    from database.repositories.word_repository import get_total_words_count
     
     # Check if we already have data
     if get_total_words_count("A1") > 0:

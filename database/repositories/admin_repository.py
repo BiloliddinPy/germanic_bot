@@ -39,7 +39,7 @@ def get_admin_stats_snapshot():
         conn.close()
     return stats
 
-def get_last_event_timestamp(user_id: int = None):
+def get_last_event_timestamp(user_id: int | None = None):
     conn = get_connection()
     cursor = conn.cursor()
     if user_id:

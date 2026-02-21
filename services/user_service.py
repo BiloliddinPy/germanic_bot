@@ -5,8 +5,11 @@ class UserService:
     @staticmethod
     def get_profile(user_id: int):
         profile = get_or_create_user_profile(user_id)
+        if not profile:
+            profile = {}
         # Add virtual fields/formatting
-        profile["goal_label"] = GOAL_LABELS.get(profile.get("goal"), "Noma'lum")
+        goal_key = str(profile.get("goal") or "")
+        profile["goal_label"] = GOAL_LABELS.get(goal_key, "Noma'lum")
         return profile
 
     @staticmethod

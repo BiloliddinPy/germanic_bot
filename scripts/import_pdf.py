@@ -99,7 +99,7 @@ def import_from_pdf():
                         
                         if word_count % 100 == 0:
                             print(f"Imported {word_count} words... (Currently on level: {current_level})")
-                    except Exception as e:
+                    except Exception:
                         # Skip duplicates or errors
                         pass
             

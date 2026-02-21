@@ -1,6 +1,4 @@
 from database.connection import get_connection
-import random
-import sqlite3
 import logging
 
 def get_words_by_level(level: str, limit: int = 20, offset: int = 0):

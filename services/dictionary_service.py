@@ -8,7 +8,7 @@ from core.config import settings
 
 class DictionaryService:
     @staticmethod
-    def get_page(level: str, offset: int = 0, letter: str = None):
+    def get_page(level: str, offset: int = 0, letter: str | None = None):
         limit = settings.page_size
         
         if letter:

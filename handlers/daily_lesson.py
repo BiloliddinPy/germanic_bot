@@ -1,20 +1,17 @@
-import logging
-import datetime
 import re
 import random
+from typing import Any, Awaitable, cast
 from database.repositories.word_repository import get_words_by_ids, get_random_words
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.fsm.context import FSMContext
 
 from services.learning_service import LearningService
 from services.user_service import UserService
 from services.stats_service import StatsService
 from services.grammar_service import GrammarService
-from database.repositories.session_repository import get_daily_lesson_state, save_daily_lesson_state, save_user_submission, delete_daily_lesson_state
-from database.repositories.lesson_repository import save_daily_plan, get_last_daily_plan
-from utils.ui_utils import send_single_ui_message, _md_escape
-from core.config import settings
+from database.repositories.session_repository import get_daily_lesson_state, save_daily_lesson_state, delete_daily_lesson_state
+from database.repositories.lesson_repository import save_daily_plan
+from utils.ui_utils import send_single_ui_message
 
 router = Router()
 
@@ -38,7 +35,9 @@ async def daily_lesson_start(message: Message):
         await message.delete()
     except Exception:
         pass
-    
+
+    if not message.from_user:
+        return
     user_id = message.from_user.id
     StatsService.log_navigation(user_id, "daily_lesson", entry_type="text")
     await _show_entry_screen(message, user_id)
@@ -46,16 +45,10 @@ async def daily_lesson_start(message: Message):
 @router.callback_query(F.data == "daily_begin")
 async def daily_begin_handler(call: CallbackQuery):
     user_id = call.from_user.id
-    profile = UserService.get_profile(user_id)
-    
-    # Create or load plan
-    plan = get_last_daily_plan(user_id)
-    # Check if plan is from today
-    # (Simplified for now: always create if not in progress)
-    
+    profile = UserService.get_profile(user_id) or {}
     session_plan = LearningService.create_daily_plan(user_id, profile)
     save_daily_plan(user_id, session_plan)
-    
+
     # Initialize session state
     state = {
         "status": STATUS_IN_PROGRESS,
@@ -64,19 +57,27 @@ async def daily_begin_handler(call: CallbackQuery):
         "results": {"quiz_correct": 0, "quiz_total": 0}
     }
     save_daily_lesson_state(user_id, state)
-    
-    await _render_step(call.message, user_id, state)
+
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+    await _render_step(message, user_id, state)
 
 @router.callback_query(F.data == "daily_resume")
 async def daily_resume_handler(call: CallbackQuery):
     user_id = call.from_user.id
     state = get_daily_lesson_state(user_id)
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     if not state or state.get("status") != STATUS_IN_PROGRESS:
         await call.answer("Faol sessiya topilmadi.")
-        await _show_entry_screen(call.message, user_id)
+        await _show_entry_screen(message, user_id)
         return
-    
-    await _render_step(call.message, user_id, state)
+
+    await _render_step(message, user_id, state)
 
 async def _show_entry_screen(message: Message, user_id: int):
     state = get_daily_lesson_state(user_id)
@@ -101,26 +102,33 @@ async def _show_entry_screen(message: Message, user_id: int):
             [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")]
         ])
         
-    await send_single_ui_message(message, text, reply_markup=markup, parse_mode="Markdown", user_id=user_id)
+    await cast(
+        Awaitable[Message],
+        send_single_ui_message(message, text, reply_markup=markup, parse_mode="Markdown", user_id=user_id),
+    )
 
 async def _render_step(message: Message, user_id: int, state: dict):
     step = state.get("step", 1)
     plan = state.get("plan", {})
     
-    header = f"🚀 **{step}/6 — {STEPS[step].title()}**\n\n"
+    step_name = STEPS.get(step, "lesson")
+    header = f"🚀 **{step}/6 — {step_name.title()}**\n\n"
     
     if step == 1: # Warmup
         topic_id = plan.get("grammar_topic_id")
         topic, _ = GrammarService.get_topic_by_id(topic_id)
-        text = f"{header}Bugungi fokus: **{topic['title']}**\n\nTayyormisiz?"
+        topic_title = topic["title"] if topic else "Bugungi mavzu"
+        text = f"{header}Bugungi fokus: **{topic_title}**\n\nTayyormisiz?"
         markup = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Ha, tayyorman!", callback_data="daily_step_2")]
         ])
     elif step == 2: # Vocab
-        from database.repositories.word_repository import get_words_by_ids
         words = get_words_by_ids(plan.get("vocab_ids", []))
-        word_list = "\n".join([f"🔹 **{w['de']}** — {w['uz']}" for w in words])
-        text = f"{header}Yangi so'zlar:\n\n{word_list}"
+        if words:
+            word_list = "\n".join([f"🔹 **{w['de']}** — {w['uz']}" for w in words])
+            text = f"{header}Yangi so'zlar:\n\n{word_list}"
+        else:
+            text = f"{header}Bugungi dars uchun yangi so'zlar topilmadi, keyingi bosqichga o'tamiz."
         markup = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Keyingi", callback_data="daily_step_3")]
         ])
@@ -191,33 +199,57 @@ async def _render_step(message: Message, user_id: int, state: dict):
         markup = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="Darsni yakunlash", callback_data="daily_finish")]
         ])
+    else:
+        text = f"{header}Dars bosqichi topilmadi. Qaytadan boshlang."
+        markup = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Qayta boshlash", callback_data="daily_begin")]
+        ])
         
     await message.edit_text(text, reply_markup=markup, parse_mode="Markdown")
 
 @router.callback_query(F.data.startswith("daily_step_"))
 async def daily_step_callback(call: CallbackQuery):
-    next_step = int(call.data.split("_")[2])
+    data = call.data or ""
+    try:
+        next_step = int(data.split("_")[2])
+    except (ValueError, IndexError):
+        await call.answer("Noto'g'ri bosqich so'rovi.", show_alert=True)
+        return
     user_id = call.from_user.id
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     state = get_daily_lesson_state(user_id)
     if state:
         state["step"] = next_step
         save_daily_lesson_state(user_id, state)
-        await _render_step(call.message, user_id, state)
+        await _render_step(message, user_id, state)
     else:
         await call.answer("Dars sessiyasi topilmadi.")
-        await _show_entry_screen(call.message, user_id)
+        await _show_entry_screen(message, user_id)
 
 @router.callback_query(F.data.startswith("dquiz_"))
 async def daily_quiz_answer(call: CallbackQuery):
-    is_correct = int(call.data.split("_")[1])
+    data = call.data or ""
+    try:
+        is_correct = int(data.split("_")[1])
+    except (ValueError, IndexError):
+        await call.answer("Noto'g'ri javob formati.", show_alert=True)
+        return
     user_id = call.from_user.id
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     state = get_daily_lesson_state(user_id)
     if not state:
         await call.answer("Sessiya topilmadi.", show_alert=True)
         return
         
     if is_correct:
-        if "results" not in state: state["results"] = {}
+        if "results" not in state:
+            state["results"] = {}
         state["results"]["quiz_correct"] = state["results"].get("quiz_correct", 0) + 1
         await call.answer("✅ To'g'ri!")
         # Record positive SRS if needed using learning_service
@@ -232,29 +264,38 @@ async def daily_quiz_answer(call: CallbackQuery):
         state["step"] = 5
         
     save_daily_lesson_state(user_id, state)
-    await _render_step(call.message, user_id, state)
+    await _render_step(message, user_id, state)
 
 @router.callback_query(F.data == "daily_finish")
 async def daily_finish_callback(call: CallbackQuery):
     user_id = call.from_user.id
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     state = get_daily_lesson_state(user_id)
     if state:
         state["status"] = STATUS_FINISHED
         save_daily_lesson_state(user_id, state)
         # Log completion
-        profile = UserService.get_profile(user_id)
+        profile: dict[str, Any] = UserService.get_profile(user_id) or {}
+        level = str(profile.get("current_level") or "A1")
         from database.repositories.progress_repository import log_event
-        log_event(user_id, "daily_lesson_completed", level=profile.get("current_level"))
+        log_event(user_id, "daily_lesson_completed", level=level)
         StatsService.log_navigation(user_id, "daily_lesson_finish", entry_type="callback")
     
     await call.answer("Dars yakunlandi! 🏆", show_alert=True)
     from utils.ui_utils import _send_fresh_main_menu
-    await call.message.delete()
-    await _send_fresh_main_menu(call.message, "Ajoyib! Bugungi dars yakunlandi. Nima bilan davom etamiz?", user_id=user_id)
+    await message.delete()
+    await _send_fresh_main_menu(message, "Ajoyib! Bugungi dars yakunlandi. Nima bilan davom etamiz?", user_id=user_id)
 
 @router.callback_query(F.data == "daily_cancel")
 async def daily_cancel_handler(call: CallbackQuery):
     user_id = call.from_user.id
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
     delete_daily_lesson_state(user_id)
     await call.answer("Dars bekor qilindi.")
-    await _show_entry_screen(call.message, user_id)
+    await _show_entry_screen(message, user_id)

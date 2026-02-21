@@ -27,7 +27,12 @@ def update_module_progress(user_id: int, module_name: str, level: str, completed
     finally:
         conn.close()
 
-def record_navigation_event(user_id: int, section_name: str, level: str = None, entry_type: str = "callback"):
+def record_navigation_event(
+    user_id: int,
+    section_name: str,
+    level: str | None = None,
+    entry_type: str = "callback",
+):
     conn = get_connection()
     cursor = conn.cursor()
     try:
@@ -59,7 +64,13 @@ def log_mistake(user_id: int, item_id: str, module: str, mistake_type: str = "vo
     finally:
         conn.close()
 
-def log_event(user_id: int, event_type: str, section_name: str = None, level: str = None, metadata: dict = None):
+def log_event(
+    user_id: int,
+    event_type: str,
+    section_name: str | None = None,
+    level: str | None = None,
+    metadata: dict | None = None,
+):
     conn = get_connection()
     cursor = conn.cursor()
     meta_json = json.dumps(metadata) if metadata else None

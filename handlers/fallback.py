@@ -27,10 +27,11 @@ async def unknown_text_fallback(message: Message):
 async def unknown_callback_fallback(call: CallbackQuery):
     # Prevent stale inline buttons from confusing users.
     await call.answer("Bu tugma eskirgan yoki noto'g'ri.")
-    if not call.message:
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
         return
     try:
-        await call.message.delete()
+        await message.delete()
     except Exception:
         pass
-    await _send_fresh_main_menu(call.message, MAIN_MENU_TEXT, user_id=call.from_user.id)
+    await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=call.from_user.id)

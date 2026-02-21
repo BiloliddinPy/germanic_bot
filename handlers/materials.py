@@ -1,7 +1,5 @@
-import os
 from aiogram import Router, F
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, FSInputFile
-from database.repositories.progress_repository import record_navigation_event, log_event
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from utils.ui_utils import send_single_ui_message
 
 router = Router()

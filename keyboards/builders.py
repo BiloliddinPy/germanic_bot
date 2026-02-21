@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
+from aiogram.types import InlineKeyboardButton, KeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from core.texts import BTN_HOME, BTN_BACK, BTN_DAILY_LESSON, BTN_DICTIONARY, BTN_GRAMMAR, BTN_QUIZ, BTN_PRACTICE, BTN_VIDEO, BTN_EXAMS, BTN_STATS, BTN_PROFILE
 

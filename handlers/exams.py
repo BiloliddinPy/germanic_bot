@@ -1,10 +1,9 @@
 import random
 from aiogram import Router, F
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from database.repositories.word_repository import get_total_words_count, get_random_words
-from database.repositories.progress_repository import record_navigation_event, update_module_progress, add_quiz_result, log_mistake
+from database.repositories.word_repository import get_random_words
 from utils.ui_utils import send_single_ui_message
 
 router = Router()

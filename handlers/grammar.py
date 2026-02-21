@@ -78,7 +78,7 @@ async def grammar_topic_detail_handler(call: CallbackQuery):
         return
 
     try:
-        GrammarService.mark_completed(call.from_user.id, topic_id, level)
+        GrammarService.mark_completed(call.from_user.id, topic_id, level or "A1")
     except Exception:
         pass  # Don't let tracking errors kill the view
 
@@ -112,7 +112,7 @@ async def grammar_topic_detail_handler(call: CallbackQuery):
 
     try:
         await call.message.edit_text(raw_text, reply_markup=builder, parse_mode="Markdown")
-    except Exception as e:
+    except Exception:
         # Last resort: try without parse_mode
         try:
             plain = re.sub(r"[*_`]", "", raw_text)

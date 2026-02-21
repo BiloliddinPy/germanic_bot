@@ -2,7 +2,6 @@ import asyncio
 from unittest.mock import AsyncMock
 from aiogram.types import Message
 from handlers.daily_lesson import _render_step
-from aiogram import Bot
 
 async def main():
     message = AsyncMock(spec=Message)
