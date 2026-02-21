@@ -13,7 +13,7 @@ from database.repositories.admin_repository import (
 )
 from database.repositories.user_repository import add_user, get_or_create_user_profile
 from database.repositories.broadcast_repository import get_broadcast_queue_counts
-from database.connection import get_connection
+from database.connection import get_connection, is_postgres_backend
 from utils.ui_utils import send_single_ui_message
 from utils.backup_manager import (
     run_backup_async,
@@ -80,6 +80,8 @@ async def health_cmd(message: Message):
     scheduler_processor_next = scheduler.get("processor_next_run_time") or "-"
     scheduler_leader = "yes" if scheduler.get("leader") else "no"
     queue_counts = get_broadcast_queue_counts()
+    backend = "postgres" if is_postgres_backend() else "sqlite"
+    db_source = "-"
 
     db_path = settings.db_path
     db_abs_path = os.path.abspath(db_path)
@@ -91,12 +93,32 @@ async def health_cmd(message: Message):
             db_mtime = _format_dt_local(os.path.getmtime(db_abs_path))
     except Exception:
         pass
+    conn = None
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        if is_postgres_backend():
+            cur.execute("SELECT current_database(), current_user")
+            src = cur.fetchone()
+            db_source = f"db={src[0]}, user={src[1]}"
+        else:
+            db_source = f"file={settings.db_path}"
+    except Exception as exc:
+        db_source = f"error={exc}"
+    finally:
+        try:
+            if conn:
+                conn.close()
+        except Exception:
+            pass
 
     text = (
         "🩺 Health (Admin)\n\n"
         f"• Bot: @{me.username or '-'} (id: {me.id})\n"
         f"• Uptime: {uptime_seconds} sec\n"
         f"• Delivery mode: {settings.delivery_mode}\n"
+        f"• DB backend: {backend}\n"
+        f"• DB source: {db_source}\n"
         f"• Last update handled: {last_update}\n\n"
         "Scheduler\n"
         f"• Started: {scheduler_started}\n"
@@ -180,16 +202,24 @@ async def diag_db_cmd(message: Message):
         return
 
     user_id = int(message.from_user.id)
+    backend = "postgres" if is_postgres_backend() else "sqlite"
     db_path = settings.db_path
     exists = os.path.exists(db_path)
     size = os.path.getsize(db_path) if exists else 0
 
     total_users = 0
     row = None
+    source_line = "-"
     conn = None
     try:
         conn = get_connection()
         cur = conn.cursor()
+        if is_postgres_backend():
+            cur.execute("SELECT current_database(), current_user")
+            src = cur.fetchone()
+            source_line = f"db={src[0]}, user={src[1]}"
+        else:
+            source_line = f"file={db_path}"
         cur.execute("SELECT COUNT(*) FROM user_profile")
         total_users = int(cur.fetchone()[0] or 0)
         cur.execute(
@@ -217,6 +247,8 @@ async def diag_db_cmd(message: Message):
 
     text = (
         "🧪 DB Diagnostics\n\n"
+        f"backend: {backend}\n"
+        f"source: {source_line}\n"
         f"db_path: {db_path}\n"
         f"db_exists: {exists}\n"
         f"db_size: {size}\n"

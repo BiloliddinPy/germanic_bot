@@ -103,7 +103,9 @@ async def main():
     )
 
     if settings.admin_id:
-        admin_commands = user_commands + [
+        admin_commands = [
+            types.BotCommand(command="start", description="Botni ishga tushirish"),
+            types.BotCommand(command="menu", description="Bosh menyu"),
             types.BotCommand(command="admin", description="Admin buyruqlari"),
             types.BotCommand(command="users_count", description="Userlar soni"),
             types.BotCommand(command="admin_stats", description="Admin statistika"),
