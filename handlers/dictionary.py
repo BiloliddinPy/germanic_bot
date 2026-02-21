@@ -13,6 +13,36 @@ from core.texts import BTN_DICTIONARY
 
 router = Router()
 
+
+def _parse_dict_next_callback(data: str):
+    """
+    Parse pagination callback data.
+    Supported:
+    - dict_next_<LEVEL>_<OFFSET>
+    - dict_next_letter_<LETTER>_<LEVEL>_<OFFSET>
+    Returns tuple (level, offset, letter) or None when invalid.
+    """
+    parts = (data or "").split("_")
+    if len(parts) < 4 or parts[0] != "dict" or parts[1] != "next":
+        return None
+
+    try:
+        if parts[2] == "letter":
+            if len(parts) != 6:
+                return None
+            letter = parts[3]
+            level = parts[4]
+            offset = int(parts[5]) + settings.page_size
+            return level, offset, letter
+
+        if len(parts) != 4:
+            return None
+        level = parts[2]
+        offset = int(parts[3]) + settings.page_size
+        return level, offset, None
+    except ValueError:
+        return None
+
 @router.message(F.text == BTN_DICTIONARY)
 async def show_dictionary_levels(message: Message):
     try:
@@ -73,21 +103,16 @@ async def dictionary_letter_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_next_"))
 async def dictionary_pagination_handler(call: CallbackQuery):
     """Handles Next page pagination."""
-    data = call.data or ""
-    parts = data.split("_")
-    if len(parts) < 4:
+    parsed = _parse_dict_next_callback(call.data or "")
+    if not parsed:
         await call.answer("Noto'g'ri sahifa so'rovi.", show_alert=True)
         return
-    
-    if parts[2] == "letter":
-        letter = parts[3]
-        level = parts[4]
-        offset = int(parts[5]) + settings.page_size
+
+    level, offset, letter = parsed
+    if letter:
         result = DictionaryService.get_page(level, offset=offset, letter=letter)
         await _show_word_page(call, level, result, offset, letter=letter)
     else:
-        level = parts[2]
-        offset = int(parts[3]) + settings.page_size
         result = DictionaryService.get_page(level, offset=offset)
         await _show_word_page(call, level, result, offset)
 

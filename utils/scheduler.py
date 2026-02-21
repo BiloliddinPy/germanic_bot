@@ -11,7 +11,7 @@ _scheduler: AsyncIOScheduler | None = None
 
 
 async def start_scheduler(bot: Bot):
-    from handlers.daily import send_daily_word_to_all
+    from handlers.daily import send_daily_word_to_all, DAILY_TIMEZONE
     global _scheduler
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
@@ -19,7 +19,7 @@ async def start_scheduler(bot: Bot):
         "cron",
         hour="*",
         minute=0,
-        timezone="Asia/Tashkent",
+        timezone=DAILY_TIMEZONE,
         args=[bot],
         id=SCHEDULER_JOB_ID_DAILY_WORD,
         replace_existing=True
@@ -38,7 +38,8 @@ async def start_scheduler(bot: Bot):
     scheduler.start()
     _scheduler = scheduler
     logging.info(
-        "Scheduler started. hourly_reminder=**:00 Asia/Tashkent, daily_backup=%02d:%02d UTC",
+        "Scheduler started. hourly_reminder=**:00 %s, daily_backup=%02d:%02d UTC",
+        DAILY_TIMEZONE,
         backup_hour,
         backup_minute
     )

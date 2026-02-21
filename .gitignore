@@ -13,6 +13,7 @@ bot.log
 germanic.db
 *.sqlite
 *.sqlite3
+data/bot.instance.lock
 
 # Virtual envs
 .venv/

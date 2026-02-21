@@ -2,6 +2,7 @@ import json
 import random
 import os
 import datetime
+from zoneinfo import ZoneInfo
 from typing import Awaitable, cast
 from aiogram import Router, F, Bot
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
@@ -9,6 +10,15 @@ from utils.ui_utils import send_single_ui_message
 
 router = Router()
 DATA_DIR = "data"
+DAILY_TIMEZONE = "Asia/Tashkent"
+
+
+def _now_in_daily_tz() -> datetime.datetime:
+    return datetime.datetime.now(ZoneInfo(DAILY_TIMEZONE))
+
+
+def _current_time_slot() -> str:
+    return _now_in_daily_tz().strftime("%H:00")
 
 def load_daily_words():
     file_path = f"{DATA_DIR}/daily_words.json"
@@ -21,7 +31,7 @@ def get_todays_word():
     words = load_daily_words()
     if not words:
         return None
-    day_of_year = datetime.datetime.now().timetuple().tm_yday
+    day_of_year = _now_in_daily_tz().timetuple().tm_yday
     word_index = day_of_year % len(words)
     return words[word_index]
 
@@ -93,8 +103,8 @@ async def send_daily_word_to_all(bot: Bot):
         from database.repositories.user_repository import get_subscribed_users_for_time
         from core.texts import DAILY_QUOTES
         
-        # Get the current hour in HH:00 format
-        current_time_str = datetime.datetime.now().strftime("%H:00")
+        # Keep scheduler and DB time matching in the same timezone.
+        current_time_str = _current_time_slot()
         users = get_subscribed_users_for_time(current_time_str)
         
         word = get_todays_word()
@@ -115,7 +125,7 @@ async def send_daily_word_to_all(bot: Bot):
         )
         
         builder = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🚀 Darsni boshlash", callback_data="daily_step_1")],
+            [InlineKeyboardButton(text="🚀 Darsni boshlash", callback_data="daily_begin")],
             [InlineKeyboardButton(text="🏠 Asosiy Menyuga", callback_data="home")]
         ])
         
