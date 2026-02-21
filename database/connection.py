@@ -1,5 +1,6 @@
 import re
 import sqlite3
+import atexit
 from pathlib import Path
 from typing import Any
 
@@ -7,6 +8,7 @@ from core.config import settings
 
 _POSTGRES_POOL: Any = None
 _QMARK_RE = re.compile(r"\?")
+_POSTGRES_ATEXIT_REGISTERED = False
 
 
 def _to_postgres_placeholders(query: str) -> str:
@@ -97,6 +99,7 @@ class CompatConnection:
 
 def _get_or_create_postgres_pool():
     global _POSTGRES_POOL
+    global _POSTGRES_ATEXIT_REGISTERED
     if _POSTGRES_POOL is not None:
         return _POSTGRES_POOL
 
@@ -115,6 +118,9 @@ def _get_or_create_postgres_pool():
         max_size=max(max(1, settings.db_pool_min_size), settings.db_pool_max_size),
         open=True,
     )
+    if not _POSTGRES_ATEXIT_REGISTERED:
+        atexit.register(close_postgres_pool)
+        _POSTGRES_ATEXIT_REGISTERED = True
     return _POSTGRES_POOL
 
 
