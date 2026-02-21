@@ -64,6 +64,7 @@ async def show_dictionary_levels(message: Message):
 @router.callback_query(F.data.startswith("dict_alpha_"))
 async def dictionary_alphabet_view_handler(call: CallbackQuery):
     """Shows the A-Z letter picker for a specific level."""
+    await call.answer()
     data = call.data or ""
     parts = data.split("_")
     if len(parts) < 3:
@@ -83,6 +84,7 @@ async def dictionary_alphabet_view_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_letter_"))
 async def dictionary_letter_handler(call: CallbackQuery):
     """Handles letter selection from alphabet keyboard."""
+    await call.answer()
     data = call.data or ""
     parts = data.split("_")
     if len(parts) < 4:
@@ -103,6 +105,7 @@ async def dictionary_letter_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_next_"))
 async def dictionary_pagination_handler(call: CallbackQuery):
     """Handles Next page pagination."""
+    await call.answer()
     parsed = _parse_dict_next_callback(call.data or "")
     if not parsed:
         await call.answer("Noto'g'ri sahifa so'rovi.", show_alert=True)
@@ -119,6 +122,7 @@ async def dictionary_pagination_handler(call: CallbackQuery):
 @router.callback_query(F.data.startswith("dict_") & ~F.data.startswith("dict_letter_") & ~F.data.startswith("dict_next_") & ~F.data.startswith("dict_alpha_") & ~F.data.contains("pdf"))
 async def dictionary_level_handler(call: CallbackQuery):
     """Handles level selection (dict_A1, etc.) and dict_back."""
+    await call.answer()
     data = call.data or ""
     message = call.message if isinstance(call.message, Message) else None
     if not message:
@@ -150,18 +154,18 @@ async def _show_word_page(call, level, result, offset, letter=None):
     words = result["words"]
     total = result["total"]
     
-    header = f"📚 *Lug'at: {level}*"
+    header = f"📚 Lug'at: {level}"
     if letter:
-        header += f" | Harf: *{letter}*"
+        header += f" | Harf: {letter}"
     
-    sub_header = f"_{offset + 1}–{offset + len(words)} / {total} ta so'z_"
+    sub_header = f"{offset + 1}–{offset + len(words)} / {total} ta so'z"
     lines = [f"{header}\n{sub_header}\n"]
     
     MAX_LEN = 3600  # safely under Telegram's 4096 char limit
     
     for word in words:
-        pos = f" `{word['pos']}`" if word.get('pos') else ""
-        line = f"🔹 *{word['de']}*{pos} — {word['uz']}\n"
+        pos = f" ({word['pos']})" if word.get('pos') else ""
+        line = f"🔹 {word['de']}{pos} — {word['uz']}\n"
         if "\n".join(lines + [line]).__len__() > MAX_LEN:
             break
         lines.append(line)
@@ -198,8 +202,11 @@ async def _show_word_page(call, level, result, offset, letter=None):
         await call.answer("Xabar topilmadi.", show_alert=True)
         return
     try:
-        await message.edit_text(response_text, reply_markup=builder, parse_mode="Markdown")
+        await message.edit_text(response_text, reply_markup=builder)
     except Exception as e:
+        if "message is not modified" in str(e).lower():
+            await call.answer()
+            return
         logging.error(f"Dictionary edit error: {e}")
         await call.answer("Xatolik yuz berdi. Qaytadan urinib ko'ring.", show_alert=True)
 
