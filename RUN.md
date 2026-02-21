@@ -62,9 +62,17 @@ Users will be able to click "Aloqa" to contact you directly via Telegram link.
   - `BROADCAST_CLAIM_BATCH_SIZE=1000`
   - `BROADCAST_SEND_CONCURRENCY=30`
   - `BROADCAST_MAX_ATTEMPTS=6`
+  - `DELIVERY_MODE=webhook` (multi-replica uchun tavsiya)
+  - `WEBHOOK_BASE_URL=https://<railway-app-domain>`
+  - `WEBHOOK_PATH=/telegram/webhook`
+  - `WEBHOOK_SECRET_TOKEN=<long-random-secret>`
 - Data migration:
   - Dry run: `python3 scripts/migrate_sqlite_to_postgres.py --sqlite-path germanic.db --dry-run`
   - Execute: `python3 scripts/migrate_sqlite_to_postgres.py --sqlite-path germanic.db --truncate --pg-url "$DATABASE_URL"`
+
+### Webhook mode (scale-safe)
+- Polling conflictni oldini olish uchun productionda `DELIVERY_MODE=webhook` ishlating.
+- Agar `WEBHOOK_URL` bermasangiz, bot `WEBHOOK_BASE_URL + WEBHOOK_PATH` dan yig'adi.
 
 ## 6. Docker Persistence (important)
 - In Docker, DB is pinned to `/app/data/germanic.db` (mounted from `./data`).

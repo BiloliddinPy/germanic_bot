@@ -1,8 +1,10 @@
 import asyncio
 import logging
 import sys
+from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
 from core.config import settings
 from database import create_table, bootstrap_words_if_empty
@@ -45,11 +47,14 @@ async def main():
         logging.error("BOT_TOKEN is not set!")
         return
 
-    # Single Instance Lock
-    instance_lock = SingleInstanceLock("./data/bot.instance.lock")
-    if not instance_lock.acquire():
-        logging.error("Another bot instance is already running.")
-        return
+    is_webhook_mode = settings.delivery_mode == "webhook"
+    instance_lock = None
+    if not is_webhook_mode:
+        # Polling mode must remain single-instance.
+        instance_lock = SingleInstanceLock("./data/bot.instance.lock")
+        if not instance_lock.acquire():
+            logging.error("Another bot instance is already running.")
+            return
 
     # Bot & Dispatcher
     bot = Bot(token=settings.bot_token)
@@ -111,15 +116,59 @@ async def main():
             scope=types.BotCommandScopeChat(chat_id=int(settings.admin_id)),
         )
 
-    await bot.delete_webhook(drop_pending_updates=True)
     await start_scheduler(bot)
 
-    logging.info("🚀 Germanic Bot started successfully.")
-    try:
-        await dp.start_polling(bot)
-    finally:
-        stop_scheduler()
-        instance_lock.release()
+    if is_webhook_mode:
+        if not settings.webhook_url:
+            logging.error("WEBHOOK_URL (or WEBHOOK_BASE_URL + WEBHOOK_PATH) is required in webhook mode.")
+            stop_scheduler()
+            return
+
+        await bot.set_webhook(
+            url=settings.webhook_url,
+            secret_token=(settings.webhook_secret_token or None),
+            drop_pending_updates=False,
+        )
+
+        app = web.Application()
+        webhook_requests_handler = SimpleRequestHandler(
+            dispatcher=dp,
+            bot=bot,
+            secret_token=(settings.webhook_secret_token or None),
+        )
+        webhook_requests_handler.register(app, path=settings.webhook_path)
+        setup_application(app, dp, bot=bot)
+
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, host=settings.webhook_host, port=settings.webhook_port)
+        await site.start()
+
+        logging.info(
+            "🚀 Germanic Bot started in webhook mode. listen=%s:%s path=%s webhook_url=%s",
+            settings.webhook_host,
+            settings.webhook_port,
+            settings.webhook_path,
+            settings.webhook_url,
+        )
+        try:
+            while True:
+                await asyncio.sleep(3600)
+        finally:
+            stop_scheduler()
+            try:
+                await runner.cleanup()
+            except Exception:
+                pass
+    else:
+        await bot.delete_webhook(drop_pending_updates=True)
+        logging.info("🚀 Germanic Bot started in polling mode.")
+        try:
+            await dp.start_polling(bot)
+        finally:
+            stop_scheduler()
+            if instance_lock:
+                instance_lock.release()
 
 if __name__ == "__main__":
     try:

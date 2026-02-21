@@ -14,6 +14,16 @@ def _resolve_db_path(raw_path: str) -> str:
         return os.path.abspath(candidate)
     return os.path.abspath(os.path.join(_PROJECT_ROOT, candidate))
 
+
+def _join_webhook_url(base_url: str, path: str) -> str:
+    clean_base = (base_url or "").strip().rstrip("/")
+    clean_path = (path or "").strip()
+    if not clean_base:
+        return ""
+    if not clean_path.startswith("/"):
+        clean_path = "/" + clean_path
+    return clean_base + clean_path
+
 @dataclass(frozen=True)
 class Config:
     bot_token: str = os.getenv("BOT_TOKEN", "")
@@ -42,6 +52,16 @@ class Config:
     broadcast_claim_batch_size: int = int(os.getenv("BROADCAST_CLAIM_BATCH_SIZE", "1000"))
     broadcast_send_concurrency: int = int(os.getenv("BROADCAST_SEND_CONCURRENCY", "30"))
     broadcast_max_attempts: int = int(os.getenv("BROADCAST_MAX_ATTEMPTS", "6"))
+    delivery_mode: str = os.getenv("DELIVERY_MODE", "polling").strip().lower()
+    webhook_host: str = os.getenv("WEBHOOK_HOST", "0.0.0.0").strip()
+    webhook_port: int = int(os.getenv("PORT", os.getenv("WEBHOOK_PORT", "8080")))
+    webhook_path: str = os.getenv("WEBHOOK_PATH", "/telegram/webhook").strip()
+    webhook_secret_token: str = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
+    webhook_base_url: str = os.getenv("WEBHOOK_BASE_URL", "").strip()
+    webhook_url: str = (
+        os.getenv("WEBHOOK_URL", "").strip()
+        or _join_webhook_url(os.getenv("WEBHOOK_BASE_URL", "").strip(), os.getenv("WEBHOOK_PATH", "/telegram/webhook").strip())
+    )
     
     # UI Constants
     page_size: int = 20
