@@ -7,6 +7,7 @@ from aiogram.types import (
     InlineKeyboardButton,
 )
 from aiogram.fsm.context import FSMContext
+from typing import Awaitable, cast
 from database import get_or_create_user_profile  # From package init
 from database.repositories.user_repository import add_user
 from database.repositories.progress_repository import record_navigation_event
@@ -18,6 +19,15 @@ from core.config import settings
 
 router = Router()
 UI_TEST_MODE = "🛠️ Bot hozirda test rejimida ishlayapti"
+
+
+def _is_onboarding_completed(profile: dict | None) -> bool:
+    if not profile:
+        return False
+    try:
+        return bool(int(profile.get("onboarding_completed") or 0))
+    except (TypeError, ValueError):
+        return False
 
 
 async def _safe_delete_message(message: Message):
@@ -39,8 +49,8 @@ async def cmd_start(message: Message, state: FSMContext):
     profile = get_or_create_user_profile(user_id)
     record_navigation_event(user_id, "start", entry_type="command")
 
-    if not profile or not profile.get("onboarding_completed"):
-        await start_onboarding(message, state)
+    if not _is_onboarding_completed(profile):
+        await cast(Awaitable[None], start_onboarding(message, state))
         return
 
     current_level = str(profile.get("current_level") or "A1")
@@ -63,8 +73,11 @@ async def cmd_start(message: Message, state: FSMContext):
                 [InlineKeyboardButton(text="🏠 Bosh menyu", callback_data="home")],
             ]
         )
-        await send_single_ui_message(
-            message, text, reply_markup=markup, parse_mode="Markdown", user_id=user_id
+        await cast(
+            Awaitable[Message],
+            send_single_ui_message(
+                message, text, reply_markup=markup, parse_mode="Markdown", user_id=user_id
+            ),
         )
         return
 
@@ -73,7 +86,9 @@ async def cmd_start(message: Message, state: FSMContext):
         f"📍 Sizning joriy darajangiz: **{current_level}**\n\n"
         f"{INTRO_TEXT}"
     )
-    await _send_fresh_main_menu(message, welcome_text, user_id=user_id)
+    await cast(
+        Awaitable[None], _send_fresh_main_menu(message, welcome_text, user_id=user_id)
+    )
 
 
 @router.message(Command("menu"))
@@ -81,7 +96,10 @@ async def cmd_start(message: Message, state: FSMContext):
 async def cmd_menu(message: Message):
     await _safe_delete_message(message)
     record_navigation_event(message.from_user.id, "main_menu", entry_type="text")
-    await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=message.from_user.id)
+    await cast(
+        Awaitable[None],
+        _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=message.from_user.id),
+    )
 
 
 @router.callback_query(F.data == "home")
@@ -95,7 +113,10 @@ async def go_to_home(call: CallbackQuery):
         await message.delete()
     except Exception:
         pass
-    await _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=call.from_user.id)
+    await cast(
+        Awaitable[None],
+        _send_fresh_main_menu(message, MAIN_MENU_TEXT, user_id=call.from_user.id),
+    )
 
 
 @router.message(Command("help"))
@@ -108,8 +129,11 @@ async def cmd_help(message: Message):
     )
     from keyboards.builders import get_main_menu
 
-    await send_single_ui_message(
-        message, text, reply_markup=get_main_menu(), parse_mode="Markdown"
+    await cast(
+        Awaitable[Message],
+        send_single_ui_message(
+            message, text, reply_markup=get_main_menu(), parse_mode="Markdown"
+        ),
     )
 
 
@@ -123,8 +147,11 @@ async def cmd_about(message: Message):
     )
     from keyboards.builders import get_main_menu
 
-    await send_single_ui_message(
-        message, text, reply_markup=get_main_menu(), parse_mode="Markdown"
+    await cast(
+        Awaitable[Message],
+        send_single_ui_message(
+            message, text, reply_markup=get_main_menu(), parse_mode="Markdown"
+        ),
     )
 
 
@@ -144,4 +171,6 @@ async def cmd_contact(message: Message):
         "Savollaringiz bo'lsa, adminga yozishingiz mumkin:\n"
         f"{admin_text}"
     )
-    await send_single_ui_message(message, text, parse_mode="Markdown")
+    await cast(
+        Awaitable[Message], send_single_ui_message(message, text, parse_mode="Markdown")
+    )

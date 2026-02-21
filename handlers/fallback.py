@@ -10,6 +10,14 @@ from handlers.onboarding import start_onboarding
 
 router = Router()
 
+def _is_onboarding_completed(profile: dict | None) -> bool:
+    if not profile:
+        return False
+    try:
+        return bool(int(profile.get("onboarding_completed") or 0))
+    except (TypeError, ValueError):
+        return False
+
 
 @router.message()
 async def unknown_text_fallback(message: Message, state: FSMContext):
@@ -21,7 +29,7 @@ async def unknown_text_fallback(message: Message, state: FSMContext):
 
     if message.from_user:
         profile = get_or_create_user_profile(message.from_user.id)
-        if not profile or not profile.get("onboarding_completed"):
+        if not _is_onboarding_completed(profile):
             await start_onboarding(message, state)
             return
 
@@ -37,7 +45,7 @@ async def unknown_callback_fallback(call: CallbackQuery, state: FSMContext):
     # Prevent stale inline buttons from confusing users.
     await call.answer("Bu tugma eskirgan. Iltimos, /start bosing.", show_alert=True)
     profile = get_or_create_user_profile(call.from_user.id)
-    if not profile or not profile.get("onboarding_completed"):
+    if not _is_onboarding_completed(profile):
         message = call.message if isinstance(call.message, Message) else None
         if message:
             await start_onboarding(message, state)

@@ -1,10 +1,12 @@
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
+from aiogram.fsm.context import FSMContext
 
 from services.user_service import UserService
 from services.learning_service import LearningService
 from services.stats_service import StatsService
 from utils.ui_utils import send_single_ui_message, _get_progress_bar
+from handlers.onboarding import start_onboarding
 
 router = Router()
 
@@ -48,3 +50,13 @@ async def show_profile(message: Message):
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
+
+@router.callback_query(F.data == "onboarding_start")
+async def profile_edit_info_callback(call: CallbackQuery, state: FSMContext):
+    message = call.message if isinstance(call.message, Message) else None
+    if not message:
+        await call.answer("Xabar topilmadi.", show_alert=True)
+        return
+    await call.answer()
+    StatsService.log_navigation(call.from_user.id, "profile_edit", entry_type="callback")
+    await start_onboarding(message, state)
